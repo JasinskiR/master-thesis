@@ -1,0 +1,134 @@
+\begin{thebibliography}{10}
+
+\bibitem{WhenIsParallelismFearlessandZeroCostwithRust?}
+J.~Abdi, G.~Posluns, G.~Zhang, B.~Wang, M.~C. Jeffrey.
+\newblock When is parallelism fearless and zero-cost with rust?
+\newblock {\em Proceedings of the 36th ACM Symposium on Parallelism in Algorithms and Architectures}, SPAA '24, strona 27–40, New York, NY, USA, 2024. Association for Computing Machinery.
+
+\bibitem{UnsafeRust}
+V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
+\newblock How do programmers use unsafe rust?
+\newblock {\em Proceedings of the ACM on Programming Languages}, 4(OOPSLA):1--27, 2020.
+
+\bibitem{RustAtomicsAndLocks}
+M.~Bos.
+\newblock {\em Rust Atomics and Locks: Low-Level Concurrency in Practice}.
+\newblock O'Reilly Media, 2022.
+
+\bibitem{ProgramminInOpenMp}
+R.~Chandra.
+\newblock {\em Parallel Programming in OpenMP}.
+\newblock High performance computing. Elsevier Science, 2001.
+
+\bibitem{10.1145/3678232.3678258}
+T.-C. Chen, M.~Dezani-Ciancaglini, N.~Yoshida.
+\newblock On the preciseness of subtyping in session types: 10 years later.
+\newblock {\em Proceedings of the 26th International Symposium on Principles and Practice of Declarative Programming}, PPDP '24, New York, NY, USA, 2024. Association for Computing Machinery.
+
+\bibitem{RustPerformance3}
+M.~Costanzo, E.~Rucci, M.~Naiouf, A.~De~Giusti.
+\newblock Performance vs programming effort between rust and c on multicore architectures: Case study in n-body.
+\newblock {\em 2021 XLVII Latin American Computing Conference (CLEI)}, strony 1--10. IEEE, 2021.
+
+\bibitem{RustDifferences1}
+Z.~Fehervari.
+\newblock {R}ust vs {C}++: {M}odern {D}evelopers' {D}ilemma --- bluebirdinternational.com.
+\newblock \url{https://bluebirdinternational.com/rust-vs-c/}.
+\newblock [Dostęp 28-01-2025].
+
+\bibitem{RustSafety1}
+K.~R. Fulton, A.~Chan, D.~Votipka, M.~Hicks, M.~L. Mazurek.
+\newblock Benefits and drawbacks of adopting a secure programming language: Rust as a case study.
+\newblock {\em Seventeenth Symposium on Usable Privacy and Security (SOUPS 2021)}, strony 597--616, 2021.
+
+\bibitem{MasteringConcurrencyAndParallelProgramming}
+M.~Galvin.
+\newblock {\em Mastering Concurrency And Parallel Programming: Atain Advanced Techniques and Best Practices for Crafting Robust, Manitainable, and High-Performance Concurrent Code in C++}.
+\newblock 2024.
+
+\bibitem{RustDifferences}
+Y.~Gusakov.
+\newblock {C}++ {V}s. {R}ust: 6 {K}ey {D}ifferences — {Q}{I}{T} --- qit.software.
+\newblock \url{https://qit.software/c-vs-rust-6-key-differences/}.
+\newblock [Dostęp 28-01-2025].
+
+\bibitem{RapidInnovationMasteringRust}
+R.~Innovation.
+\newblock {M}astering {R}ust {C}oncurrency \& {P}arallelism: {U}ltimate {G}uide 2024 --- rapidinnovation.io.
+\newblock \url{https://www.rapidinnovation.io/post/concurrent-and-parallel-programming-with-rust#2-basics-of-rust-for-concurrent-programming}.
+\newblock [Dostęp 23-12-2024].
+
+\bibitem{RustSafety3}
+R.~Jung, J.-H. Jourdan, R.~Krebbers, D.~Dreyer.
+\newblock Safe systems programming in rust.
+\newblock {\em Communications of the ACM}, 64(4):144--152, 2021.
+
+\bibitem{TheRustProgrammingLanguage}
+S.~Klabnik,  C.~Nichols.
+\newblock {\em The Rust Programming Language}.
+\newblock No Starch Press, USA, 2018.
+
+\bibitem{GPUSystemComapre}
+B.~Köpcke, S.~Gorlatch, M.~Steuwer.
+\newblock Descend: A safe gpu systems programming language.
+\newblock {\em Proceedings of the ACM on Programming Languages}, 8, 2024.
+\newblock Cited by: 0; All Open Access, Gold Open Access, Green Open Access.
+
+\bibitem{RustPerformance2}
+S.~Lankes, J.~Breitbart, S.~Pickartz.
+\newblock Exploring rust for unikernel development.
+\newblock {\em Proceedings of the 10th Workshop on Programming Languages and Operating Systems}, strony 8--15, 2019.
+
+\bibitem{RustPerformance4}
+Y.~Lin, S.~M. Blackburn, A.~L. Hosking, M.~Norrish.
+\newblock Rust as a language for high performance gc implementation.
+\newblock {\em ACM SIGPLAN Notices}, 51(11):89--98, 2016.
+
+\bibitem{parallelrustcppIntroductionComparing}
+M.~Lindgren.
+\newblock {I}ntroduction - {C}omparing parallel {R}ust and {C}++ --- parallel-rust-cpp.github.io.
+\newblock \url{https://parallel-rust-cpp.github.io}.
+\newblock [Dostęp 28-01-2025].
+
+\bibitem{mitzenmacher2017probability}
+M.~Mitzenmacher,  E.~Upfal.
+\newblock {\em Probability and Computing: Randomization and Probabilistic Techniques in Algorithms and Data Analysis}.
+\newblock Cambridge University Press, 2017.
+
+\bibitem{RustSafety2}
+A.~Pinho, L.~Couto, J.~Oliveira.
+\newblock Towards rust for critical systems.
+\newblock {\em 2019 IEEE International Symposium on Software Reliability Engineering Workshops (ISSREW)}, strony 19--24. IEEE, 2019.
+
+\bibitem{HandsOnConcurrencywithRust}
+B.~Troutwine.
+\newblock {\em Hands-On Concurrency with Rust: Confidently build memory-safe, parallel, and efficient software in Rust}.
+\newblock Packt Publishing, 2018.
+
+\bibitem{ZamiennikWEmbedded}
+T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
+\newblock Overview of embedded rust operating systems and frameworks.
+\newblock {\em Sensors}, 24(17), 2024.
+\newblock Cited by: 0; All Open Access, Gold Open Access.
+
+\bibitem{RustPerformance1}
+R.~Viitanen.
+\newblock Evaluating memory models for graph-like data structures in the rust programming language: Performance and usabiliy, 2020.
+
+\bibitem{ParallelProgramminginC++withOpenMP}
+V.~Q.~T. (vuquangtrong@gmail.com).
+\newblock {I}ntroduction to {P}arallel {P}rogramming in {C}++ with {O}pen{M}{P} - {S}tephan {O}\&apos;{B}rien --- physics.mcgill.ca.
+\newblock \url{https://www.physics.mcgill.ca/~obriens/Tutorials/parallel-cpp/}.
+\newblock [Dostęp 23-12-2024].
+
+\bibitem{ConcurrencyInAction}
+A.~Williams.
+\newblock {\em C++ Concurrency in Action}.
+\newblock Manning, 2019.
+
+\bibitem{RustFC}
+Z.~Yu, L.~Song, Y.~Zhang.
+\newblock Fearless concurrency? understanding concurrent programming safety in real-world rust software.
+\newblock {\em arXiv preprint arXiv:1902.01906}, 2019.
+
+\end{thebibliography}

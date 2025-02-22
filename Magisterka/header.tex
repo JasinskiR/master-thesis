@@ -1,0 +1,623 @@
+% !TeX root = Dyplom.tex
+\documentclass[a4paper,onecolumn,oneside,12pt,extrafontsizes]{memoir}
+
+%    Do tego wystarczy posłużyć się poniższymi komendami (zamiast documentclass z pierwszej linijki):
+%   \documentclass[a4paper,onecolumn,twoside,10pt]{memoir} 
+%   \renewcommand{\normalsize}{\fontsize{8pt}{10pt}\selectfont}
+\usepackage[utf8]{inputenc} % Proszę użyć zamiast powyższego, jeśli kodowanie edytowanych plików to UTF8
+\usepackage[T1]{fontenc}
+\usepackage[english,polish]{babel} % Tutaj ważna jest kolejność atrybutów (dla pracy po polsku polish powinno być na końcu)
+%\DisemulatePackage{setspace}
+\usepackage{setspace}
+\usepackage{color,calc}
+%\usepackage{soul} % pakiet z komendami do podkreślania, przekreślania, podświetlania tekstu (raczej niepotrzebny)
+\usepackage{ebgaramond} % pakiet z czcionkami garamond, potrzebny tylko do strony tytułowej, musi wystąpić przed pakietem tgtermes
+\usepackage{float}
+\usepackage{etoolbox}
+
+\usepackage{subcaption}
+%% Aby uzyskać polskie literki w pdfie (a nie zlepki) korzystamy z pakietu czcionek tgterms. 
+%% W pakiecie tym są zdefiniowane klony czcionek Times o kształtach: normalny, pogrubiony, italic, italic pogrubiony.
+%% W pakiecie tym brakuje czcionki o kształcie: slanted (podobny do italic). 
+%% Jeśli w dokumencie gdzieś zostanie zastosowana czcionka slanted (np. po użyciu komendy \textsl{}), to
+%% latex dokona podstawienia na czcionkę standardową i zgłosi to w ostrzeżeniu (warningu).
+%% Ponadto tgtermes to czcionka do tekstu. Wszelkie matematyczne wzory będą sformatowane domyślną czcionką do wzorów.
+%% Jeśli wzory mają być sformatowane z wykorzystaniem innych czcionek, trzeba to jawnie zadeklarować.
+
+\usepackage{tgtermes}   
+\renewcommand*\ttdefault{txtt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ustawienia odpowiedzialne za sposób łamania dokumentu
+%% i ułożenie elementów pływających
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clubpenalty=10000      % kara za sierotki
+\widowpenalty=10000     % nie pozostawiaj wdów
+\righthyphenmin=3			  % dziel minimum 3 litery
+
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.35}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Ustawienia rozmiarów: tekstu, nagłówka i stopki, marginesów
+%%  dla dokumentów klasy memoir 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\headsep}{3mm} 
+\setlength{\headheight}{13.6pt} % wartość baselineskip dla czcionki 11pt tj. \small wynosi 13.6pt
+\setlength{\footskip}{\headsep+\headheight}
+\setlength{\uppermargin}{\headheight+\headsep+1cm}
+\setlength{\textheight}{\paperheight-\uppermargin-\footskip-1.5cm}
+\setlength{\textwidth}{\paperwidth-5cm}
+\setlength{\spinemargin}{2.5cm}
+\setlength{\foremargin}{2.5cm}
+\setlength{\marginparsep}{2mm}
+\setlength{\marginparwidth}{2.3mm}
+\checkandfixthelayout[fixed] % konieczne, aby się dobrze wszystko poustawiało
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Ustawienia odległości linii, wcięć, odstępów
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\linespread{1}
+%\linespread{1.241}
+\setlength{\parindent}{14.5pt}
+
+
+\usepackage{multicol} % pakiet umożliwiający stworzenie wielokolumnowego tekstu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pakiety do formatowania tabel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tabularx}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pakiet do wstawiania fragmentów kodu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{listings} 
+\usepackage{listingsutf8}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+% Zmiana "Algorithm" na "Algorytm"
+\renewcommand{\algorithmcfname}{Algorytm}
+\usepackage{framed}
+\usepackage{xpatch}
+\makeatletter
+\xpatchcmd\l@lstlisting{1.5em}{0em}{}{}
+\makeatother
+% Pakiet dostarcza otoczenia lstlisting. Jest ono wysoce konfigurowalne. 
+% Konfigurować można indywidualnie każdy z listingów lub globalnie, w poleceniu \lstset{}.
+
+% Zalecane jest, by kod źródłowy był wyprowadzany z użyciem czcionki maszynowej \ttfamily
+% Ponieważ kod źródłowy, nawet po obcięciu do interesujących fragmentów, bywa obszerny, należy zmniejszyć czcionkę.
+% Zalecane jest \small (dla krótkich fragmentów) oraz \footnotesize (dla dłuższych fragmentów).
+
+% Ponadto podczas konfiguracji można zadeklarować sposób numerowania linii. Numerowanie linii zalecane jest jednak 
+% tylko w przypadkach, gdy w redagowanym tekście znajdują się jakieś odwołania do konkretnych linii.
+% Jeśli takich odwołań nie ma, numerowanie linii jest zbędne. Proszę wtedy go nie stosować.
+% Przy włączaniu numerowania linii należy zwrócić uwagę na to, gdzie pojawią się te numery.
+% Bez zmiany dodatkowych parametrów pojawiają się one na marginesie strony (co jest niepożądane).
+
+\lstset{
+  basicstyle=\small\ttfamily, % lub basicstyle=\footnotesize\ttfamily
+  inputencoding=utf8,
+  %%columns=fullflexible,
+	%%showstringspaces=false,
+	%%showspaces=false,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, 
+  %%numbers=left,  % ta i poniższe linie dotyczą ustawienia numerowania i sposobu jego wyprowadzania
+  %%firstnumber=1, 
+  %%numberfirstline=true, 
+	%%xleftmargin=17pt,
+  %%framexleftmargin=17pt,
+  %%framexrightmargin=5pt,
+  %%framexbottommargin=4pt,
+	belowskip=.5\baselineskip,
+	literate={\_}{{\_\allowbreak}}1 % ta deklaracja przydaje się, jeśli na listingu mają być łamane nazwy zawierające podkreślniki
+}
+\lstset{literate=%-
+{ą}{{\k{a}}}1 {ć}{{\'c}}1 {ę}{{\k{e}}}1 {ł}{{\l{}}}1 {ń}{{\'n}}1 {ó}{{\'o}}1 {ś}{{\'s}}1 {ż}{{\.z}}1 {ź}{{\'z}}1 {Ą}{{\k{A}}}1 {Ć}{{\'C}}1 {Ę}{{\k{E}}}1 {Ł}{{\L{}}}1 {Ń}{{\'N}}1 {Ó}{{\'O}}1 {Ś}{{\'S}}1 {Ż}{{\.Z}}1 {Ź}{{\'Z}}1 
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {~}{{\textasciitilde}}1
+    {—}{{{\textemdash} }}1
+}%{\ \ }{{\ }}1}
+
+%% Inne języki muszą być dodefiniowane. Poniżej podano przykłady definicji języków i styli.
+
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+
+\lstdefinestyle{JavaStyle}{
+basicstyle=\footnotesize\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=none,%left,
+numberstyle=\tiny\color{black},
+stepnumber=2,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false,
+captionpos=t
+}
+
+\definecolor{BackgroundRust}{RGB}{255,255,255}
+\definecolor{GrayCodeBlock}{RGB}{241,241,241}
+\definecolor{BlackText}{RGB}{110,107,94}
+\definecolor{RedTypename}{RGB}{182,86,17}
+\definecolor{GreenString}{RGB}{96,172,57}
+\definecolor{PurpleKeyword}{RGB}{184,84,212}
+\definecolor{GrayComment}{RGB}{170,170,170}
+\definecolor{GoldDocumentation}{RGB}{180,165,45}
+\lstdefinelanguage{rust}
+{
+    columns=fullflexible,
+    keepspaces=true,
+    frame=single,
+    framesep=0pt,
+    framerule=0pt,
+    framexleftmargin=4pt,
+    framexrightmargin=4pt,
+    framextopmargin=5pt,
+    framexbottommargin=3pt,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    backgroundcolor=\color{BackgroundRust},
+    basicstyle=\ttfamily\color{BlackText},
+    keywords={
+        true,false,
+        unsafe,async,await,move,
+        use,pub,crate,super,self,mod,
+        struct,enum,fn,const,static,let,mut,ref,type,impl,dyn,trait,where,as,
+        break,continue,if,else,while,for,loop,match,return,yield,in
+    },
+    keywordstyle=\color{PurpleKeyword},
+    ndkeywords={
+        bool,u8,u16,u32,u64,u128,i8,i16,i32,i64,i128,char,str,
+        Self,Option,Some,None,Result,Ok,Err,String,Box,Vec,Rc,Arc,Cell,RefCell,HashMap,BTreeMap,
+        macro_rules
+    },
+    ndkeywordstyle=\color{RedTypename},
+    comment=[l][\color{GrayComment}\slshape]{//},
+    morecomment=[s][\color{GrayComment}\slshape]{/*}{*/},
+    morecomment=[l][\color{GoldDocumentation}\slshape]{///},
+    morecomment=[s][\color{GoldDocumentation}\slshape]{/*!}{*/},
+    morecomment=[l][\color{GoldDocumentation}\slshape]{//!},
+    morecomment=[s][\color{RedTypename}]{\#![}{]},
+    morecomment=[s][\color{RedTypename}]{\#[}{]},
+    stringstyle=\color{GreenString},
+    string=[b]"
+}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{dark-grey}{rgb}{0.4,0.4,0.4}
+
+% VS2017 C++ color scheme
+\definecolor{clr-background}{RGB}{255,255,255}
+\definecolor{clr-text}{RGB}{0,0,0}
+\definecolor{clr-string}{RGB}{163,21,21}
+\definecolor{clr-namespace}{RGB}{0,0,0}
+\definecolor{clr-preprocessor}{RGB}{128,128,128}
+\definecolor{clr-keyword}{RGB}{0,0,255}
+\definecolor{clr-type}{RGB}{43,145,175}
+\definecolor{clr-variable}{RGB}{0,0,0}
+\definecolor{clr-constant}{RGB}{111,0,138} % macro color
+\definecolor{clr-comment}{RGB}{0,128,0}
+
+\lstdefinestyle{VS2017}{
+	backgroundcolor=\color{clr-background},
+	basicstyle=\color{clr-text}, % any text
+	stringstyle=\color{clr-string},
+	identifierstyle=\color{clr-variable}, % just about anything that isn't a directive, comment, string or known type
+	commentstyle=\color{clr-comment},
+	directivestyle=\color{clr-preprocessor}, % preprocessor commands
+	% listings doesn't differentiate between types and keywords (e.g. int vs return)
+	% use the user types color
+	keywordstyle=\color{clr-type},
+	keywordstyle={[2]\color{clr-constant}}, % you'll need to define these or use a custom language
+	tabsize=4
+}
+% styl json
+\newcommand\JSONnumbervaluestyle{\color{blue}}
+\newcommand\JSONstringvaluestyle{\color{red}}
+
+\newif\ifcolonfoundonthisline
+
+\makeatletter
+
+\lstdefinestyle{json-style}  
+{
+	showstringspaces    = false,
+	keywords            = {false,true},
+	alsoletter          = 0123456789.,
+	morestring          = [s]{"}{"},
+	stringstyle         = \ifcolonfoundonthisline\JSONstringvaluestyle\fi,
+	MoreSelectCharTable =%
+	\lst@DefSaveDef{`:}\colon@json{\processColon@json},
+	basicstyle          = \footnotesize\ttfamily,
+	keywordstyle        = \ttfamily\bfseries,
+	numbers				= left, % zakomentować, jeśli numeracja linii jest niepotrzebna
+	numberstyle={\footnotesize\ttfamily\color{dark-grey}},
+	xleftmargin			= 2em % zakomentować, jeśli numeracja linii jest niepotrzebna
+}
+
+\newcommand\processColon@json{%
+	\colon@json%
+	\ifnum\lst@mode=\lst@Pmode%
+	\global\colonfoundonthislinetrue%
+	\fi
+}
+
+\lst@AddToHook{Output}{%
+	\ifcolonfoundonthisline%
+	\ifnum\lst@mode=\lst@Pmode%
+	\def\lst@thestyle{\JSONnumbervaluestyle}%
+	\fi
+	\fi
+	\lsthk@DetectKeywords% 
+}
+
+\lst@AddToHook{EOL}%
+{\global\colonfoundonthislinefalse}
+
+\makeatother
+\usepackage{memlays}     % extra layout diagrams, zastosowane w szblonie do 'debuggowania', używa pakietu layouts
+%\usepackage{layouts}
+\usepackage{printlen} % pakiet do wyświetlania wartości zdefiniowanych długości, stosowany do 'debuggowania'
+\usepackage{enumitem} % pakiet do numerowania 1.1 1.2 w sekcji enumrate
+\uselengthunit{pt}
+\makeatletter
+\newcommand{\showFontSize}{\f@size pt} % makro wypisujące wielkość bieżącej czcionki
+\makeatother
+% do pokazania ramek można byłoby użyć:
+%\usepackage{showframe} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Formatowanie list wyliczeniowych, wypunktowań i własnych otoczeń
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Domyślnie wypunktowania mają zadeklarowane znaki, które nie występują w tgtermes
+% Aby latex nie podstawiał w ich miejsca znaków z czcionki standardowej można zrobić podstawienie:
+%    \DeclareTextCommandDefault{\textbullet}{\ensuremath{\bullet}}
+%    \DeclareTextCommandDefault{\textasteriskcentered}{\ensuremath{\ast}}
+%    \DeclareTextCommandDefault{\textperiodcentered}{\ensuremath{\cdot}}
+% Jednak jeszcze lepszym pomysłem jest zdefiniowanie otoczeń z wykorzystaniem enumitem
+\usepackage{enumitem} % pakiet pozwalający zarządzać formatowaniem list wyliczeniowych
+\setlist{noitemsep,topsep=4pt,parsep=0pt,partopsep=4pt,leftmargin=*} % zadeklarowane parametry pozwalają uzyskać 'zwartą' postać wypunktowania bądź wyliczenia
+\setenumerate{labelindent=0pt,itemindent=0pt,leftmargin=!,label=\arabic*.} % można zmienić \arabic na \alph, jeśli wyliczenia mają być z literkami
+\setlistdepth{4} % definiujemy głębokość zagnieżdżenia list wyliczeniowych do 4 poziomów
+\setlist[itemize,1]{label=$\bullet$}  % definiujemy, jaki symbol ma być użyty w wyliczeniu na danym poziomie
+\setlist[itemize,2]{label=\normalfont\bfseries\textendash}
+\setlist[itemize,3]{label=$\ast$}
+\setlist[itemize,4]{label=$\cdot$}
+\renewlist{itemize}{itemize}{4}
+
+
+\makeatletter
+\renewenvironment{quote}{
+	\begin{list}{}
+	{
+	\setlength{\leftmargin}{1em}
+	\setlength{\topsep}{0pt}%
+	\setlength{\partopsep}{0pt}%
+	\setlength{\parskip}{0pt}%
+	\setlength{\parsep}{0pt}%
+	\setlength{\itemsep}{0pt}
+	}
+	}{
+	\end{list}}
+\makeatother
+
+ \usepackage{datetime2} % INFO: pakiet potrzeby do uzyskania i sformatowania daty 
+ \usepackage[pdftex,bookmarks,breaklinks,unicode]{hyperref}
+ \usepackage[pdftex]{graphicx}
+ \DeclareGraphicsExtensions{.pdf,.jpg,.mps,.png} % po zadeklarowaniu rozszerzeń można będzie wstawiać pliki z grafiką bez konieczności podawania tych rozszerzeń w ich nazwach
+\pdfcompresslevel=9
+\pdfoutput=1
+
+% Dobrze przygotowany dokument pdf to taki, który zawiera metadane.
+% Poniżej zadeklarowano pola metadanych, jakie będą włączone do dokumentu pdf.
+% Można je zmodyfikować w zależności od potrzeb
+\makeatletter
+\pdftrailerid{} %Remove ID
+\pdfsuppressptexinfo15 %Suppress PTEX.Fullbanner and info of imported PDFs
+\makeatother
+%\else             % jeśli kompilacja jest inna niż pdflatex
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps,.ps,.jpg,.mps,.png}
+%\fi
+\sloppy
+
+% INFO: dodane by lepiej łamać urle 
+\def\UrlBreaks{\do\/\do-\do_} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Formatowanie dokumentu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INFO: Deklaracja głębokościu numeracji
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\setsecnumdepth{subsection} 
+% INFO: Dodanie kropek po numerach sekcji
+\makeatletter
+\def\@seccntformat#1{\csname the#1\endcsname.\quad}
+\def\numberline#1{\hb@xt@\@tempdima{#1\if&#1&\else.\fi\hfil}}
+\makeatother
+% INFO: Numeracja rozdziałów i separatory
+\renewcommand{\chapternumberline}[1]{#1.\quad}
+\renewcommand{\cftchapterdotsep}{\cftdotsep}
+
+\makeatletter % odstępy w spisie pomiędzy rozdziałami
+\renewcommand*{\insertchapterspace}{%
+  \addtocontents{lof}{\protect\addvspace{3pt}}%
+  \addtocontents{lot}{\protect\addvspace{3pt}}%
+	\addtocontents{toc}{\protect\addvspace{3pt}} %
+  \addtocontents{lol}{\protect\addvspace{3pt}}}
+\makeatother 
+
+
+\setlength{\cftbeforechapterskip}{0pt} % odstępy w spisie treści przed rozdziałem, działa w korelacji z:
+\renewcommand{\aftertoctitle}{\afterchaptertitle\vspace{-4pt}} % 
+
+% INFO: Czcionka do podpisów tabel, rysunków, listingów
+\captionnamefont{\small}
+\captiontitlefont{\small}
+
+% INFO: Sformatowanie podpisu nad dwukolumnowym listingiem
+\newcommand{\listingcaption}[1]
+{%
+\vspace*{\abovecaptionskip}\small 
+\refstepcounter{lstlisting}\hfill%
+Listing \thelstlisting: #1\hfill%\hfill%
+\addcontentsline{lol}{lstlisting}{\protect\numberline{\thelstlisting}#1}
+}%
+
+% INFO: Pomocnicze marko do wyróżniania tekstu w języku angielskim
+\newcommand{\eng}[1]{(ang.~\emph{#1})}
+% IFNO: Pomocnicze makro do dołączania podpisów do rysunków ze wskazaniem źródła (bez wypisywania tego źródła w spisie rysunków)
+\newcommand*{\captionsource}[2]{%
+  \caption[{#1}]{%
+    #1 \emph{Źródło:} #2%
+  }%
+}
+
+% INFO: definicje etykiet i tytułów spisów
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\tablename}{Tab.}%% INFO: Przedefiniowanie etykiet w podpisach tabel 
+}%} 
+
+% Przedefiniowanie etykiet oraz nazw wykazu literatury, spisów, indeksu
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\figurename}{Rys.}%% INFO: Przedefiniowanie etykiet w podpisach rysunków 
+}%}
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\lstlistlistingname}{Spis listingów}%% INFO: Przedefiniowanie nazwy spisu listingów
+}%} 
+\newlistof{lstlistoflistings}{lol}{\lstlistlistingname}
+
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\bibname}{Bibliografia}%% INFO: Przedefiniowanie nazwy wykazu literatury 
+}%}
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\listfigurename}{Spis rysunków}%% INFO: Przedefiniowanie nazwy spisu rysunków 
+}%}
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+        \renewcommand{\listtablename}{Spis tabel}%% INFO: Przedefiniowanie nazwy spisu tabel 
+}%}
+
+%\AtBeginDocument{% 
+        \addto\captionspolish{% 
+\renewcommand\indexname{Indeks rzeczowy}%% INFO: Przedefiniowanie nazwy indeksu 
+}%}
+
+  \makeatletter
+  % \renewcommand{\ALG@name}{Algorytm}
+  \makeatother
+
+%\AtBeginDocument{% 
+%    \addto\captionsenglish{
+%\renewcommand\abstractname{Abstract} 
+%}%}
+
+\renewcommand{\abstractnamefont}{\normalfont\Large\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Definicje stopek i nagłówków
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtopsmarks{headings}{%
+\nouppercaseheads % added at the beginning
+}{%
+\createmark{chapter}{both}{shownumber}{}{. \space}
+%\createmark{chapter}{left}{shownumber}{}{. \space}
+\createmark{section}{right}{shownumber}{}{. \space}
+}%use the new settings
+
+\makeatletter
+\copypagestyle{outer}{headings}
+\makeoddhead{outer}{}{}{\small\itshape\rightmark}
+\makeevenhead{outer}{\small\itshape\leftmark}{}{}
+\makeoddfoot{outer}{\small\@author:~\@titleShort}{}{\small\thepage}
+\makeevenfoot{outer}{\small\thepage}{}{\small\@author:~\@title}
+\makeheadrule{outer}{\linewidth}{\normalrulethickness}
+\makefootrule{outer}{\linewidth}{\normalrulethickness}{2pt}
+\makeatother
+
+% fix plain
+\copypagestyle{plain}{headings} % overwrite plain with outer
+\makeoddhead{plain}{}{}{} % remove right header
+\makeevenhead{plain}{}{}{} % remove left header
+\makeevenfoot{plain}{}{}{}
+\makeoddfoot{plain}{}{}{}
+
+\copypagestyle{empty}{headings} % overwrite plain with outer
+\makeoddhead{empty}{}{}{} % remove right header
+\makeevenhead{empty}{}{}{} % remove left header
+\makeevenfoot{empty}{}{}{}
+\makeoddfoot{empty}{}{}{}
+
+% INFO: deklaracja zmiennej logicznej wykorzystywanej do rozróżnienia pracy inżynierskiej i magisterskiej
+\newif\ifMaster% domyślnie false (czyli domyślnie mamy pracę inżynierską)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Definicja strony tytułowej 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+%Uczelnia
+\newcommand\uczelnia[1]{\renewcommand\@uczelnia{#1}}
+\newcommand\@uczelnia{}
+%Wydział
+\newcommand\wydzial[1]{\renewcommand\@wydzial{#1}}
+\newcommand\@wydzial{}
+%Kierunek
+\newcommand\kierunek[1]{\renewcommand\@kierunek{#1}}
+\newcommand\@kierunek{}
+%Specjalność
+\newcommand\specjalnosc[1]{\renewcommand\@specjalnosc{#1}}
+\newcommand\@specjalnosc{}
+%Tytuł po angielsku
+\newcommand\titleEN[1]{\renewcommand\@titleEN{#1}}
+\newcommand\@titleEN{}
+%Tytuł krótki
+\newcommand\titleShort[1]{\renewcommand\@titleShort{#1}}
+\newcommand\@titleShort{}
+%Promotor
+\newcommand\promotor[1]{\renewcommand\@promotor{#1}}
+\newcommand\@promotor{}
+%Słowa kluczowe
+\newcommand\kvpl[1]{\renewcommand\@kvpl{#1}}
+\newcommand\@kvpl{}
+\newcommand\kven[1]{\renewcommand\@kven{#1}}
+\newcommand\@kven{}
+%Komenda wykorzystywana w streszczeniu
+\newcommand\mykeywords{\hspace{\absleftindent}%
+\parbox{\linewidth-2.0\absleftindent}{
+       \iflanguage{polish}{\textbf{Słowa kluczowe:} \@kvpl}{%
+			 \iflanguage{english}{\textbf{Keywords:} \@kven}}{}}
+				}
+
+\def\maketitle{%
+  \pagestyle{empty}%
+%%\garamond 
+	\fontfamily{\ebgaramond@family}\selectfont % na stronie tytułowej czcionka garamond
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+%% Poniżej, w otoczniu picture, wstawiono tytuł i autora. 
+%% Tytuł (z autorem) musi znaleźć się w obszarze 
+%% odpowiadającym okienku 110mmx75mm, którego lewy górny róg 
+%% jest w położeniu 77mm od lewej i 111mm od górnej  krawędzi strony 
+%% (tak wynika z wycięcia na okładce). 
+%% Poniższy kod musi być użyty dokładnie w miejscu gdzie jest.
+%% Jeśli tytuł nie mieści się w okienku, to należy tak pozmieniać 
+%% parametry użytych komend, aby ten przydługi tytuł jednak 
+%% upakować do okienka.
+%%
+%% Sama okładka (kolorowa strona z wycięciem, kiedyś była do pobrania z dydaktyki) 
+%% powinna być przycięta o 3mm od każdej z krawędzi.
+%% Te 3mm pewnie zostawiono na ewentualne spady czy też specjalną oprawę.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\tmpfboxrule}
+\setlength{\tmpfboxrule}{\fboxrule}
+\setlength{\fboxsep}{2mm}
+\setlength{\fboxrule}{0mm} 
+%\setlength{\fboxrule}{0.1mm} %% INFO: Jeśli chcemy zobaczyć ramkę, wystarczy odmarkować tę linijkę
+\setlength{\unitlength}{1mm}
+\begin{picture}(0,0)
+%\put(26,-124){\fbox{% ustawienie do "wyciętego okienka"
+\put(20,-124){\fbox{% ustawienie na środku
+\parbox[c][71mm][c]{104mm}{\centering%\lineskip=34pt 
+{\fontsize{18pt}{20pt}\bfseries\selectfont \@title}\\[5mm]
+{\fontsize{18pt}{20pt}\bfseries\selectfont \@titleEN}\\[10mm] % INFO: wstawiono tytuł w języku angielskim, choć w obecnych oficjalnych zaleceniach tego nie ma
+%\fontsize{16pt}{18pt}\selectfont AUTOR:\\[2mm]
+{\fontsize{16pt}{18pt}\selectfont \@author}}
+}
+}
+\end{picture}
+\setlength{\fboxrule}{\tmpfboxrule} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Reszta strony z nazwą uczelni, wydziału, kierunkiem, specjalnością
+%% promotorem, oceną pracy (zakomentowane), miastem i rokiem
+	{\vskip 9pt\centering
+		{\fontsize{20pt}{22pt}\bfseries\selectfont \@uczelnia}\\[5pt]
+		{\fontsize{16pt}{18pt}\bfseries\selectfont \@wydzial}\\[1pt]
+		  \hrule
+	}
+{\vskip 24pt\raggedright\fontsize{14pt}{16pt}\selectfont%
+\begin{tabular}{@{}ll}
+Kierunek: & {\bfseries \@kierunek}\\
+Specjalność: & {\bfseries \@specjalnosc}\\
+\end{tabular}\\[1.3cm]
+}
+{\vskip 29pt\centering{\fontsize{24pt}{26pt}\selectfont%
+{\fontsize{26pt}{28pt}\selectfont P}RACA {\fontsize{26pt}{24pt}\selectfont D}YPLOMOWA\\[7pt]
+\ifMaster \selectfont{\fontsize{26pt}{28pt}\selectfont M}AGISTERSKA\\[2.5cm]%
+\else \selectfont{\fontsize{26pt}{28pt}\selectfont I}NŻYNIERSKA\\[2.5cm]\fi
+}}
+	\vfill
+{\centering
+		{\fontsize{14pt}{16pt}\selectfont Opiekun pracy}\\[2mm] 
+		{\fontsize{14pt}{16pt}\bfseries\selectfont \@promotor}\\[10mm]%INFO: tutaj wstawiane ejst nazwisko promotora
+%		&{\fontsize{16pt}{18pt}\selectfont OCENA PRACY:}\\[20mm] 
+% INFO: linię powyższą zakomentowano, gdyż od czasu pandemii COVID-19 prace mogą być dostarczane bez podpisu promotora
+}
+\vspace{4cm}\noindent
+%{\fontsize{12pt}{14pt}\selectfont Słowa kluczowe: \@kvpl}% INFO: na stronę tytułową trafiają tylko słowa kluczowe w języku polskim (w jakim napisana jest praca)
+\vspace{1.3cm}
+\hrule\vspace*{0.3cm}
+{\centering
+{\fontsize{14pt}{16pt}\selectfont \@date}\\[0cm]
+}
+%\ungaramond
+\normalfont
+ \cleardoublepage
+}
+
+\makeatother
+
+\usepackage{listings}
+% \usepackage{algorithm}
+\makeatletter
+\def\ext@algorithm{lol}% algorithm captions will be written to the .lol file
+% share the list making commands and redefine the heading
+\AtBeginDocument{%
+  \let\l@algorithm\l@lstlisting
+  \let\c@algorithm\c@lstlisting
+  \let\thealgorithm\thelstlisting
+  \renewcommand{\lstlistlistingname}{Algorithms and program code}%
+}
+\makeatother
+\usepackage{subcaption}
+\doublehyphendemerits=100000 % Domyślna wartość to 10000
+\brokenpenalty=1000 % Domyślna wartość to 10000
+\usepackage{multirow}
+
+% Przypisy dolne
+\usepackage{threeparttable}

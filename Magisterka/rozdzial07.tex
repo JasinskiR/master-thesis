@@ -1,0 +1,119 @@
+%Porównanie Rust i C++
+% \chapter{Porównanie mechanizmów w językach Rust oraz C++}
+% \section{Programowanie współbieżne}
+% Thread Creation and Management
+% Thread creation time (microseconds)
+% Memory overhead per thread (KB)
+% Maximum number of threads before system failure
+% Synchronization Performance
+% Mutex lock/unlock operations per second
+% Channel/message passing latency (microseconds)
+% Context switching time between threads (microseconds)
+% Safety Overhead
+% Compilation time with concurrent code (seconds)
+% Binary size comparison (KB)
+% Memory usage during runtime (MB)
+
+% \section{Programowanie równoległe}
+
+% Computation Performance
+% Execution time for parallel algorithms (milliseconds)
+% Speedup ratio (T1/Tn) with different thread counts
+% Efficiency (Speedup/Number of processors)
+% GFLOP/s performance
+% - Single-threaded GFLOP/s
+% - Multi-threaded GFLOP/s
+% - Scaling efficiency (GFLOP/s per core)
+% Amdahl's law comparison
+% Resource Usage
+% CPU utilization percentage
+% Memory consumption under load
+% Cache miss rates
+% I/O operations per second
+
+% GFLOP/s is particularly useful:\\
+
+% Provides a standardized way to measure computational performance
+% Allows direct comparison of algorithmic efficiency
+% Helps evaluate hardware utilization effectiveness
+% To measure GFLOP/s:\\
+
+% Matrix multiplication
+% FFT (Fast Fourier Transform)
+% N-body simulation
+
+\chapter{Porównanie mechanizmów w językach Rust oraz C++}
+
+\section{Programowanie współbieżne}
+Programowanie współbieżne odnosi się do organizacji zadań w sposób umożliwiający ich jednoczesne wykonywanie, przy czym zadania te mogą dzielić wspólne zasoby. W niniejszej sekcji przeprowadzono porównanie mechanizmów współbieżności w językach Rust oraz C++, koncentrując się na kluczowych aspektach takich jak zarządzanie wątkami, synchronizacja oraz wydajność.
+
+\subsection{Zarządzanie wątkami}
+Porównanie tworzenia i zarządzania wątkami obejmuje następujące parametry:
+\begin{itemize}
+\item czas tworzenia wątku (w mikrosekundach),
+\item narzut pamięciowy na wątek (w KB),
+\item maksymalna liczba wątków przed awarią systemu.
+\end{itemize}
+
+\subsection{Wydajność synchronizacji}
+Kluczowe aspekty synchronizacji to:
+\begin{itemize}
+\item liczba operacji blokowania i odblokowywania mutexa na sekundę,
+\item opóźnienie przesyłania wiadomości przez kanały (w mikrosekundach),
+\item czas przełączania kontekstu pomiędzy wątkami (w mikrosekundach).
+\end{itemize}
+
+\subsection{Narzut bezpieczeństwa}
+W kontekście narzutu związanego z mechanizmami bezpieczeństwa w językach Rust i C++ analizowane będą następujące metryki:
+\begin{itemize}
+\item czas kompilacji kodu współbieżnego (w sekundach),
+\item rozmiar pliku binarnego (w KB),
+\item zużycie pamięci podczas wykonywania programu (w MB).
+\end{itemize}
+
+\subsection{Wybrane algorytmy do analizy wydajności}
+Dla porównania mechanizmów współbieżności wybrano następujące algorytmy:
+\begin{itemize}
+\item Mnożenie macierzy (Matrix Multiplication),
+\item Transformata Fouriera (Fast Fourier Transform, FFT).
+\end{itemize}
+Algorytmy te pozwalają na analizę zdolności języków Rust i C++ do efektywnego zarządzania współbieżnością w obliczeniach numerycznych.
+
+\section{Programowanie równoległe}
+Programowanie równoległe odnosi się do wykonywania zadań na wielu rdzeniach procesora jednocześnie, co pozwala na istotne przyspieszenie obliczeń. Analiza porównawcza języków Rust oraz C++ w zakresie równoległości obejmuje następujące aspekty:
+
+\subsection{Wydajność obliczeniowa}
+Główne metryki oceny wydajności algorytmów równoległych to:
+\begin{itemize}
+\item czas wykonania algorytmów równoległych (w milisekundach),
+\item współczynnik przyspieszenia (T1/Tn) dla różnych liczby wątków,
+\item efektywność (przyspieszenie/liczba procesorów).
+\end{itemize}
+
+\subsection{Wydajność sprzętowa (GFLOP/s)}
+Wydajność obliczeniowa mierzona w jednostkach GFLOP/s (gigaflops per second) pozwala na ocenę efektywności wykorzystania sprzętu:
+\begin{itemize}
+\item wydajność w pojedynczym wątku,
+\item wydajność wielowątkowa,
+\item efektywność skalowania (GFLOP/s na rdzeń).
+\end{itemize}
+Dodatkowo przeprowadzona zostanie analiza zgodnie z prawem Amdahla w celu określenia teoretycznych ograniczeń przyspieszenia obliczeń.
+
+\subsection{Zasoby systemowe}
+Analiza zużycia zasobów przez algorytmy równoległe obejmuje:
+\begin{itemize}
+\item procentowe wykorzystanie CPU,
+\item zużycie pamięci w warunkach obciążenia,
+\item współczynnik nietrafień w cache,
+\item liczbę operacji wejścia-wyjścia na sekundę.
+\end{itemize}
+
+\subsection{Wybrane algorytmy do analizy wydajności}
+Dla porównania mechanizmów równoległości wybrano następujące algorytmy:
+\begin{itemize}
+\item Model producent-konsument (z wykorzystaniem aktorów),
+\item Problem filozofów (synchronizacja dostępu do zasobów).
+\end{itemize}
+Algorytmy te pozwolą na analizę efektywności zarządzania zasobami oraz synchronizacji w językach Rust i C++.
+
+Wybór powyższych benchmarków pozwoli na szczegółową analizę wydajności oraz stabilności obu języków w kontekście programowania współbieżnego i równoległego, umożliwiając sformułowanie rekomendacji dotyczących wyboru narzędzi w zależności od specyfiki projektu.

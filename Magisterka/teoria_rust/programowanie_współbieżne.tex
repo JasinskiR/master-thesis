@@ -1,0 +1,148 @@
+\section{Programowanie współbieżne}
+Współbieżność to zdolność systemu do obsługi wielu zadań, które potencjalnie mogą się nakładać w czasie. Współbieżność odnosi się do zdolności systemu do jednoczesnego obsługiwania wielu zadań, które mogą mieć miejsce w tym samym czasie. Język Rust został zaprojektowany z uwzględnieniem bezpieczeństwa i wydajności w kontekście współbieżności, co czyni go niezwykle atrakcyjnym narzędziem dla programistów zajmujących się systemami wielowątkowymi.
+
+\subsection{Model własności pamięci}
+Centralnym elementem podejścia Rusta do współbieżności jest model własności pamięci, który umożliwia programistom tworzenie kodu współbieżnego bez ryzyka wystąpienia błędów związanych z niebezpiecznym dostępem do współdzielonej pamięci. Mechanizm ten, oparty na koncepcjach własności, pożyczania oraz systemu typów, pozwala kompilatorowi Rust na statyczne wykrywanie potencjalnych problemów, takich jak wyścigi danych (data races). Własność pamięci zapewnia, że tylko jeden wątek może posiadać mutowalny dostęp do danej zmiennej w danym czasie, eliminując tym samym możliwość niespodziewanej ingerencji ze strony innych wątków \ref{ownership_borrow}.
+
+\subsection{Biblioteki}
+\subsubsection{std::thread}
+\subsubsection{Tokio}
+\subsubsection{Rayon}
+\subsubsection{crossbeam::channel}
+\subsubsection{actix}
+\subsection{Wątki}
+\subsubsection{Pule wątków \eng{Thread Pools}}
+\subsubsection{Kradzież zadania \eng{Work Stealing}}
+\subsection{Kanały}
+
+Kanały \eng{channels} to mechanizm w języku Rust, który umożliwia bezpieczną i efektywną komunikację między wątkami. Kanały są jednym z kluczowych elementów modelu współbieżności w tym języku, zapewniając sposób przesyłania danych z jednego wątku do drugiego, jednocześnie minimalizując ryzyko problemów związanych z współdzieleniem pamięci. Kanały są oparte na wzorcu producenta-konsumenta, gdzie jeden wątek (producent) wysyła dane, a inny wątek (konsument) je odbiera.
+\\
+
+W Rust kanały są częścią standardowej biblioteki i implementują model komunikacji oparty na kolejkach \textbf{FIFO} (\textit{First In, First Out}). W kontekście Rust'a kanały są realizowane przez struktury \textbf{\textit{Sender}} (nadawca) i \textbf{\textit{Receiver}} (odbiorca), które stanowią mechanizm do przesyłania danych między wątkami. Kanały zapewniają synchronizację pomiędzy wątkami, eliminując potrzebę bezpośredniego współdzielenia pamięci w sposób, który mógłby prowadzić do niepożądanych efektów ubocznych, takich jak błędy związane z równoległym dostępem do tej samej przestrzeni pamięci.
+\\
+
+Kanały w Rust działają na zasadzie przekazywania wartości z wątku do wątku. Są one bezpieczne, ponieważ Rust zapewnia, że nie wystąpią wyścigi danych — Sender jest odpowiedzialny za wysyłanie danych, a Receiver za ich odbiór. Rust automatycznie zapewnia synchronizację, więc nie ma potrzeby stosowania dodatkowych mechanizmów, jak blokady mutexów, do zarządzania dostępem do pamięci.
+
+\subsubsection{Tworzenie kanałów}
+Kanał można stworzyć za pomocą funkcji \textit{mpsc::channel()} z modułu \textit{std::sync}. Ta funkcja zwraca dwie wartości: nadawcę (Sender) i odbiorcę (Receiver).
+
+\begin{lstlisting}[language=Rust, caption=Przykład tworzenia kanału, label=channel_spawn]
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    // Tworzenie kanału
+    let (tx, rx) = mpsc::channel();
+
+    // Tworzenie wątku producenta
+    thread::spawn(move || {
+        let value = String::from("Hello from the producer!");
+        tx.send(value).expect("Failed to send message");
+    });
+
+    // Odbiór wiadomości w wątku konsumenta
+    let received = rx.recv().expect("Failed to receive message");
+    println!("Received: {}", received);
+}
+\end{lstlisting}
+Opis wykonanych kroków w celu utworzenia kanałów w listingu \ref{channel_spawn}:
+\begin{enumerate}
+    \item Tworzymy kanał za pomocą \textit{mpsc::channel()}, który zwraca parę (tx, rx) — tx jest nadawcą, a rx odbiorcą.
+    \item Tworzymy nowy wątek (producenta), który wysyła wiadomość ("\textit{Hello from the producer!}") do kanału.
+    \item W głównym wątku (konsument) odbieramy wiadomość za pomocą \textit{recv()} i drukujemy ją na ekranie.
+\end{enumerate}
+
+\subsubsection{Wysyłanie i odbieranie danych}
+Nadawca (Sender) jest używany do wysyłania danych do kanału. Można wysłać dowolny typ, który jest przesyłany przez kanał. Funkcja send() jest używana do wysyłania wartości, a recv() w odbiorcy blokuje wątek do momentu otrzymania danych.\\
+Odbiorca (Receiver) odbiera dane z kanału. Jest to blokująca operacja, co oznacza, że wątek odbiorcy będzie czekał, aż dane będą dostępne do odebrania.
+
+\subsubsection{Przykład wielokrotnego odbioru}
+Kanały w Rust są domyślnie jednokierunkowe, co oznacza, że tylko jeden odbiorca może odbierać wiadomości z kanału. Możemy jednak tworzyć wiele kanałów i różne wątki odbiorcze, aby efektywnie rozdzielać zadania.
+
+\begin{lstlisting}[language=Rust, caption=Przykład z wieloma wątkami, label=multi_channel_spawn]
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+    let rx = Arc::new(Mutex::new(rx));
+
+    // Tworzenie 3 wątków konsumentów
+    for i in 0..3 {
+        let rx = Arc::clone(&rx);  // Klonowanie Arc, nie Receiver
+        thread::spawn(move || {
+            let message = rx.lock().unwrap().recv().expect("Failed to receive message");
+            println!("Consumer {} received: {}", i, message);
+        });
+    }
+
+    // Wysyłanie wiadomości do konsumentów
+    for i in 0..3 {
+        let message = format!("Message {}", i);
+        tx.send(message).expect("Failed to send message");
+    }
+
+    // Zatrzymanie wątku głównego, aby konsument mógł zakończyć pracę
+    thread::sleep(std::time::Duration::from_secs(1));
+}
+
+\end{lstlisting}
+W tym przykładzie \ref{multi_channel_spawn} tworzymy trzy wątki konsumentów, z których każdy odbiera wiadomości z tego samego kanału. Wątek główny wysyła trzy wiadomości, które są odbierane przez konsumentów.
+\begin{itemize}
+    \item Dodatkowo została użyta struktura \textbf{\textit{Arc<Mutex<Receiver>>}} \ref{ARC} do umożliwienia współdzielenia odbiorcy (Receiver) między wątkami. Mutex zapewnia synchronizację dostępu do kanału, dzięki czemu tylko jeden wątek na raz może odbierać wiadomości.
+    \item \textbf{\textit{Arc::clone}} klonuje Arc, a nie Receiver. \textit{Arc} tworzy nowy uchwyt do tego samego obiektu w pamięci, dzięki czemu wszystkie wątki mogą uzyskać dostęp do tego samego kanału.
+    \item \textbf{\textit{lock()}} Każdy wątek przed odebraniem wiadomości blokuje mutex, aby uzyskać dostęp do kanału w bezpieczny sposób.
+\end{itemize}
+Przykładowa odpowiedź programu:
+\begin{verbatim}
+Consumer 0 received: Message 0
+Consumer 2 received: Message 2
+Consumer 1 received: Message 1
+\end{verbatim}
+
+\subsubsection{Zakończenie pracy z kanałami}
+Kanał w Rust jest "ograniczony" — po wysłaniu wszystkich danych nadawca (sender) automatycznie zakończy swoje działanie, co powoduje, że funkcja recv() w odbiorcy zwróci błąd, jeśli nie będzie więcej wiadomości. Można także zakończyć kanał, jeśli w danym wątku nie ma już nadawców.
+\begin{lstlisting}[language=Rust, caption=Zakończenie kanału, label=channel_ending]
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        tx.send(String::from("End of messages")).expect("Send failed");
+    });
+
+    match rx.recv() {
+        Ok(msg) => println!("Received: {}", msg),
+        Err(_) => println!("No more messages!"),
+    }
+    match rx.recv() {
+        Ok(msg) => println!("Received: {}", msg),
+        Err(_) => println!("No more messages!"),
+    }
+}
+
+\end{lstlisting}
+W tym przykładzie \ref{channel_ending} po wysłaniu wiadomości przez nadawcę wątku głównego, kanał zostaje zamknięty, co sprawia, że dalsze wywołanie recv() w odbiorcy zwróci błąd.\\
+Odpowiedź programu:
+\begin{verbatim}
+Received: End of messages
+No more messages!
+\end{verbatim}
+
+\subsubsection{Kanały poprzeczne \eng{Crossbeam Channels}}
+\subsubsection{Aktorzy}
+
+\subsection{Synchronizacja}
+\subsection{Mutex i RwLock}
+
+Dla sytuacji wymagających współdzielenia pamięci Rust oferuje synchronizowane struktury, takie jak Mutex \eng{mutual exclusion} oraz RwLock. Umożliwiają one zarządzanie dostępem do danych w sposób bezpieczny, jednocześnie wymagając od programisty jawnego określenia momentów blokady i odblokowania zasobów.
+
+\subsection{Wartości atomiczne}
+Rust obsługuje także operacje na typach atomowych, które pozwalają na wykonywanie niepodzielnych operacji na współdzielonych zmiennych bez potrzeby stosowania bardziej zaawansowanych mechanizmów synchronizacji.
+
+\subsection{Bariery i semafory}
+
+\subsection{Asynchroniczność}
+Chociaż współbieżność i asynchroniczność nie są tożsame, w Rust oba te podejścia są ze sobą ściśle powiązane. Rust implementuje asynchroniczność za pomocą konstrukcji takich jak async/await oraz bibliotek takich jak Tokio czy async-std. Podejście to pozwala na wykonywanie wielu operacji współbieżnie w ramach pojedynczego wątku, eliminując narzut związany z tworzeniem wielu wątków.

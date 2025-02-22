@@ -1,0 +1,120 @@
+% !TeX root = Dyplom.tex
+\input{header.tex}
+
+\Mastertrue % INFO: odkomentuj, jeśli to praca magisterska
+\title{Porównanie wybranych mechanizmów programowania współbieżnego i równoległego w językach Rust i C++} % INFO: tytuł pracy w języku polskim 
+\titleShort{Porównanie mechanizmów programowania współbieżnego i równoległego}  % INFO: krótki tytuł pracy (do zamieszczenia w stopce, sklejony z imieniem i nazwiskiem autora nie powinien zająć więcej niż jedną linijkę)
+\titleEN{Comparison of selected concurrent and parallel programming mechanisms in Rust and C++} % INFO: tytuł pracy w języku angielskim
+\author{Rafał Jasiński}  % INFO: imię i nazwisko autora
+\uczelnia{Politechnika Wrocławska} % INFO: nazwa uczelni
+\wydzial{Wydział Informatyki i Telekomunikacji} % INFO: nazwa wydziału
+\kierunek{Informatyka Stosowana (IST)} % IFO: nazwa kierunku
+\specjalnosc{Inżynieria Oprogramowania (IO)} % INFO: nazwa specjalności
+\promotor{dr inż. Zdzisław Spławski} % INFO: dane promotora 
+\date{WROCŁAW, 2024} % INFO: miejscowość, rok złożenia pracy dyplomowej
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Struktura dokumentu
+%%  - tutaj należy wstawić własne rozdziały
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INFO: Za pomocą polecenia \includeonly{} można dokonać selekcji  
+%       tych części (plików z latexowym kodem), które mają być kompilowane. 
+%       Przydaje się to szczególnie podczas pracy nad dużymi dokumentami. 
+%       Bo im mniej części zostanie wyselekcjonowanych, tym szybsza będzie kompilacja.
+%       Proszę nie mylić tej komendy z poleceniem \include{}, którą używa się 
+%       do zadeklarowania pełnej struktury dokumentu (plików z latexowym kodem).
+%\includeonly{skroty,rozdzial01}  
+
+\begin{document}
+
+\maketitle
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+% Kolejne części dokumentu: streszczenie, spisy, skróty, rozdziały, dodatki
+%\chapterstyle{noNumbered}
+% STRESZCZENIE (proszę zajrzeć do środka na zakomentowane komendy)
+\include{streszczenie}
+\pagestyle{outer}
+\clearpage
+% SPIS TREŚCI (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis treści}{spisTresci.1}%
+%%\phantomsection
+%%\addcontentsline{toc}{chapter}{Spis treści}
+\tableofcontents* 
+\clearpage
+
+\clearpage
+% SKRÓTY (to opcjonalna część pracy)
+% \include{skroty} 
+% ROZDZIAŁY (kolejne rozdziały dołączane są z kolejnych plików)
+\chapterstyle{default}
+
+
+\include{rozdzial01}
+\include{rozdzial02}
+\include{rozdzial03}
+\include{rozdzial04}
+\include{rozdzial05}
+\include{rozdzial06}
+\include{rozdzial07}
+\include{rozdzial08}
+\include{rozdzial09}
+\include{rozdzial10}
+
+
+
+% SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis rysunków}{spisRysunkow.1} % jeśli chcemy mieć w spisie treści, to zamarkować tę linię, a odmarkować linie poniższe
+\phantomsection
+\addcontentsline{toc}{chapter}{Spis rysunków}
+\listoffigures*
+\clearpage
+
+% SPIS TABEL (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis tabel}{spisTabel.1} %
+\phantomsection
+\addcontentsline{toc}{chapter}{Spis tabel}
+\listoftables*
+\clearpage
+
+% SPIS LISTINGÓW (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis listingów}{spisListingow.1} %
+\phantomsection
+\addcontentsline{toc}{chapter}{Spis listingów}
+\lstlistoflistings*
+
+% LITERATURA (zostanie wygenerowana automatycznie)
+%UWAGA: bibliotekę referencji należy przygotować samemu. Dobrym do tego narzędziem jest JabRef.
+%       JabRef oferuje jednak większą liczbę typów rekordów niż obsługuje BibTeX.
+%       Proszę nie deklarować rekordów o typach nieobsługiwanych przez BibTeX.
+%       Formatowania wykazu literatury i cytowań odbywać się ma zgodnie z zadeklarowanym stylem.
+%       Zalecane są style produkujące numeryczne cytowania (w postaci [1], [2,3]).
+%       Takim stylem jest np. plabbrv
+\bibliographystyle{plabbrv}
+%       Aby zapanować nad odstępami w wykazie literatury można posłużyć się poniższą komendą
+\setlength{\bibitemsep}{2pt} % - zacieśnia wykaz
+%       Pozycja Literatura pojawia się w spisie treści nieco inaczej niż spisy rysunków, tabel itp.
+%       Aby zachować właściwe odstępy należy użyć poniższej komendy
+\addtocontents{toc}{\addvspace{2pt}} % ustawiamy odstęp w spisie treści przed pozycją Literatura 
+%       Nazwę pliku przygotowanej biblioteki wpisuje się bez rozszerzenia .bib
+%       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
+\bibliography{dokumentacja}
+\nocite{*}
+
+\appendix
+%\include{dodatekA}
+%\include{dodatekB}
+
+% Jeśli w pracy pojawiać się ma indeks, należy odkomentować poniższe linie
+%%\chapterstyle{noNumbered}
+%%\phantomsection % sets an anchor
+%%\addcontentsline{toc}{chapter}{Indeks rzeczowy}
+%%\printindex
+
+\end{document}
