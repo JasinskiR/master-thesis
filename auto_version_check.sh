@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Get the current date
-TAG_DATE=$(date +%Y-%m-%d)
+# Get the current date and time
+TAG_DATE=$(date +%Y-%m-%d-%H-%M-%S)
 
 # Fetch latest changes from remote
 git fetch origin master
