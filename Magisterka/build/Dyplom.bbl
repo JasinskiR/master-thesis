@@ -100,6 +100,12 @@ A.~Pinho, L.~Couto, J.~Oliveira.
 \newblock Towards rust for critical systems.
 \newblock {\em 2019 IEEE International Symposium on Software Reliability Engineering Workshops (ISSREW)}, strony 19--24. IEEE, 2019.
 
+\bibitem{FastFlow}
+L.~Rinaldi, M.~Torquati, M.~Danelutto.
+\newblock Enforcing reference capability in fastflow with rust.
+\newblock {\em Advances in Parallel Computing}, 36:396 – 405, 2020.
+\newblock Cited by: 0; All Open Access, Gold Open Access.
+
 \bibitem{HandsOnConcurrencywithRust}
 B.~Troutwine.
 \newblock {\em Hands-On Concurrency with Rust: Confidently build memory-safe, parallel, and efficient software in Rust}.

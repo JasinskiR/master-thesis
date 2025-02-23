@@ -2,6 +2,7 @@
 \addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
+\contentsline {lstlisting}{\numberline {4.1}{\ignorespaces Kwerenda wygenerowana przez AI}}{15}{lstlisting.4.1}%
 \addvspace {3pt}
 \contentsline {lstlisting}{\numberline {5.1}{\ignorespaces Przykład mechanizmu borrow}}{19}{lstlisting.5.1}%
 \contentsline {lstlisting}{\numberline {5.2}{\ignorespaces Box smart pointer}}{20}{lstlisting.5.2}%
