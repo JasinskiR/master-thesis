@@ -10,6 +10,11 @@ V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
 \newblock How do programmers use unsafe rust?
 \newblock {\em Proceedings of the ACM on Programming Languages}, 4(OOPSLA):1--27, 2020.
 
+\bibitem{rustPolishNames}
+J.~Blandy, J.~Orendorff, L.~Tindall.
+\newblock {\em Programming Rust}.
+\newblock O'Reilly Media, 2021.
+
 \bibitem{RustAtomicsAndLocks}
 M.~Bos.
 \newblock {\em Rust Atomics and Locks: Low-Level Concurrency in Practice}.
