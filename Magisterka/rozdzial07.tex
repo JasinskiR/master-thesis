@@ -43,16 +43,12 @@
 % N-body simulation
 
 \chapter{Porównanie mechanizmów w językach Rust oraz C++}
-
 \section{Programowanie współbieżne}
-Programowanie współbieżne odnosi się do organizacji zadań w sposób umożliwiający ich jednoczesne wykonywanie, przy czym zadania te mogą dzielić wspólne zasoby. W niniejszej sekcji przeprowadzono porównanie mechanizmów współbieżności w językach Rust oraz C++, koncentrując się na kluczowych aspektach takich jak zarządzanie wątkami, synchronizacja oraz wydajność.
-
 \subsection{Zarządzanie wątkami}
 Porównanie tworzenia i zarządzania wątkami obejmuje następujące parametry:
 \begin{itemize}
 \item czas tworzenia wątku (w mikrosekundach),
-\item narzut pamięciowy na wątek (w KB),
-\item maksymalna liczba wątków przed awarią systemu.
+\item narzut pamięciowy na wątek (w KB)
 \end{itemize}
 
 \subsection{Wydajność synchronizacji}
@@ -74,13 +70,13 @@ W kontekście narzutu związanego z mechanizmami bezpieczeństwa w językach Rus
 \subsection{Wybrane algorytmy do analizy wydajności}
 Dla porównania mechanizmów współbieżności wybrano następujące algorytmy:
 \begin{itemize}
-\item Mnożenie macierzy (Matrix Multiplication),
-\item Transformata Fouriera (Fast Fourier Transform, FFT).
+    \item Model producent-konsument (z wykorzystaniem aktorów),
+    \item Problem filozofów (synchronizacja dostępu do zasobów).
 \end{itemize}
 Algorytmy te pozwalają na analizę zdolności języków Rust i C++ do efektywnego zarządzania współbieżnością w obliczeniach numerycznych.
 
+
 \section{Programowanie równoległe}
-Programowanie równoległe odnosi się do wykonywania zadań na wielu rdzeniach procesora jednocześnie, co pozwala na istotne przyspieszenie obliczeń. Analiza porównawcza języków Rust oraz C++ w zakresie równoległości obejmuje następujące aspekty:
 
 \subsection{Wydajność obliczeniowa}
 Główne metryki oceny wydajności algorytmów równoległych to:
@@ -111,8 +107,8 @@ Analiza zużycia zasobów przez algorytmy równoległe obejmuje:
 \subsection{Wybrane algorytmy do analizy wydajności}
 Dla porównania mechanizmów równoległości wybrano następujące algorytmy:
 \begin{itemize}
-\item Model producent-konsument (z wykorzystaniem aktorów),
-\item Problem filozofów (synchronizacja dostępu do zasobów).
+\item Mnożenie macierzy (Matrix Multiplication),
+\item Transformata Fouriera (Fast Fourier Transform, FFT).
 \end{itemize}
 Algorytmy te pozwolą na analizę efektywności zarządzania zasobami oraz synchronizacji w językach Rust i C++.
 

@@ -1,5 +1,11 @@
 %Porównanie Rust i C++
 \chapter{Wybrene mechanizmy w języku C++}
 \section{Programowanie współbieżne}
+
+
 \section{Programowanie równoległe}
 
+\subsection{OpenMP}
+Biblioteka ta pozwala uruchomić wybraną część kodu na wielu wątkach. Działa to podobnie do uruchamiania kody z wykorzystaniem GPU - kod, który zostanie uruchomiony na wielu wątkach umieszczany jest w specjalnym zakresie \eng{scope}. 
+Kompilacja kodu z OpenMP odbywa się z wykorzystaniem flagi \texttt{-fopenmp} w przypadku kompilatora \texttt{g++}.\\
+Użycie pamięci cache może pomóc w zwiększeniu wydajności czasowej programu kosztem pamięci. W przypadku OpenMP, zmienna \texttt{shared} oznacza, że zmienna jest współdzielona pomiędzy wątkami, a \texttt{private} oznacza, że każdy wątek ma swoją kopię zmiennej?\\
