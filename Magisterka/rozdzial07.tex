@@ -43,6 +43,7 @@
 % N-body simulation
 
 \chapter{Porównanie mechanizmów w językach Rust oraz C++}
+W tym rozdziale przedstawiono metryki oraz algorytmy do analizy wydajności mechanizmów programowania współbieżnego i równoległego w językach Rust oraz C++. 
 \section{Programowanie współbieżne}
 \subsection{Zarządzanie wątkami}
 Porównanie tworzenia i zarządzania wątkami obejmuje następujące parametry:
@@ -113,3 +114,8 @@ Dla porównania mechanizmów równoległości wybrano następujące algorytmy:
 Algorytmy te pozwolą na analizę efektywności zarządzania zasobami oraz synchronizacji w językach Rust i C++.
 
 Wybór powyższych benchmarków pozwoli na szczegółową analizę wydajności oraz stabilności obu języków w kontekście programowania współbieżnego i równoległego, umożliwiając sformułowanie rekomendacji dotyczących wyboru narzędzi w zależności od specyfiki projektu.
+
+\section{Metodologia badań}
+W celu zminimalizowania wpływu czynników zewnętrznych na wyniki badań, wszystkie testy zostaną przeprowadzone na tej samej konfiguracji sprzętowej oraz oprogramowania (instancje maszyn EC2 w usłudze Amazon Web Services - AWS) oraz z tymi samymi danymi testowymi. Wyniki badań zostaną przedstawione w formie tabel i wykresów, co pozwoli na łatwe porównanie wyników oraz wyciągnięcie wniosków dotyczących wydajności języków Rust i C++ w kontekście programowania współbieżnego i równoległego.
+
+%Do analizy wydajności zostaną wykorzystane narzędzia do profilowania kodu, takie jak Valgrind, GDB, LLVM oraz biblioteki do testów wydajnościowych, takie jak Google Benchmark.

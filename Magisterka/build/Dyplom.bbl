@@ -15,6 +15,11 @@ J.~Blandy, J.~Orendorff, L.~Tindall.
 \newblock {\em Programming Rust}.
 \newblock O'Reilly Media, 2021.
 
+\bibitem{IntroductionToConcurrencyAndParallelism}
+K.~Bobrov.
+\newblock {\em Grokking Concurrency}.
+\newblock Manning, 2024.
+
 \bibitem{RustAtomicsAndLocks}
 M.~Bos.
 \newblock {\em Rust Atomics and Locks: Low-Level Concurrency in Practice}.
@@ -24,7 +29,7 @@ M.~Bos.
 ByteByteGo.
 \newblock {E}{P}108: {H}ow do we design a secure system? --- blog.bytebytego.com.
 \newblock \url{https://blog.bytebytego.com/p/ep108-how-do-we-design-a-secure-system?utm_campaign=post&utm_medium=web}.
-\newblock Dostęp 12-03-2025.
+\newblock [Dostęp 09-03-2025].
 
 \bibitem{ProgramminInOpenMp}
 R.~Chandra.
@@ -114,6 +119,12 @@ M.~Mitzenmacher,  E.~Upfal.
 \newblock {\em Probability and Computing: Randomization and Probabilistic Techniques in Algorithms and Data Analysis}.
 \newblock Cambridge University Press, 2017.
 
+\bibitem{Paluch}
+W.~Paluszynski.
+\newblock {S}ystemy {C}zasu {R}zeczywistego i {S}ieci {K}omputerowe - {W}itold {P}aluszynski --- kcir.pwr.edu.pl.
+\newblock \url{https://kcir.pwr.edu.pl/~witold/scrsk/#literatura}.
+\newblock [Dostęp 10-03-2025].
+
 \bibitem{RustSafety2}
 A.~Pinho, L.~Couto, J.~Oliveira.
 \newblock Towards rust for critical systems.
@@ -129,7 +140,7 @@ L.~Rinaldi, M.~Torquati, M.~Danelutto.
 J.~Sible,  D.~Svoboda.
 \newblock Rust software security: A current state assessment.
 \newblock Carnegie Mellon University, Software Engineering Institute's Insights (blog), Dec 2022.
-\newblock Dostęp: 2025-Mar-12.
+\newblock [Dostęp: 2025-Mar-12].
 
 \bibitem{HandsOnConcurrencywithRust}
 B.~Troutwine.
