@@ -2,7 +2,7 @@
 Celem niniejszego rozdziału jest przedstawienie dotychczasowych badań i publikacji dotyczących mechanizmów programowania współbieżnego i równoległego w językach Rust i C++. Analiza literatury umożliwi zrozumienie aktualnego stanu wiedzy w tej dziedzinie, a także wskazanie na występujące luki badawcze, które niniejsza praca postara się wypełnić.
 
 Przegląd literatury odbywał się z wykorzystaniem narzędzi baz danych oferujących wyszukiwanie, filtrowanie oraz przegląd prac: Scopus, Google Scholar.\\
-W ramach bazy scopus wykorzystano następujące kwerendy do wyszukiwania:
+W ramach bazy scopus wykorzystano następujące kwerendy do wyszukiwania - tabela \ref{table:literatureReviewQueries}
 
 \begin{table}[H]
     \caption{Kwerendy użyte w bazie Scopus \protect \footnotemark}
@@ -16,7 +16,7 @@ W ramach bazy scopus wykorzystano następujące kwerendy do wyszukiwania:
 \end{table}
 \footnotetext{Ilość wyników dla poszczególnych zapytań może się różnić w zależności od daty (wyszukiwanie przeprowadzono w okresie listopad-luty 2024/25).}
 
-Autor zdecydował się również użyć nowego wbudowane narzędzia w systemie Scopus - Scopus AI. Narzędzie to oparte na sztucznej inteligencji, wspomaga eksplorację akademicką w oparciu o dane z platformy Scopus. Dzięki integracji z narzędziem Copilot optymalizuje wyszukiwania, łącząc metody semantyczne i dopasowanie słów kluczowych. Choć Scopus AI ułatwia badania, jego wyniki warto weryfikować, ponieważ mogą zawierać nieścisłości lub stronniczość. \\
+Autor zdecydował się również użyć nowego, wbudowane narzędzia w systemie Scopus - Scopus AI. Narzędzie to oparte na sztucznej inteligencji, wspomaga eksplorację akademicką w oparciu o dane z platformy Scopus. Dzięki integracji z narzędziem Copilot optymalizuje wyszukiwania, łącząc metody semantyczne i dopasowanie słów kluczowych. Choć Scopus AI ułatwia badania, jego wyniki warto weryfikować, ponieważ mogą zawierać nieścisłości lub stronniczość. \\
 Po wprowadzeniu tytułu pracy w języku angielskim jako kwerendę, Scopus AI zwrócił 9 wyników, biorąc pod uwagę kwerendę stworzoną na podstawie tytyułu pracy, zamieszczoną w listingu \ref{AIQuery}. Zwrócone prace pokrywają się z przeglądem umieszczonym w tabeli \ref{table:literatureReviewQueries} 
 
 \lstset{breaklines=true}
@@ -32,9 +32,29 @@ AND ("libraries" OR "frameworks" OR "tools" OR "APIs")
 \section{Porównanie Rust oraz C++}
 Porównanie języków programowania Rust i C++ jest przedmiotem licznych publikacji, które analizują ich różnorodne aspekty, takie jak struktura kodu, sposób kompilacji, bezpieczeństwo, wydajność oraz obsługa współbieżności i równoległości.
 
-Jednym z podstawowych kryteriów porównań jest model kompilacji. Rust i C++ są językami kompilowanymi, co oznacza, że dedykowany kompilator tłumaczy kod źródłowy na kod maszynowy przed jego wykonaniem. Dzięki temu możliwe jest uzyskanie wysokiej wydajności programów. W literaturze często podkreśla się, że Rust, w odróżnieniu od C++, kładzie większy nacisk na bezpieczeństwo pamięci oraz typów w czasie kompilacji, co ma kluczowe znaczenie w nowoczesnym oprogramowaniu. W kontekście C++ wskazuje się na jego większą elastyczność oraz bogaty ekosystem, który pozwala na szeroką gamę zastosowań, ale jednocześnie wymaga większej uwagi programistów w zakresie zarządzania pamięcią i synchronizacji wątków.
+Jednym z podstawowych kryteriów porównań jest model kompilacji. Rust i C++ są językami kompilowanymi, co oznacza, że dedykowany kompilator tłumaczy kod źródłowy na kod maszynowy przed jego wykonaniem. Dzięki temu możliwe jest uzyskanie wysokiej wydajności programów. W literaturze \cite{Lesiński} często podkreśla się, że Rust, w odróżnieniu od C++, kładzie większy nacisk na bezpieczeństwo pamięci oraz typów w czasie kompilacji, co ma kluczowe znaczenie w nowoczesnym oprogramowaniu. W kontekście C++ wskazuje się na jego większą elastyczność oraz bogaty ekosystem, który pozwala na szeroką gamę zastosowań, ale jednocześnie wymaga większej uwagi programistów w zakresie zarządzania pamięcią i synchronizacji wątków.
+% two images next to each other
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[height=12cm]{images/RustBuildsSteps.png}
+        \caption{Kroki kompilacji w języku Rust}
+        \label{fig:rust_build_steps}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[height=12cm]{images/CppBuildsSteps.png}
+        \caption{Kroki kompilacji w języku C++}
+        \label{fig:cpp_build_steps}
+    \end{minipage}
+    \caption{Porównanie kroków kompilacji w językach Rust i C++}
+\end{figure}
 
-Kolejnym ważnym aspektem poruszanym w badaniach są różnice w modelach obsługi błędów. Rust implementuje mechanizm ownership oraz lifetimes, które pozwalają na jednoznaczne zarządzanie cyklem życia zasobów w czasie kompilacji, minimalizując ryzyko wycieków pamięci. C++ oferuje alternatywne rozwiązania, takie jak wskaźniki inteligentne (smart pointers), ale pozostawia programiście większą swobodę, co może prowadzić do potencjalnych błędów. \cite{RustDifferences, RustDifferences1}
+Informacje o procesie kompilacji pochodzą z \cite{Lesiński}, które opisują integrację z LLVM i różnice w sprawdzaniu bezpieczeństwa.
+Na diagramie \ref{fig:rust_build_steps} drugi blok reprezentuje dodatkowe etapy sprawdzania bezpieczeństwa w Rust, które nie występują w C++. Z kolei na diagramie \ref{fig:cpp_build_steps} drugi blok pokazuje podstawowe sprawdzanie typów w C++, które jest mniej rygorystyczne niż system Rust.
+
+Kolejnym ważnym aspektem poruszanym w badaniach są różnice w modelach obsługi błędów. Rust implementuje mechanizm ownership oraz lifetimes, które pozwalają na jednoznaczne zarządzanie cyklem życia zasobów w czasie kompilacji, minimalizując ryzyko wycieków pamięci \cite{MigratingCtoRustforMemorySafety}. C++ oferuje alternatywne rozwiązania, takie jak wskaźniki inteligentne (smart pointers), ale pozostawia programiście większą swobodę, co może prowadzić do potencjalnych błędów. \cite{RustDifferences, RustDifferences1}
 
 \subsection{Bezpieczeństwo}
 Bezpieczeństwo języków Rust i C++ jest jednym z najczęściej analizowanych tematów w literaturze. W przypadku Rusta duży nacisk kładziony jest na eliminację całych klas błędów, takich jak null pointer dereferencing, data races oraz wycieki pamięci. Mechanizmy takie jak ownership, borrow checker oraz obowiązkowa mutowalność zmiennych (explicit mutability) są wymieniane jako kluczowe elementy zapewniające bezpieczeństwo.

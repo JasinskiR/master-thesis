@@ -9,3 +9,10 @@ Then add the following line:
 ```bash
 0 0 * * * path/auto_version_check.sh >> path/version_check.log 2>&1
 ```
+Jak się zepsuje automatyczne generowanie
+```cd /Users/rafal/Desktop/All/Studia/master/master-thesis/Magisterka
+pdflatex -output-directory=build Dyplom.tex
+bibtex build/Dyplom
+pdflatex -output-directory=build Dyplom.tex
+pdflatex -output-directory=build Dyplom.tex
+```

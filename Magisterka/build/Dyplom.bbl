@@ -84,6 +84,14 @@ S.~Lankes, J.~Breitbart, S.~Pickartz.
 \newblock Exploring rust for unikernel development.
 \newblock {\em Proceedings of the 10th Workshop on Programming Languages and Operating Systems}, strony 8--15, 2019.
 
+\bibitem{MigratingCtoRustforMemorySafety}
+P.~Larsen.
+\newblock { Migrating C to Rust for Memory Safety }.
+\newblock {\em IEEE Security \& Privacy}, 22(04):22--29, Lip. 2024.
+
+\bibitem{Lesiński}
+K.~Lesiński.
+
 \bibitem{RustPerformance4}
 Y.~Lin, S.~M. Blackburn, A.~L. Hosking, M.~Norrish.
 \newblock Rust as a language for high performance gc implementation.
@@ -110,6 +118,12 @@ L.~Rinaldi, M.~Torquati, M.~Danelutto.
 \newblock Enforcing reference capability in fastflow with rust.
 \newblock {\em Advances in Parallel Computing}, 36:396 – 405, 2020.
 \newblock Cited by: 0; All Open Access, Gold Open Access.
+
+\bibitem{SecurityInRust}
+J.~Sible,  D.~Svoboda.
+\newblock Rust software security: A current state assessment.
+\newblock Carnegie Mellon University, Software Engineering Institute's Insights (blog), Dec 2022.
+\newblock Dostęp: 2025-Mar-12.
 
 \bibitem{HandsOnConcurrencywithRust}
 B.~Troutwine.
