@@ -20,6 +20,12 @@ M.~Bos.
 \newblock {\em Rust Atomics and Locks: Low-Level Concurrency in Practice}.
 \newblock O'Reilly Media, 2022.
 
+\bibitem{bytebytegoEP108Design}
+ByteByteGo.
+\newblock {E}{P}108: {H}ow do we design a secure system? --- blog.bytebytego.com.
+\newblock \url{https://blog.bytebytego.com/p/ep108-how-do-we-design-a-secure-system?utm_campaign=post&utm_medium=web}.
+\newblock Dostęp 12-03-2025.
+
 \bibitem{ProgramminInOpenMp}
 R.~Chandra.
 \newblock {\em Parallel Programming in OpenMP}.

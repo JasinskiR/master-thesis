@@ -51,7 +51,7 @@ Jednym z podstawowych kryteriów porównań jest model kompilacji. Rust i C++ s�
     \caption{Porównanie kroków kompilacji w językach Rust i C++}
 \end{figure}
 
-Informacje o procesie kompilacji pochodzą z \cite{Lesiński}, które opisują integrację z LLVM i różnice w sprawdzaniu bezpieczeństwa.
+Informacje o procesie kompilacji pochodzą z \cite{Lesiński, rustPolishNames, TheRustProgrammingLanguage}, które opisują integrację z LLVM i różnice w sprawdzaniu bezpieczeństwa.
 Na diagramie \ref{fig:rust_build_steps} drugi blok reprezentuje dodatkowe etapy sprawdzania bezpieczeństwa w Rust, które nie występują w C++. Z kolei na diagramie \ref{fig:cpp_build_steps} drugi blok pokazuje podstawowe sprawdzanie typów w C++, które jest mniej rygorystyczne niż system Rust.
 
 Kolejnym ważnym aspektem poruszanym w badaniach są różnice w modelach obsługi błędów. Rust implementuje mechanizm ownership oraz lifetimes, które pozwalają na jednoznaczne zarządzanie cyklem życia zasobów w czasie kompilacji, minimalizując ryzyko wycieków pamięci \cite{MigratingCtoRustforMemorySafety}. C++ oferuje alternatywne rozwiązania, takie jak wskaźniki inteligentne (smart pointers), ale pozostawia programiście większą swobodę, co może prowadzić do potencjalnych błędów. \cite{RustDifferences, RustDifferences1}

@@ -1,32 +1,34 @@
-\chapter[Wstęp]{Wstęp - wypełniacz z poprzedniej pracy - do zmiany}
+\chapter[Wstęp]{Wstęp}
 % \addcontentsline{toc}{chapter}{Wstęp}  % Add unnumbered chapter to the table of contents if needed
 \section{Problem badawczy}
-Temat niniejszej pracy inżynierskiej, skupia się na stworzeniu aplikacji do wizualizacji zmian w populacji dla różnych wariantów algorytmu genetycznego. Jest to aplikacja desktop'owa, pozwalająca na ukazanie kolejnych etapów ewolucji oraz zmieniającej się z czasem populacji rozwiązań dla założonego wariantu algorytmu.
+Wraz z rozwojem nowoczesnych technologii informatycznych i rosnącą złożonością systemów obliczeniowych, znaczenia nabierają paradygmaty programowania, które pozwalają na maksymalne wykorzystanie zasobów współczesnego sprzętu komputerowego — w szczególności architektur wielordzeniowych. Programowanie współbieżne i równoległe stanowią obecnie podstawę projektowania wydajnych i niezawodnych aplikacji w wielu obszarach, od systemów operacyjnych, przez serwery wysokiej dostępności, aż po rozwiązania z zakresu sztucznej inteligencji czy gier komputerowych.
 
-Współczesny świat technologii obfituje w wyzwania i możliwości. Jednym z obszarów, który stanowi zarówno źródło problemów, jak i źródło fascynacji, jest algorytmika ewolucyjna. \linebreak
-Algorytmy genetyczne, będące jednym z kluczowych narzędzi w dziedzinie sztucznej inteligencji, naśladują procesy ewolucyjne w celu rozwiązania problemów optymalizacyjnych i wyszukiwawczych. Ze względu na rosnącą złożoność problemów, które muszą być rozwiązane, algorytmy genetyczne zdobyły na popularności w ostatnich latach. Jednak pomimo ich potencjału, efektywna analiza i rozwijanie tych algorytmów stanowi wyzwanie, które jest kluczowe dla ich skutecznego wykorzystania \.\\
-W kontekście algorytmów genetycznych, istnieje wiele wariantów, takich jak algorytmy ewolucyjne, programowanie genetyczne czy algorytmy rojowe. Każdy z tych wariantów ma swoje własne zasady działania, parametry i charakterystyki.
-Dlatego pojęcie "Aplikacja do wizualizacji zmian w populacji dla różnych wariantów algorytmu genetycznego"\ nabiera szczególnego znaczenia. To narzędzie staje się odpowiedzią na konkretne potrzeby społeczne i techniczne.
+W kontekście tych wyzwań szczególnie interesujące staje się porównanie narzędzi, jakie oferują współczesne języki programowania. Niniejsza praca magisterska koncentruje się na analizie dwóch języków: Rust oraz C++, które – mimo odmiennej filozofii projektowej – są powszechnie wykorzystywane w systemach wymagających wysokiej wydajności. Rust, jako stosunkowo młody język \cite{}, zdobywa coraz większą popularność\cite{} ze względu na nowatorskie podejście do bezpieczeństwa pamięci i współbieżności, opierające się na systemie własności (\eng{ownership}) oraz sprawdzaniu poprawności kodu na etapie kompilacji. Dzięki temu minimalizuje ryzyko wycieków pamięci, błędów synchronizacji czy wyścigów danych. Z kolei C++ – język dojrzały, o długiej historii i ugruntowanej pozycji w przemyśle – oferuje niezwykle szeroki wachlarz możliwości, jeśli chodzi o zarządzanie zasobami i niskopoziomową optymalizację, jednak często kosztem większego ryzyka błędów programistycznych.
 
-W dziedzinach takich jak inżynieria, biologia, czy analiza danych, algorytmy genetyczne są wykorzystywane do rozwiązywania problemów optymalizacyjnych, które mają realny wpływ na życie ludzi. Mogą to być trasy dostaw, projektowanie leków, czy optymalizacja produkcji. Efektywne narzędzie do analizy i wizualizacji pracy tych algorytmów może znacząco przyspieszyć procesy badawcze i projektowe .
+Wybór tych dwóch języków podyktowany jest ich rosnącym znaczeniem w obszarach wymagających efektywnego zarządzania współbieżnością i równoległością. Rust jest promowany jako bezpieczna alternatywa dla C i C++ w systemach krytycznych \cite{}, natomiast C++ nadal pozostaje filarem wielu aplikacji, w tym tych o kluczowym znaczeniu dla infrastruktury informatycznej. Porównanie ich możliwości w zakresie programowania współbieżnego i równoległego dostarcza cennych informacji dla praktyków inżynierii oprogramowania, projektantów systemów oraz badaczy eksplorujących nowe podejścia do zarządzania złożonością kodu.
 
-Obserwując ogólny trend w technologii i informatyce, który dąży ku zwiększaniu transparentności i interpretowalności algorytmów. To efekt świadomości społeczeństwa i decydentów, że coraz częściej używamy algorytmów w podejmowaniu ważnych decyzji. Warto zrozumieć, dlaczego dany algorytm działa w określony sposób i jakie ma ograniczenia. W tym kontekście, aplikacja do wizualizacji algorytmu genetycznego staje się narzędziem dla przyszłości, które pozwala na lepsze zrozumienie i kontrolowanie działania tych algorytmów .
-
-Jak podają C.Reeves, J.Rowe w swojej książce "Genetic Algorithms: Principles and Perspectives
-A Guide to GA Theory"\  początki algorytmów genetycznych sięgają lat 60. XX wieku, kiedy to John Holland zaczął badać procesy ewolucyjne w kontekście sztucznej inteligencji. 
-Inspiracją były procesy ewolucyjne występujące w przyrodzie, gdzie organizmy ewoluują i przystosowują się do zmieniającego się środowiska. Dlatego algorytmy genetyczne wykorzystują mechanizmy reprodukcji, selekcji, krzyżowania oraz mutacji, aby generować nowe rozwiązania, które są stopniowo optymalizowane w celu znalezienia najlepszego możliwego rozwiązania.\linebreak
-Od tego czasu algorytmy genetyczne przeszły długą drogę, ewoluując i dostosowując się do coraz bardziej skomplikowanych problemów.
-
-Jednak pomimo ich skuteczności, analiza czy też optymalizacja algorytmów genetycznych może być skomplikowana i trudna do zrozumienia oraz interpretacji, zwłaszcza w przypadku bardziej zaawansowanych wariantów, bądź też dla osób nieznajomych z dziedziną sztucznej inteligencji. Dlatego istnieje potrzeba narzędzi, które mogą pomóc wizualizować i interpretować te procesy.
-
-Na rynku dostępne są różne narzędzia do wizualizacji algorytmów genetycznych - chociażby wyznaczanie trasy przejazdu , jednak żadne z nich nie oferuje pełnej gamy funkcji potrzebnych do efektywnego analizowania i porównywania różnych wariantów tych algorytmów.
-
-Wprowadzenie aplikacji do wizualizacji zmian w populacji może znacząco ułatwić badaczom eksperymentowanie z różnymi wariantami algorytmów, a także pozwoli na monitorowanie zmian w populacji w czasie rzeczywistym. Aplikacja ta może również dostarczać narzędzi do analizy statystycznej wyników.\\
-
+W związku z powyższym, głównym problemem badawczym pracy są następujące pytania:
+\begin{quote}
+    \item \textbf{PB1}: 
+    \emph{Jakie są różnice i podobieństwa w podejściu do programowania współbieżnego i równoległego w językach Rust oraz C++ pod względem efektywności, bezpieczeństwa oraz dostępnych narzędzi?}
+    \item \textbf{PB2}:
+    \emph{W jaki sposób wybór konkretnego języka wpływa na wydajność i stabilność aplikacji współbieżnych oraz równoległych?}
+\end{quote}
+Odpowiedź na to pytanie zostanie udzielona poprzez analizę teoretyczną, przegląd literatury oraz eksperymentalne porównanie konkretnych mechanizmów oferowanych przez oba języki. W ramach pracy przeprowadzone zostaną testy wydajnościowe oraz analiza, które pozwolą na identyfikację różnic w podejściu do programowania współbieżnego i równoległego w językach Rust oraz C++.
 
 %%Układ dokumentu - Układ tego dokumentu przedstawia się następująco:
 \section{Struktura pracy}
-W rozdziale pierwszym przedstawiono ogólny cel i tematykę pracy inżynierskiej. Rozdział drugi opisuje cel oraz zakres pracy. Rozdział ten ma charakter informacyjny. Rozdział trzeci zawiera informacje na temat projektu aplikacji. Przedstawia mechanizm działania algorytmów genetycznych oraz ich parametrów. Rozdział czwarty skupia się na implementacji aplikacji. Zawiera on uwagi techniczne oraz przykładowe implementacje mechanizmów. Kolejny, piąty rozdział, przedstawia analizę wyników porównania mechanizmów tworzenia populacji dla różnych parametrów. Ostatni, szósty rozdział, podsumowuje pracę oraz przedstawia wyzwania jak i możliwe udoskonalenia implementacyjne aplikacji. Na samym końcu pracy znajduje się spis wykorzystanych rysunków, algorytmów oraz literatura.
+Struktura pracy została zaplanowana w sposób umożliwiający systematyczne przedstawienie zagadnienia oraz przeprowadzenie kompleksowej analizy porównawczej. Po niniejszym wprowadzeniu, rozdział drugi precyzuje cel oraz zakres pracy, określając, które aspekty mechanizmów współbieżności i równoległości będą poddane szczegółowej analizie. Następnie, w rozdziale trzecim, przedstawione zostały podstawowe pojęcia związane z programowaniem współbieżnym i równoległym – zarówno od strony teoretycznej, jak i praktycznej – w celu zbudowania wspólnego kontekstu dla dalszych rozważań.
+
+Rozdział czwarty zawiera przegląd literatury oraz wcześniejszych badań dotyczących wykorzystania języków Rust i C++ w projektowaniu systemów wielowątkowych. Zidentyfikowano w nim również istniejące luki badawcze oraz przedstawiono różnice w podejściu do bezpieczeństwa, wydajności i zarządzania pamięcią.
+
+W dalszej części pracy – odpowiednio w rozdziałach piątym i szóstym – zaprezentowano konkretne mechanizmy programowania współbieżnego i równoległego dostępne w językach Rust oraz C++. Każdy z tych rozdziałów zawiera szczegółowe omówienie modeli pamięci, używanych bibliotek (np. Tokio, Rayon, std::thread, OpenMP), metod synchronizacji (mutexy, kanały, wartości atomowe), a także wybranych konstrukcji językowych wspierających bezpieczne współdzielenie danych między wątkami.
+
+W rozdziale siódmym dokonano bezpośredniego porównania omawianych mechanizmów, koncentrując się na takich kryteriach jak zarządzanie wątkami, efektywność synchronizacji, narzut związany z bezpieczeństwem, a także wydajność obliczeniowa i sprzętowa.
+
+Rozdział ósmy poświęcony jest analizie wyników eksperymentów, w ramach których porównano działanie wybranych algorytmów zaimplementowanych w obu językach, ze szczególnym uwzględnieniem czasów wykonania, zużycia zasobów oraz stabilności działania.
+
+W końcowej części pracy, rozdział dziewiąty prezentuje wnioski oraz rekomendacje dotyczące praktycznego zastosowania języków Rust i C++ w projektach wymagających wysokiej wydajności i bezpieczeństwa współbieżnego. Pracę zamyka rozdział dziesiąty, który podsumowuje najważniejsze osiągnięcia badawcze oraz wskazuje możliwe kierunki dalszych analiz i rozwijania zaproponowanych rozwiązań.
 
 \newpage
 \section{Słownik wybranych pojęć}
