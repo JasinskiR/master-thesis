@@ -1,5 +1,14 @@
 \begin{thebibliography}{10}
 
+\bibitem{ProsAndCons}
+{S}afety: {A} comparaison between {R}ust, {C}++ and {G}o | {H}acker {N}ews --- news.ycombinator.com.
+\newblock \url{https://news.ycombinator.com/item?id=32285122}.
+\newblock [Accessed 13-03-2025].
+
+\bibitem{CUDA}
+{\em Professional CUDA C Programming}.
+\newblock Wrox Press Ltd., GBR, wydanie 1st, 2014.
+
 \bibitem{WhenIsParallelismFearlessandZeroCostwithRust?}
 J.~Abdi, G.~Posluns, G.~Zhang, B.~Wang, M.~C. Jeffrey.
 \newblock When is parallelism fearless and zero-cost with rust?
@@ -119,6 +128,11 @@ M.~Mitzenmacher,  E.~Upfal.
 \newblock {\em Probability and Computing: Randomization and Probabilistic Techniques in Algorithms and Data Analysis}.
 \newblock Cambridge University Press, 2017.
 
+\bibitem{ParallelProgramming}
+P.~Pacheco.
+\newblock {\em An Introduction to Parallel Programming}.
+\newblock Morgan Kaufmann, 2011.
+
 \bibitem{Paluch}
 W.~Paluszynski.
 \newblock {S}ystemy {C}zasu {R}zeczywistego i {S}ieci {K}omputerowe - {W}itold {P}aluszynski --- kcir.pwr.edu.pl.
@@ -141,6 +155,12 @@ J.~Sible,  D.~Svoboda.
 \newblock Rust software security: A current state assessment.
 \newblock Carnegie Mellon University, Software Engineering Institute's Insights (blog), Dec 2022.
 \newblock [Dostęp: 2025-Mar-12].
+
+\bibitem{ZastosowanieWspolbieznosci}
+H.~Team.
+\newblock {R}ust vs {C}++: {A} {Q}uick {G}uide for {D}evelopers | {H}ostwinds --- hostwinds.com.
+\newblock \url{https://www.hostwinds.com/blog/rust-vs-c-a-quick-guide-for-developers}.
+\newblock [Accessed 13-03-2025].
 
 \bibitem{HandsOnConcurrencywithRust}
 B.~Troutwine.
