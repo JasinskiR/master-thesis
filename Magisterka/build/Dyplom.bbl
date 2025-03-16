@@ -157,6 +157,16 @@ M.~Mitzenmacher,  E.~Upfal.
 \newblock {\em Probability and Computing: Randomization and Probabilistic Techniques in Algorithms and Data Analysis}.
 \newblock Cambridge University Press, 2017.
 
+\bibitem{ConcurrentSemanticComparison_2}
+S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
+\newblock A comparative study of the usability of two object-oriented concurrent programming languages.
+\newblock {\em Information and Software Technology}, 55, 11 2010.
+
+\bibitem{ConcurrentSemanticComparison_1}
+S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
+\newblock Design of an empirical study for comparing the usability of concurrent programming languages.
+\newblock {\em Information and Software Technology}, 55(7):1304--1315, 2013.
+
 \bibitem{ParallelProgramming}
 P.~Pacheco.
 \newblock {\em An Introduction to Parallel Programming}.
