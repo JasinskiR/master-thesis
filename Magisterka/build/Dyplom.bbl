@@ -1,9 +1,29 @@
 \begin{thebibliography}{10}
 
+\bibitem{wikipediaWikipedia}
+{C}++ - {W}ikipedia --- en.wikipedia.org.
+\newblock \url{https://en.wikipedia.org/wiki/C%2B%2B}.
+\newblock [Dostęp 16-03-2025].
+
+\bibitem{LanguageComparison_3}
+{C}omparing {P}rogramming {L}anguages --- cs.ucf.edu.
+\newblock \url{https://www.cs.ucf.edu/~leavens/ComS541Fall98/hw-pages/comparing/}.
+\newblock [Dostęp 16-03-2025].
+
+\bibitem{LanguageComparison_4}
+{H}ow do you compare programming languages in a coding interview? --- linkedin.com.
+\newblock \url{https://www.linkedin.com/advice/1/how-do-you-compare-programming-languages-coding}.
+\newblock [Dostęp 16-03-2025].
+
+\bibitem{wikipediaRustprogramming}
+{R}ust (programming language) - {W}ikipedia --- en.wikipedia.org.
+\newblock \url{https://en.wikipedia.org/wiki/Rust_(programming_language)}.
+\newblock [Dostęp 16-03-2025].
+
 \bibitem{ProsAndCons}
 {S}afety: {A} comparaison between {R}ust, {C}++ and {G}o | {H}acker {N}ews --- news.ycombinator.com.
 \newblock \url{https://news.ycombinator.com/item?id=32285122}.
-\newblock [Accessed 13-03-2025].
+\newblock [Dostęp 13-03-2025].
 
 \bibitem{CUDA}
 {\em Professional CUDA C Programming}.
@@ -13,6 +33,15 @@
 J.~Abdi, G.~Posluns, G.~Zhang, B.~Wang, M.~C. Jeffrey.
 \newblock When is parallelism fearless and zero-cost with rust?
 \newblock {\em Proceedings of the 36th ACM Symposium on Parallelism in Algorithms and Architectures}, SPAA '24, strona 27–40, New York, NY, USA, 2024. Association for Computing Machinery.
+
+\bibitem{LanguageComparison_1}
+S.~Ali,  S.~Qayyum.
+\newblock A pragmatic comparison of four different programming languages, 06 2021.
+
+\bibitem{LanguageComparison_2}
+Z.~Alomari, O.~Halimi, K.~Sivaprasad, C.~Pandit.
+\newblock Comparative studies of six programming languages.
+\newblock 04 2015.
 
 \bibitem{UnsafeRust}
 V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
@@ -150,17 +179,28 @@ L.~Rinaldi, M.~Torquati, M.~Danelutto.
 \newblock {\em Advances in Parallel Computing}, 36:396 – 405, 2020.
 \newblock Cited by: 0; All Open Access, Gold Open Access.
 
+\bibitem{FFTPerformance}
+M.~P. Rooney,  S.~J. Matthews.
+\newblock Evaluating fft performance of the c and rust languages on raspberry pi platforms.
+\newblock {\em 2023 57th Annual Conference on Information Sciences and Systems (CISS)}, strony 1--6, 2023.
+
 \bibitem{SecurityInRust}
 J.~Sible,  D.~Svoboda.
 \newblock Rust software security: A current state assessment.
 \newblock Carnegie Mellon University, Software Engineering Institute's Insights (blog), Dec 2022.
 \newblock [Dostęp: 2025-Mar-12].
 
+\bibitem{PPL1_2}
+T.~Silva, J.~Bispo, T.~Carvalho.
+\newblock Foundations for a rust-like borrow checker for c.
+\newblock strona 155 – 165, 2024.
+\newblock Cited by: 0; All Open Access, Hybrid Gold Open Access.
+
 \bibitem{ZastosowanieWspolbieznosci}
 H.~Team.
 \newblock {R}ust vs {C}++: {A} {Q}uick {G}uide for {D}evelopers | {H}ostwinds --- hostwinds.com.
 \newblock \url{https://www.hostwinds.com/blog/rust-vs-c-a-quick-guide-for-developers}.
-\newblock [Accessed 13-03-2025].
+\newblock [Dostęp 13-03-2025].
 
 \bibitem{HandsOnConcurrencywithRust}
 B.~Troutwine.
@@ -187,6 +227,11 @@ V.~Q.~T. (vuquangtrong@gmail.com).
 A.~Williams.
 \newblock {\em C++ Concurrency in Action}.
 \newblock Manning, 2019.
+
+\bibitem{PPL1_1}
+X.~Yin, Z.~Huang, S.~Kan, G.~Shen.
+\newblock Safemd: Ownership-based safe memory deallocation for c programs.
+\newblock {\em Electronics}, 13(21), 2024.
 
 \bibitem{RustFC}
 Z.~Yu, L.~Song, Y.~Zhang.
