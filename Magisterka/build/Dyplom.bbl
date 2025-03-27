@@ -10,10 +10,20 @@
 \newblock \url{https://www.cs.ucf.edu/~leavens/ComS541Fall98/hw-pages/comparing/}.
 \newblock [Dostęp 16-03-2025].
 
+\bibitem{nvidiaCUDAToolkit}
+{C}{U}{D}{A} {T}oolkit - {F}ree {T}ools and {T}raining --- developer.nvidia.com.
+\newblock \url{https://developer.nvidia.com/cuda-toolkit}.
+\newblock [Dostęp 22-03-2025].
+
 \bibitem{LanguageComparison_4}
 {H}ow do you compare programming languages in a coding interview? --- linkedin.com.
 \newblock \url{https://www.linkedin.com/advice/1/how-do-you-compare-programming-languages-coding}.
 \newblock [Dostęp 16-03-2025].
+
+\bibitem{rustgpuRust}
+{R}ust {G}{P}{U} --- rust-gpu.github.io.
+\newblock \url{https://rust-gpu.github.io}.
+\newblock [Dostęp 22-03-2025].
 
 \bibitem{wikipediaRustprogramming}
 {R}ust (programming language) - {W}ikipedia --- en.wikipedia.org.
@@ -24,6 +34,16 @@
 {S}afety: {A} comparaison between {R}ust, {C}++ and {G}o | {H}acker {N}ews --- news.ycombinator.com.
 \newblock \url{https://news.ycombinator.com/item?id=32285122}.
 \newblock [Dostęp 13-03-2025].
+
+\bibitem{docsVulkanoRust}
+vulkano - {R}ust --- docs.rs.
+\newblock \url{https://docs.rs/vulkano/0.12.0/vulkano/}.
+\newblock [Dostęp 22-03-2025].
+
+\bibitem{wgpuWgpuPortable}
+wgpu: portable graphics library for {R}ust --- wgpu.rs.
+\newblock \url{https://wgpu.rs}.
+\newblock [Dostęp 22-03-2025].
 
 \bibitem{CUDA}
 {\em Professional CUDA C Programming}.
@@ -83,6 +103,12 @@ T.-C. Chen, M.~Dezani-Ciancaglini, N.~Yoshida.
 M.~Costanzo, E.~Rucci, M.~Naiouf, A.~De~Giusti.
 \newblock Performance vs programming effort between rust and c on multicore architectures: Case study in n-body.
 \newblock {\em 2021 XLVII Latin American Computing Conference (CLEI)}, strony 1--10. IEEE, 2021.
+
+\bibitem{rainbow}
+R.~DeWolf.
+\newblock {I}ntroducing {R}ainbow: {C}ompare the {P}erformance of {D}ifferent {P}rogramming {L}anguages --- medium.com.
+\newblock \url{https://medium.com/better-programming/introducing-rainbow-compare-the-performance-of-different-programming-languages-f08a67453cd4 }.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{RustDifferences1}
 Z.~Fehervari.
