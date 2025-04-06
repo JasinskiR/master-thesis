@@ -68,6 +68,11 @@ V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
 \newblock How do programmers use unsafe rust?
 \newblock {\em Proceedings of the ACM on Programming Languages}, 4(OOPSLA):1--27, 2020.
 
+\bibitem{Besozzi}
+V.~Besozzi.
+\newblock Ppl: Structured parallel programming meets rust.
+\newblock {\em 2024 32nd Euromicro International Conference on Parallel, Distributed and Network-Based Processing (PDP)}, strony 78--87, 2024.
+
 \bibitem{rustPolishNames}
 J.~Blandy, J.~Orendorff, L.~Tindall.
 \newblock {\em Programming Rust}.
@@ -132,6 +137,10 @@ Y.~Gusakov.
 \newblock \url{https://qit.software/c-vs-rust-6-key-differences/}.
 \newblock [Dostęp 28-01-2025].
 
+\bibitem{heyman2020comparison}
+H.~Heyman,  L.~Brandefelt.
+\newblock A comparison of performance \& implementation complexity of multithreaded applications in rust, java and c++, 2020.
+
 \bibitem{RapidInnovationMasteringRust}
 R.~Innovation.
 \newblock {M}astering {R}ust {C}oncurrency \& {P}arallelism: {U}ltimate {G}uide 2024 --- rapidinnovation.io.
@@ -177,6 +186,10 @@ M.~Lindgren.
 \newblock {I}ntroduction - {C}omparing parallel {R}ust and {C}++ --- parallel-rust-cpp.github.io.
 \newblock \url{https://parallel-rust-cpp.github.io}.
 \newblock [Dostęp 28-01-2025].
+
+\bibitem{martins2025npbrustnasparallelbenchmarks}
+E.~M. Martins, L.~G. Faé, R.~B. Hoffmann, L.~S. Bianchessi, D.~Griebler.
+\newblock Npb-rust: Nas parallel benchmarks in rust, 2025.
 
 \bibitem{mitzenmacher2017probability}
 M.~Mitzenmacher,  E.~Upfal.
