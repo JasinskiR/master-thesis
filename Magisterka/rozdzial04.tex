@@ -73,7 +73,7 @@ AND ("libraries" OR "frameworks" OR "tools" OR "APIs")
 
     \end{tabular}
 \end{table}
-Ze względu na dużą ilośc wyników zostało wzięte pod uwagę pierwsze 10 stron bazy. Po uwzględnieniu kryterium selekcji oraz wyłączenia, które zostały opisane w podrozdziale \ref{KryteriaSelekcji}, uzyskano 12 wyników.\\
+Ze względu na dużą ilośc wyników zostało wzięte pod uwagę pierwsze 10 stron bazy. Po uwzględnieniu kryterium selekcji oraz wyłączenia, które zostały opisane w podrozdziale \ref{KryteriaSelekcji}, uzyskano 9 wyników.\\
 \footnotetext{Ilość wyników dla poszczególnych zapytań może się różnić w zależności od daty (wyszukiwanie przeprowadzono w okresie marzec-kwiecień 2025).}
 
 \section{Porównanie Rust oraz C++}
@@ -117,6 +117,7 @@ Na diagramie \ref{fig:rust_build_steps} drugi blok reprezentuje dodatkowe etapy 
 C++ nadal pozostaje językiem preferowanym w projektach o krytycznym znaczeniu wydajnościowym, takich jak gry komputerowe, symulacje fizyczne czy systemy wbudowane, choć Rust zaczyna zdobywać popularność w tych obszarach ze względu na większe bezpieczeństwo przy porównywalnej wydajności. 
 
 \subsection{Programowanie współbieżne oraz równoległe}
+\label{Współbieżność}
 Współbieżność i równoległość to kluczowe elementy programowania w  językach Rust i C++. Oba języki oferują zaawansowane narzędzia i biblioteki do zarządzania wielowątkowością.
 
 Rust wyróżnia się systemem własności \eng{ownership} i wbudowanym mechanizmem wykrywania błędów współbieżności, co eliminuje wyścigi danych w czasie kompilacji. Narzędzia takie jak Tokio i Rayon pozwalają na łatwe tworzenie i zarządzanie zadaniami asynchronicznymi i równoległymi.
@@ -140,10 +141,9 @@ Można również znaleźć pracę, która przedstawia wykorzystanie biblioteki o
 \section{Podsumowanie}
 Na podstawie przeglądu literatury oraz zadanych pytań do przeglądu literatury można wskazać na następujące odpowiedzi
 \subsubsection{PPL1: Jakie główne koncepcje/teorie dominują w literaturze dotyczącej porównania języków Rust oraz C++?}
-W literaturze dominują badania porównawcze bezpieczeństwa, wydajności oraz zarządzania pamięcią w językach Rust i C++ \cite{PPL1_1} - szczegółowo opisane w podrozdziałach \ref{Bezpieczeństwo} oraz \ref{CzasWykonania}. W kontekście współbieżności i równoległości brakuje systematycznych analiz porównawczych.
+W literaturze dominują badania porównawcze bezpieczeństwa, wydajności oraz zarządzania pamięcią w językach Rust i C++ - bardziej szczegółowo opisane w podrozdziałach \ref{Bezpieczeństwo} oraz \ref{CzasWykonania}. W kontekście współbieżności i równoległości można zauważyć znaczący wzrost prac w ubiegłych latach, co przedstawia przegląd opisany w podrozdziale \ref{Współbieżność}.
 
-\subsubsection{PPL2: Jakie metody badawcze są najcz
-ęściej stosowane do analizy różnic pomiędzy językami ?}
+\subsubsection{PPL2: Jakie metody badawcze są najczęściej stosowane do analizy różnic pomiędzy językami ?}
 W literaturze oraz w dotychczasowych analizach \cite{LanguageComparison_1,LanguageComparison_2,LanguageComparison_3,LanguageComparison_4} wskazano szereg kryteriów istotnych przy porównywaniu lub ocenie języków programowania ogólnego przeznaczenia. Do najważniejszych należą: 
     \begin{itemize}
         \item Prostota konstrukcji języka, mająca bezpośredni wpływ na łatwość programowania i zrozumiałość kodu
@@ -173,11 +173,22 @@ W literaturze istnieje ograniczona liczba systematycznych metodologii porównuj�
 W ramach porównania mechanizmów równoległości w obu językach, opisanych na stronie \cite{parallelrustcppIntroductionComparing} zastosowano konteneryzację obrazu programu a nastęonie uruchmoenie go na maszynie testowej. Jednak jak podaje arytkuł na stronie Medium \cite{rainbow} może to prowadzić do nie uwzględnienia wpływu takich czynników jak czas uruchamiania, rozmiar obrazu i zużycie pamięci. Podaje również metodę \textit{Rainbow}, która testuje przepustowość, uruchamiając kontenery na podobnej infrastrukturze i używając licznika Redis do śledzenia obliczeń.
 
 \subsubsection{PPL5: Jakie aspekty programowania współbieżnego i równoległego w Rust i C++ nie zostały dostatecznie zbadane w literaturze?}
-badania skupiały się przede wszystkim na ogólnych aspektach porównawczych bezpieczeństwa pamięci, zarządzania zasobami oraz wydajności kompilacji i wykonania w językach Rust i C++. Niemniej jednak, istnieją wyraźne luki badawcze, które wymagają pogłębionej analizy, w tym
+Dotychczasowe badania naukowe dotyczące programowania współbieżnego w językach Rust i C++ koncentrowały się przede wszystkim na ogólnych aspektach, takich jak bezpieczeństwo pamięci, kontrola dostępu do danych, ergonomia kodu oraz wydajność kompilacji i wykonania. W szczególności analizowano podejście języków do eliminacji błędów wykonawczych (np. data races), mechanizmy typowania oraz zarządzanie zasobami systemowymi. Przykładem mogą być prace \cite{heyman2020comparison}, które zestawiają Rust i C++ w kontekście praktycznych implementacji aplikacji wielowątkowych, czy badania \cite{martins2025npbrustnasparallelbenchmarks}, porównujące implementacje benchmarków równoległych.
+
+Niemniej jednak, najnowsze publikacje wskazują na wypełnienie wielu wcześniej istniejących luk, zwłaszcza w zakresie porównania konkretnych konstrukcji językowych (np. async/await, kanały, skeletons) oraz empirycznej weryfikacji wydajności bibliotek wspierających równoległość (np. PPL, Rayon, OpenMP).
+
+Pomimo tego, w literaturze wciąż można zidentyfikować kilka istotnych obszarów badawczych, które pozostają niewystarczająco zbadane:
 \begin{itemize}
-    \item Systematyczne porównanie specyficznych mechanizmów synchronizacji i zarządzania wątkami, takich jak mutexy, semafory, bariery czy kanały komunikacyjne. Brakuje kompleksowych studiów empirycznych, które umożliwiłyby ocenę efektywności oraz narzutu związanych z implementacją tych mechanizmów w obu językach.
-    \item Niedostatecznie zbadany wpływ przyjętych modeli programowania współbieżnego i równoległego na skalowalność i stabilność systemów wielowątkowych, szczególnie w kontekście aplikacji o wysokiej konkurencyjności oraz dynamicznie zmieniających się obciążeń.
-    \item Ograniczona liczba badań eksperymentalnych, które wykorzystują benchmarki do porównania realizacji konkretnych konstrukcji językowych (np. asynchroniczności, operacji atomowych) w Rust i C++. Taka analiza mogłaby uwzględniać zarówno aspekty wydajnościowe, jak i bezpieczeństwa wykonywania.
+    \item \textbf{Wpływ architektury sprzętowej na zachowanie systemów współbieżnych:}\\
+    Większość dotychczasowych badań prowadzono na klasycznych architekturach x86\_64. Brakuje natomiast analiz zachowania aplikacji wielowątkowych w Rust i C++ na alternatywnych platformach, takich jak ARM, RISC-V czy systemy heterogeniczne (np. SoC zawierające zarówno CPU, jak i akceleratory). Tego typu analizy są szczególnie istotne w kontekście rozwoju systemów wbudowanych oraz IoT, gdzie Rust zyskuje coraz większą popularność.
+    \item \textbf{Koszt abstrakcji oraz narzut związany z modelem bezpieczeństwa Rust:}\\
+    Choć bezpieczeństwo współbieżności w Rust jest jego kluczowym atutem, literatura rzadko podejmuje próbę precyzyjnego oszacowania narzutu wydajnościowego wynikającego z jego rygorystycznego modelu własności i borrow checkera. Istnieje potrzeba eksperymentalnych badań porównawczych, które wykazałyby, w jakim stopniu koszt ten wpływa na skalowalność aplikacji w środowiskach o dużym współczynniku równoległości.
+    \item \textbf{Porównanie ergonomii rozwiązań współbieżnych na poziomie idiomatycznym i bibliotekowym:}\\
+    Chociaż wiele prac omawia techniczne możliwości języków (np. std::thread, tokio, OpenMP, std::thread w C++), nadal brakuje badań jakościowych dotyczących ergonomii kodu, łatwości debugowania oraz odporności na błędy logiczne podczas implementacji systemów wielowątkowych. Takie analizy mogłyby obejmować porównania idiomatycznych podejść (np. actor model, CSP, fork-join), oferowanych przez biblioteki Rust i C++.
+    \item \textbf{Zachowanie systemów współbieżnych w warunkach zmiennego obciążenia i konkurencyjnego dostępu:}\\
+    Istnieje luka w badaniach dotyczących stabilności i odporności aplikacji na skoki obciążenia lub dynamiczną alokację wątków. Potrzebne są badania stresowe i profilowanie systemów w warunkach rzeczywistej konkurencji (np. serwery HTTP, silniki obliczeniowe), co pozwoliłoby ocenić adaptacyjność strategii planowania i zarządzania wątkami w Rust i C++.
+    \item \textbf{Weryfikacja formalna i modelowanie błędów współbieżności:}\\
+    Pomimo iż język Rust oferuje silne gwarancje bezpieczeństwa na etapie kompilacji - statyczna gwarancja bezpieczeństwa, zagadnienia związane z formalną weryfikacją własności współbieżnych, takich jak żywotność \eng{liveness}, brak zagłodzenia \eng{starvation-freedom} czy deterministyczność wykonania, pozostają w literaturze stosunkowo słabo zbadane. Potencjalnie wartościowym kierunkiem dalszych analiz byłoby porównanie dostępnych narzędzi formalnych, takich jak weryfikatory modeli, w kontekście języka Rust oraz innych języków programowania współbieżnego. Tego rodzaju zestawienie mogłoby przyczynić się do lepszego zrozumienia możliwości i ograniczeń istniejących podejść do formalnej weryfikacji w środowiskach wielowątkowych.
 \end{itemize}
 
 
