@@ -1,252 +1,109 @@
-\chapter{Przegląd literatury}
-Celem niniejszego rozdziału jest przedstawienie dotychczasowych badań i publikacji dotyczących mechanizmów programowania współbieżnego i równoległego w językach Rust i C++. Analiza literatury umożliwi zrozumienie aktualnego stanu wiedzy w tej dziedzinie, a także wskazanie na występujące luki badawcze, które niniejsza praca postara się wypełnić.
-Na samym wstępie zostały postawione następujące pytania do przeglądu literatury, które pomogą zrozumieć oraz sprawdzić aktualny stan wiedzy jeżeli chodzi o porównanie języków Rust oraz C++:
+\chapter{Wybrane mechanizmy w języku Rust}
+o czym rozdział
+\section{Podejście do współbieżności i równoległości}
 
-\begin{quote}
-    \item \textbf{PPL1:} \emph{Jakie główne koncepcje/teorie dominują w literaturze dotyczącej porównania języków Rust oraz C++?} \label{PPL1}
-    \item \textbf{PPL2:} \emph{Jakie metody badawcze są najczęściej stosowane do analizy różnic pomiędzy językami?}
-    \item \textbf{PPL3:} \emph{Jak wygląda porównanie dostępności i dojrzałości bibliotek do programowania współbieżnego i równoległego w obu językach?}
-    \item \textbf{PPL4:} \emph{Czy istnieją systematyczne metodologie porównywania języków programowania w kontekście współbieżności, które można zastosować do analizy Rust i C++?}
-    \item \textbf{PPL5:} \emph{Jakie aspekty programowania współbieżnego i równoległego w Rust i C++ nie zostały dostatecznie zbadane w literaturze?}
-    \item \textbf{PPL6:} \emph{Jaki jest stan wiedzy na temat wykorzystania programowania współbieżnego w ramach GPU w językach Rust i C++?}
-\end{quote}
+Rozwój języka Rust oferuje szereg funkcji, które czynią go dobrym wyborem do programowania współbieżnego oraz równoległego. Kluczowymi elementami, które wyróżniają go na tle innych języków programowania są \cite{rustPolishNames}:
+\begin{enumerate}
+    \item Własność \eng {ownership} i pożyczanie \eng {borrow}: Model własności języka Rust zapewnia, że dane są bezpiecznie współdzielone między wątkami bez ryzyka wyścigów danych \eng{races}.
+    \item Nieustraszona współbieżność \eng{Fearless Concurrency}: System typów Rusta wymusza reguły w czasie kompilacji, pozwalając programistom na pisanie współbieżnego kodu bez obawy o typowe pułapki.
+    \item Inteligentne wskaźniki \eng{smart pointers}: Abstrakcje wspierające korzystanie oraz przesyłanie danych w programowaniu współbieżnym oraz równoległym.
+\end{enumerate}
 
-Odpowiedzi na powyższe pytania pozwolą na zidentyfikowanie kluczowych obszarów, które wymagają dalszych badań oraz na wskazanie na potencjalne kierunki rozwoju w dziedzinie programowania współbieżnego i równoległego w językach Rust i C++.
-\subsection{Metodologia przeglądu literatury}
-Proces przeglądu literatury został zrealizowany zgodnie z zasadami przeglądu systematycznego, co oznaczało zastosowanie jasno określonych kryteriów selekcji i wyłączenia. Główne źródła literaturowe obejmowały artykuły naukowe, materiały konferencyjne oraz dokumentację techniczną. Wyszukiwanie przeprowadzono w renomowanych bazach danych naukowych oraz repozytoriach zawierających publikacje z zakresu inżynierii oprogramowania i języków programowania. Dodatkowo zostały również uwzględnione źródła internetowe oraz dokumentacje techniczne.
+\subsection{Ownership oraz borrow}
+\label{ownership_borrow}
+Własność \eng {ownership} jest fundamentalnym konceptem w języku Rust, który zapewnia bezpieczeństwo pamięci bez konieczności stosowania mechanizmu odśmiecania \eng{garbage collection}. Każda wartość posiada jednego właściciela, który jest odpowiedzialny za zwolnienie pamięci zajmowanej przez tę wartość, gdy wychodzi ona z zakresu \eng{scope}. Model własności zapobiega wyścigom danych i zapewnia efektywne zarządzanie pamięcią.\\
+Kluczowe zasady własności:
+\begin{itemize}
+    \item Każda wartość ma jednego właściciela.
+    \item Gdy właściciel wychodzi z zakresu, wartość zostaje usunięta \eng{ropped}.
+    \item Własność może zostać przeniesiona \eng{moved} na inną zmienną.
+\end{itemize}
 
-Przegląd literatury odbywał się z wykorzystaniem narzędzi baz danych oferujących wyszukiwanie, filtrowanie oraz przegląd prac: Scopus, Google Scholar.
-
-\subsection{Kryteria selekcji oraz wyłączenia}
-\label{KryteriaSelekcji}
-W procesie selekcji literatury uwzględniano przede wszystkim publikacje wydane po 2012 roku, co wynika z faktu, iż w tym właśnie roku zadebiutował język Rust \cite{wikipediaRustprogramming}. Wyjątek stanowiły prace o charakterze ogólnym lub takie, które nie odnosiły się bezpośrednio do języka Rust, lecz zawierały istotne informacje dla problematyki badawczej niniejszej pracy.
-
-Analiza obejmowała literaturę w języku polskim oraz angielskim, przy czym zdecydowana większość źródeł stanowiły publikacje anglojęzyczne. Selekcja materiałów opierała się na zgodności tematycznej z zakresem badań. W przypadku wątpliwości co do adekwatności danej pozycji, decyzja o jej włączeniu do przeglądu podejmowana była na podstawie analizy streszczenia. Jeśli po tej analizie publikacja wydawała się istotna, przechodzono do pełnej oceny jej treści.
-
-Publikacje, które po dogłębnej analizie okazywały się nieodpowiednie dla głównego problemu badawczego, nie były uwzględniane w zasadniczej części pracy. Niemniej jednak, jeśli przyczyniły się do lepszego zrozumienia badanego zagadnienia lub pomogły w odpowiedzi na pytania do przeglądu literatury \ref{PPL1}, były one odnotowywane jako materiały pomocnicze. Prace niespełniające powyższych kryteriów lub te, które nie są dostępne za pośrednictwem dostępnych metod (bądź też braku odpowiedzi twórców o prośbę udostępnienia pracy) były wykluczane z dalszej analizy.
-
-
-\subsection{Baza Scopus}
-W ramach bazy scopus wykorzystano następujące kwerendy do wyszukiwania - tabela \ref{table:literatureReviewQueries}
-
-\begin{table}[H]
-    \caption{Kwerendy użyte w bazie Scopus \protect \footnotemark}
-    \label{table:literatureReviewQueries}
-    \begin{tabular}{|c|p{11cm}|c|}
-    \hline
-    Lp. & Kwerenda & Liczba wyników \\ \hline
-    1 & ALL ("concurrent programming"\ OR "parallel programming") AND (ALL ("Rust") AND ALL ("C++")) & 444 \\ \hline
-
-    2 & ALL ("concurrent programming"\ OR "parallel programming") AND (ALL ("Rust") AND ALL ("C++") ) AND ( ALL ("compare")) & 28 \\ \hline
-
-    3 & (TITLE-ABS-KEY(("concurrent programming"\ OR "parallel programming") AND ("Rust"\ AND "C++"))) AND (TITLE-ABS-KEY("comparison"\ OR "evaluation"\ OR "benchmark")) & 6 \\ \hline
-
-    4 & (TITLE-ABS-KEY(("thread"\ OR "async"\ OR "future"\ OR "actor model"\ OR "message passing"\ OR "shared memory") AND ("Rust"\ AND "C++"))) AND (TITLE-ABS-KEY("comparison"\ OR "performance"\ OR "evaluation")) & 50 \\ \hline
-
-    5 & (TITLE-ABS-KEY(("Rust"\ AND "C++") AND ("concurrency model"\ OR "parallel constructs"\ OR "multithreading"))) AND (TITLE-ABS-KEY("comparison"\ OR "study")) & 2 \\ \hline
-
-    \end{tabular}
-\end{table}
-\footnotetext{Ilość wyników dla poszczególnych zapytań może się różnić w zależności od daty (wyszukiwanie przeprowadzono w okresie listopad-luty 2024/25).}
-
-W celu identyfikacji literatury związanej z porównaniem wybranych mechanizmów programowania współbieżnego i równoległego w językach Rust i C++, opracowano pięć zapytań w bazie Scopus, z których każde miało określony cel badawczy. Pierwsze zapytanie miało na celu uzyskanie ogólnego przeglądu literatury, wyszukując wszystkie dokumenty, w których występują jednocześnie zagadnienia programowania współbieżnego lub równoległego oraz języki Rust i C++, niezależnie od kontekstu. Pozwoliło to oszacować ogólną skalę badań łączących te zagadnienia. Drugie zapytanie zawężało zakres wyszukiwania poprzez dodanie słowa kluczowego „compare”, co umożliwiło wyodrębnienie publikacji, w których dokonano bezpośredniego porównania języków Rust i C++ w kontekście współbieżności lub równoległości. Dzięki temu uzyskano bardziej ukierunkowany zbiór literatury odnoszącej się do analizy porównawczej. Trzecie zapytanie charakteryzowało się większą precyzją, ograniczając wyniki do tytułów, streszczeń oraz słów kluczowych, i uwzględniało wyłącznie publikacje zawierające odniesienia do ewaluacji, porównań bądź benchmarków języków Rust i C++. Takie podejście pozwoliło wyselekcjonować najbardziej tematycznie powiązane prace. Czwarte zapytanie miało charakter bardziej techniczny, koncentrując się na konkretnych mechanizmach współbieżności, takich jak wątki, asynchroniczność, obiekty typu futury, model aktorów, przesyłanie komunikatów czy pamięć współdzielona, w połączeniu z terminami dotyczącymi wydajności i oceny. Umożliwiło to dotarcie do badań analizujących niskopoziomowe aspekty działania tych mechanizmów w obu językach. Piąte zapytanie skupiało się na poziomie koncepcyjnym, wyszukując publikacje zawierające takie terminy jak model współbieżności, konstrukty równoległe czy wielowątkowość, wraz z frazami dotyczącymi porównań lub analiz. Celem było zidentyfikowanie prac badających różnice w podejściu do współbieżności na poziomie architektury języka i jego konstrukcji wewnętrznych.
-
-Autor zdecydował się również użyć nowego, wbudowane narzędzia w systemie Scopus - Scopus AI. Narzędzie to oparte na sztucznej inteligencji, wspomaga eksplorację akademicką w oparciu o dane z platformy Scopus. Dzięki integracji z narzędziem Copilot optymalizuje wyszukiwania, łącząc metody semantyczne i dopasowanie słów kluczowych. Choć Scopus AI ułatwia badania, jego wyniki warto weryfikować, ponieważ mogą zawierać nieścisłości lub stronniczość. \\
-Po wprowadzeniu tytułu pracy w języku angielskim jako kwerendę, Scopus AI zwrócił 9 wyników, biorąc pod uwagę kwerendę stworzoną na podstawie tytyułu pracy, zamieszczoną w listingu \ref{AIQuery}. Zwrócone prace pokrywają się z przeglądem umieszczonym w tabeli \ref{table:literatureReviewQueries} 
-
-\lstset{breaklines=true}
-\begin{lstlisting}[caption=Kwerenda wygenerowana przez AI, label=AIQuery]
-("concurrent programming" OR "parallel programming" OR "multithreading" OR "asynchronous")
-AND ("Rust" OR "C++" OR "programming languages" OR "software development")
-AND ("performance" OR "efficiency" OR "scalability" OR "resource management")
-AND ("synchronization" OR "thread safety" OR "deadlock" OR "race condition")
-AND ("libraries" OR "frameworks" OR "tools" OR "APIs")
+Pożyczanie \eng{borrowing} umożliwia tworzenie referencji do wartości bez przejmowania jej własności. Jest to kluczowe dla umożliwienia różnym częściom programu dostępu do danych bez ich duplikowania. Rust pozwala na pożyczanie wartości według dwóch zasad:
+\begin{itemize}
+    \item Pożyczanie niemutowalne (domyślne) \eng{immutable}: Można utworzyć wiele referencji, ale żadna z nich nie może modyfikować wartości.
+    \item Pożyczanie mutowalne \eng{mutable}: W danym momencie może istnieć tylko jedna mutowalna referencja, co zapobiega wyścigom danych.
+\end{itemize}
+\begin{lstlisting}[language=Rust,caption=Przykład mechanizmu borrow, label=borrow_example]
+fn main() {
+    let s1 = String::from("Hello World");
+    let s2 = &s1; // Immutable borrow - pożyczka niemutowalna
+    println!("{}", s2); // Ok
+    // let s3 = &mut s1; // Error
+}
 \end{lstlisting}
+W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \textit{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \textit{s3} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \textit{s2} (domyślnie)
 
-Na podstawie zapytań wykonanych w bazie Scopus zidentyfikowano publikacje odpowiadające tematyce współbieżności i równoległości w językach Rust i C++ (prace w ramach poszczególny zapytaniach się powtarzały). Jednak z uwagi na ograniczenia czasowe oraz objętość wyników, szczegółowej analizie poddano jedynie pierwsze 15 stron wyników, jeżeli było ich więcej, co odpowiada około 150 pracom.
 
-Proces selekcji, obejmujący kolejne etapy oceny tematycznej, lektury streszczeń i wybranych pełnych tekstów zamieszczono w tabeli \ref{table:selectionProcessScopus}.
+\subsection{Nieustraszona współbieżność}
+Mechanizm ten wynika bezpośrednio z rygorystycznych reguł systemu typów i modelu własności, które są integralną częścią tego języka. Dzięki temu Rust pozwala na tworzenie kodu współbieżnego, minimalizując ryzyko wystąpienia typowych błędów, takich jak wyścigi danych czy nieokreślone zachowanie wynikające z użycia wskaźników do już zwolnionej pamięci \eng{dangling pointers}.
 
-\begin{table}[H]
-    \caption{Przebieg selekcji literatury (baza Scopus)} 
-    \label{table:selectionProcessScopus}
-    \begin{tabular}{|c|p{11.5cm}|c|}
-    \hline
-    Etap & Opis & Liczba prac  \\ \hline 
-    1 & Prace wyjściowe (przejrzane – pierwsze 15 stron wyników) & 247 \\ \hline 
-    2 & Wstępna selekcja tematyczna – usunięcie prac niezwiązanych bezpośrednio z tematem badania & 97 \\ \hline 
-    3 & Lektura streszczeń – eliminacja pozycji bez wartości empirycznej lub porównawczej & 39 \\ \hline 
-    4 & Analiza pełnych treści – wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 12 \\ \hline 
-    5 & Prace kluczowe dla problemu badawczego – porównania/omówienie mechanizmów w Rust i C++ & 9 \\ \hline 
-    \end{tabular} 
-\end{table}
+Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez analizę własności i okresu życia danych \eng{lifetimes}. Mechanizm ten zapobiega jednoczesnemu mutowalnemu dostępowi do tych samych danych w różnych wątkach (opisane w punkcie \ref{ownership_borrow}), co eliminuje potrzebę ręcznego zarządzania pamięcią czy synchronizacji przez programistę. Takie podejście czyni współbieżność w Rust nie tylko bezpieczną, ale również przewidywalną, co znacząco ułatwia jej implementację. \cite{RustFC}
 
-\subsection{Baza Google Scholar}
-\begin{table}[H]
-    \caption{Kwerendy użyte w bazie Scopus \protect \footnotemark}
-    \label{table:literatureReviewQueries}
-    \begin{tabular}{|c|p{11cm}|c|}
-    \hline
-    Lp. & Kwerenda & Liczba wyników \\ \hline
-    1 & Comparison of selected concurrent and parallel programming mechanisms in Rust and C++ & 321 \\ \hline
-
-    \end{tabular}
-\end{table}
-Podobnie jak w przypadku bazy Scopus, ze względu na dużą ilośc wyników zostało wzięte pod uwagę pierwsze 10 stron bazy (100 wyników). Proces selekcji, obejmujący kolejne etapy oceny tematycznej, lektury streszczeń i wybranych pełnych tekstów, przebiegał według poniższego schematu zamieszczono w tabeli \ref{table:selectionProcessGoogle}
-\begin{table}[H]
-    \caption{Przebieg selekcji literatury (baza Google Scholar)} 
-    \label{table:selectionProcessGoogle}
-    \begin{tabular}{|c|p{11.5cm}|c|}
-    \hline
-    Etap & Opis & Liczba prac  \\ \hline 
-    1 & Prace wyjściowe (przejrzane – pierwsze 10 stron wyników) & 100 \\ \hline 
-    2 & Wstępna selekcja tematyczna – usunięcie prac niezwiązanych bezpośrednio z tematem badania & 37 \\ \hline 
-    3 & Lektura streszczeń – eliminacja pozycji bez wartości empirycznej lub porównawczej & 9 \\ \hline 
-    4 & Analiza pełnych treści – wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 8 \\ \hline 
-    5 & Prace kluczowe dla problemu badawczego – porównania/omówienie mechanizmów w Rust i C++ & 4 \\ \hline 
-    \end{tabular} 
-\end{table}
-\footnotetext{Ilość wyników dla poszczególnych zapytań może się różnić w zależności od daty (wyszukiwanie przeprowadzono w okresie marzec-kwiecień 2025).}
-
-\section{Porównanie Rust oraz C++}
-Porównanie języków programowania Rust i C++ jest przedmiotem licznych publikacji, które analizują ich różnorodne aspekty, takie jak struktura kodu, sposób kompilacji, bezpieczeństwo, wydajność oraz obsługa współbieżności i równoległości. Choć istnieje szeroka literatura porównawcza, wciąż stosunkowo nieliczne prace skupiają się w sposób bezpośredni i systematyczny na porównaniu mechanizmów współbieżnego i równoległego przetwarzania w tych dwóch językach. W ostatnich latach pojawiły się jednak wartościowe opracowania, również te akademickie, które podejmują to zagadnienie. Pomimo tego, że liczba takich prac nadal jest ograniczona, ich jakość i rosnące zainteresowanie środowiska akademickiego wskazują na istotny potencjał badawczy w obszarze porównań paradygmatów współbieżnych w nowoczesnych językach systemowych. Dostępne opracowania stanowią wartościowe punkty odniesienia i uzasadniają potrzebę kontynuacji prac empirycznych w tym zakresie, co znajduje swoje odzwierciedlenie także w niniejszej pracy. \\
-W literaturze można znaleźć prace, które analizują różnice między Rustem a C++ w kontekście bezpieczeństwa, wydajności, zarządzania pamięcią oraz obsługi błędów.
-
-\subsection{Bezpieczeństwo}
-\label{Bezpieczeństwo}
-Bezpieczeństwo języków Rust i C++ jest jednym z najczęściej analizowanych tematów w literaturze. W przypadku Rusta duży nacisk kładziony jest na eliminację całych klas błędów, takich jak null pointer dereferencing, data races oraz wycieki pamięci. Mechanizmy takie jak ownership, borrow checker oraz obowiązkowa mutowalność zmiennych (explicit mutability) są wymieniane jako kluczowe elementy zapewniające bezpieczeństwo oraz minimalizując ryzyko wycieków pamięci \cite{MigratingCtoRustforMemorySafety}. 
-
-Z drugiej strony, C++ umożliwia większą kontrolę nad pamięcią, co może być zaletą w systemach wymagających maksymalnej wydajności, ale jednocześnie wiąże się z koniecznością samodzielnego zarządzania zasobami przez programistów. W literaturze \cite{RustDifferences, RustDifferences1} często podkreśla się, że to właśnie większa złożoność i ryzyko błędów w kodzie C++ skłoniły społeczność do stworzenia języków takich jak Rust.
-
-Przykładowo, badania \cite{RustSafety1, RustSafety2, RustSafety3} wskazują, że aplikacje napisane w Rusta są mniej podatne na błędy związane z wyścigami danych \eng{data races}, co ma szczególne znaczenie w środowiskach wielowątkowych. Z kolei w C++ stosowanie bibliotek takich jak std::thread czy frameworków typu OpenMP pozwala na osiągnięcie podobnych celów, choć wymaga od programistów większej uwagi w zakresie synchronizacji. Dodatkowo są również prace \cite{PPL1_1,PPL1_2}, które przedstawiają próby implementacji mechanizmów wbudowanych w język Rust (prawo własności, pożyczka) do języka C.
-\subsection{Czas wykonania}
-\label{CzasWykonania}
-Porównania czasów wykonania programów napisanych w Rust i C++ są częstym tematem analiz \cite{RustPerformance1, RustPerformance2, RustPerformance3, RustPerformance4}. W badaniach tych zostało wykazane, że pod względem wydajności Rust jest konkurencyjny wobec C++, co wynika z mechanizmów kompilacji i optymalizacji kodu.
-
-Jednak kluczową różnicą jest to, że Rust wprowadza pewne narzuty związane z kontrolą bezpieczeństwa w czasie kompilacji, które mogą wydłużyć czas budowania programu, ale nie wpływają znacząco na czas wykonania.\\
-Rust i C++ są językami kompilowanymi, co oznacza, że dedykowany kompilator tłumaczy kod źródłowy na kod maszynowy przed jego wykonaniem. Dzięki temu możliwe jest uzyskanie wysokiej wydajności programów. W literaturze \cite{Lesiński} często podkreśla się, że Rust, w odróżnieniu od C++, kładzie większy nacisk na bezpieczeństwo pamięci oraz typów w czasie kompilacji, co ma kluczowe znaczenie w nowoczesnym oprogramowaniu. W kontekście C++ wskazuje się na jego większą elastyczność oraz bogaty ekosystem, który pozwala na szeroką gamę zastosowań, ale jednocześnie wymaga większej uwagi programistów w zakresie zarządzania pamięcią i synchronizacji wątków.
-% two images next to each other
 \begin{figure}[H]
     \centering
-    \begin{minipage}{.5\textwidth}
-        \centering
-        \includegraphics[height=12cm]{images/RustBuildsSteps.png}
-        \caption{Kroki kompilacji w języku Rust}
-        \label{fig:rust_build_steps}
-    \end{minipage}%
-    \begin{minipage}{.5\textwidth}
-        \centering
-        \includegraphics[height=12cm]{images/CppBuildsSteps.png}
-        \caption{Kroki kompilacji w języku C++}
-        \label{fig:cpp_build_steps}
-    \end{minipage}
-    \caption{Porównanie kroków kompilacji w językach Rust i C++}
+    \includegraphics[width=0.5\linewidth]{images/FearlesRustExplain.png}
+    \caption{Spektrum nieustraszonej współbieżności \cite{WhenIsParallelismFearlessandZeroCostwithRust?}}
+    \label{fig:FearlessSpectrum}
 \end{figure}
+Autorzy \cite{WhenIsParallelismFearlessandZeroCostwithRust?}
+uważają, że nieustraszona współbieżność jest lepiej interpretowana jako spektrum, zilustrowane na \ref{fig:FearlessSpectrum} idealnie eliminując wszelkie obawy przed błędami współbieżności w czasie kompilacji (Fearless), ale jeśli nie jest to możliwe, utrzymując objawy błędów w czasie wykonywania blisko ich przyczyn (Comfortable) lub w inny sposób nie dając gwarancji odtworzenia przyczyny ani objawu (Scared).
 
-Informacje o procesie kompilacji pochodzą z \cite{Lesiński, rustPolishNames, TheRustProgrammingLanguage}, które opisują integrację z LLVM i różnice w sprawdzaniu bezpieczeństwa.
-Na diagramie \ref{fig:rust_build_steps} drugi blok reprezentuje dodatkowe etapy sprawdzania bezpieczeństwa w Rust, które nie występują w C++. Z kolei na diagramie \ref{fig:cpp_build_steps} drugi blok pokazuje podstawowe sprawdzanie typów w C++, które jest mniej rygorystyczne niż system Rust. Ze względu na różnicę w procesie kompulacji kodu powstają główne różnice w bezpieczeństwie i wydajności obu języków.
+Przetłumaczono z DeepL.com (wersja darmowa)
 
-C++ nadal pozostaje językiem preferowanym w projektach o krytycznym znaczeniu wydajnościowym, takich jak gry komputerowe, symulacje fizyczne czy systemy wbudowane, choć Rust zaczyna zdobywać popularność w tych obszarach ze względu na większe bezpieczeństwo przy porównywalnej wydajności. 
+\subsection{Inteligentne wskaźniki \eng{Smart Pointers}}
+Smart pointery w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu bez konieczności korzystania z garbage collectora. Ponadto, smart pointery są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane smart pointery w Rust: Box, Rc oraz Arc.
 
-\subsection{Programowanie współbieżne oraz równoległe}
-\label{Współbieżność}
-Współbieżność i równoległość to kluczowe elementy programowania w  językach Rust i C++. Oba języki oferują zaawansowane narzędzia i biblioteki do zarządzania wielowątkowością.
+\subsubsection{Box}
+\label{BOX}
+Własność Danych na Stercie
+Smart pointer Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
+Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji.
 
-Rust wyróżnia się systemem własności \eng{ownership} i wbudowanym mechanizmem wykrywania błędów współbieżności, co eliminuje wyścigi danych w czasie kompilacji. Narzędzia takie jak Tokio i Rayon pozwalają na łatwe tworzenie i zarządzanie zadaniami asynchronicznymi i równoległymi.
-C++ z kolei oferuje wsparcie dla wielowątkowości poprzez standardową bibliotekę (std::thread) oraz zaawansowane szkielety aplikacyjne (frameworks), takie jak OpenMP czy TBB (Threading Building Blocks). Chociaż te narzędzia są niezwykle potężne, nie zapewniają automatycznej ochrony przed błędami współbieżności, co wymaga większej ostrożności ze strony programistów.
+\begin{lstlisting}[language=Rust, caption=Box smart pointer, label=box_smart_pointer]
+fn main() {
+    let b = Box::new(5); // Alokacja liczby całkowitej na stercie
+    println!("{}", b);   // Dostęp do wartości za pomocą wskaźnika Box
+}
+\end{lstlisting}
 
-Strona \cite{parallelrustcppIntroductionComparing} szczegółowo analizuje różnice w podejściu do współbieżności w obu językach, podkreślając, że Rust dzięki swojemu modelowi zarządzania pamięcią oferuje większe bezpieczeństwo, podczas gdy C++ pozostaje bardziej elastyczny, co może być korzystne w bardziej specyficznych scenariuszach. Jednak jak sam autor \cite{parallelrustcppIntroductionComparing} wskazuje, należy zwrócić uwagę, że większość sztuczek optymalizacyjnych pokazanych w tym porównaniu to jedynie adaptacje oryginalnych rozwiązań C++ w języku Rust. Koncentruje się ona na praktycznym porównaniu języków Rust i C++ pod względem równoległego przetwarzania, szczególnie na poziomie niskopoziomowych operacji i synchronizacji wątków. Znajdują się tam benchmarki pokazujące różnice w czasie wykonywania programów, narzędzia diagnostyczne oraz zestawienie wydajności w kontekście SIMD, wątków, oraz komunikacji międzypamięciowej.
+\subsubsection{Rc: Wskaźnik z Liczeniem Referencji}
+\label{RC}
+Smart pointer Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
+Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi.
 
-W pracy akademickiej Brandefelta i Heymana \cite{heyman2020comparison} dokonano porównania wydajności oraz złożoności implementacyjnej aplikacji wielowątkowej napisanej w trzech językach: Rust, C++ oraz Java. Badanie to wykazało, że Rust oferuje zbliżoną wydajność do C++, przy jednoczesnym znacznym uproszczeniu kodu (mniejsza liczba linii kodu), co przekłada się na łatwiejsze utrzymanie i potencjalnie mniejszą podatność na błędy. Autorzy wskazują, że Rust, dzięki swojemu systemowi własności \eng{ownership}, eliminuje całe klasy błędów związanych z zarządzaniem pamięcią, bez konieczności stosowania odśmiecania.
+\begin{lstlisting}[language=Rust, caption=Rc smart pointer, label=rc_smart_pointer]
+use std::rc::Rc;
 
-Kolejne istotne opracowanie przedstawiono w publikacji Martinsa et al. \cite{martins2025npbrustnasparallelbenchmarks}, gdzie zaprezentowano implementację zestawu NAS (NASA Advanced Supercomputing) Parallel Benchmarks (NPB) w języku Rust. Zestaw NPB stanowi uznany w środowisku naukowym standard do oceny wydajności systemów równoległych. W badaniach wykazano, że Rust osiąga porównywalną, a miejscami wyższą wydajność względem C++ i Fortrana (w wersjach OpenMP i sekwencyjnych), co wskazuje na jego rosnący potencjał w dziedzinie wysokowydajnych obliczeń (HPC - High-Performance Computing). Jednocześnie zwrócono uwagę na trudności implementacyjne, związane z restrykcyjnym modelem bezpieczeństwa języka Rust, które jednak mogą być złagodzone poprzez zastosowanie odpowiednich bibliotek (np. Rayon).
+fn main() {
+    let a = Rc::new(5);      // Utworzenie licznika referencji
+    let b = Rc::clone(&a);   // Klonowanie zwiększa licznik referencji
+    println!("{}", b);       // Dostęp do współdzielonych danych
+}
+\end{lstlisting}
 
-Równolegle, w pracy Besozziego \cite{Besozzi} zaprezentowano bibliotekę Parallelo Parallel Library (PPL) – autorskie rozwiązanie do strukturalnego programowania równoległego w języku Rust. Biblioteka ta opiera się na wzorcach programowania równoległego takich jak skeletons i design patterns, oferując wysokopoziomowe abstrakcje ułatwiające implementację złożonych aplikacji równoległych. Przeprowadzone testy wykazały, że PPL dorównuje lub przewyższa popularne biblioteki takie jak Rayon, jednocześnie zachowując zgodność z idiomami języka Rust i zasadą fearless concurrency. Zastosowanie takich abstrakcji sprzyja zwiększeniu czytelności i poprawności kodu, co może mieć szczególne znaczenie w kontekście projektów systemowych.
+\subsubsection{Arc: Atomowy Wskaźnik z Liczeniem Referencji}
+\label{ARC}
+Dla programowania współbieżnego Rust oferuje Arc (Atomic Reference Counted), czyli wersję \textbf{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych.
 
-Można również znaleźć pracę, która przedstawia wykorzystanie biblioteki odpowiedzialnej za współbieżność FastFlow przez oba języki Rust oraz C++ \cite{FastFlow}. Pokazuje ona, że język Rust jest dobrą alternatywą dla języka C++ w kontekście współbieżności.
+\begin{lstlisting}[language=Rust, caption=Arc smart pointer, label=arc_smart_pointer]
+use std::sync::Arc;
+use std::thread;
 
-% W odniesieniu do artykułów, czasopism oraz materiałów konferencyjnych opublikowanych w latach 2012 \footnotemark-2024, zidentyfikowanie prac, które jednoznacznie koncentrują się na problematyce pracy, jest wyzwaniem. Można natomiast znaleźć publikacje, które wykorzystują wspomniane języki (Rust oraz C++) i ich porównanie w kontekście złożonym do problemu pracy - chociażby wykorzystanie języka Rust w programowaniu układów wbudowanych \cite{ZamiennikWEmbedded}, jako zamiennik dla dotychczasowych języków z rodziny C.\\
-% 
-% \footnotetext{Rust został zaprezentowany w 2012 roku \cite{wikipediaRustprogramming}, a C++ w 1985 roku \cite{wikipediaWikipedia}.}
+fn main() {
+    let a = Arc::new(5);     // Utworzenie atomowego licznika referencji
+    let a_clone = Arc::clone(&a); // Klonowanie dla bezpiecznego współdzielenia
 
+    let handle = thread::spawn(move || {
+        println!("{}", a_clone); // Dostęp do współdzielonych danych w nowym wątku
+    });
 
-\section{Podsumowanie}
-Na podstawie przeglądu literatury oraz zadanych pytań do przeglądu literatury można wskazać na następujące odpowiedzi
-\subsubsection{PPL1: Jakie główne koncepcje/teorie dominują w literaturze dotyczącej porównania języków Rust oraz C++?}
-W literaturze dominują badania porównawcze bezpieczeństwa, wydajności oraz zarządzania pamięcią w językach Rust i C++ - bardziej szczegółowo opisane w podrozdziałach \ref{Bezpieczeństwo} oraz \ref{CzasWykonania}. W kontekście współbieżności i równoległości można zauważyć znaczący wzrost prac w ubiegłych latach, co przedstawia przegląd opisany w podrozdziale \ref{Współbieżność}.
-
-\subsubsection{PPL2: Jakie metody badawcze są najczęściej stosowane do analizy różnic pomiędzy językami ?}
-W literaturze oraz w dotychczasowych analizach \cite{LanguageComparison_1,LanguageComparison_2,LanguageComparison_3,LanguageComparison_4} wskazano szereg kryteriów istotnych przy porównywaniu lub ocenie języków programowania ogólnego przeznaczenia. Do najważniejszych należą: 
-    \begin{itemize}
-        \item Prostota konstrukcji języka, mająca bezpośredni wpływ na łatwość programowania i zrozumiałość kodu
-        \item Czytelność kodu, związana z jego późniejszą konserwacją i rozwijaniem
-        \item Dostosowanie języka do konkretnego zastosowania, co wpływa na wydajność i efektywność programów
-        \item Szybkość kompilacji
-        \item Efektywność działania programu, zarówno pod względem szybkości, jak i zużycia zasobów systemowych,
-        \item Dostępność i jakość bibliotek, frameworków oraz narzędzi wspierających rozwój oprogramowania
-        \item Wsparcie w procesie debugowania, profilowania i testowania kodu
-        \item Bezpieczeństwo języka, związane z eliminacją błędów w czasie kompilacji oraz wykrywaniem zagrożeń w trakcie działania programu
-        \item Długowieczność języka oraz narzędzi kompilacyjnych, co wpływa na stabilność i przewidywalność rozwoju oprogramowania
-        \item Przenośność między różnymi platformami i architekturami sprzętowymi.
-    \end{itemize}
-    Wszystkie te kryteria mają istotny wpływ na całkowity koszt i nakład pracy związany z tworzeniem oraz utrzymaniem oprogramowania, a także na jego jakość i przydatność w długim okresie użytkowania.
-
-    Doświadczenie wskazuje również, że te same kryteria można stosować do oceny innych komponentów wspomagających proces tworzenia oprogramowania, takich jak biblioteki klas obiektowych czy projekty typów abstrakcyjnych. Wykorzystanie odpowiednich, zewnętrznych komponentów oraz dobrze zaprojektowanych rozwiązań przyczynia się do poprawy czytelności, utrzymywalności i ogólnej jakości kodu, jednocześnie przyspieszając proces jego tworzenia.
-
-\subsubsection{PPL3: Jak wygląda porównanie dostępności i dojrzałości bibliotek do programowania współbieżnego i równoległego w obu językach?}
-Porównując dostępność i dojrzałość bibliotek do programowania współbieżnego i równoległego w językach Rust i C++, zauważyć można istotne różnice wynikające zarówno z historii rozwoju tych języków, jak i ich podejścia do bezpieczeństwa, abstrakcji oraz zarządzania zasobami.
-
-W przypadku języka C++, biblioteki takie jak OpenMP, Intel TBB czy pthreads cechują się dużą dojrzałością oraz szerokim zastosowaniem w przemyśle, zwłaszcza w kontekście obliczeń naukowych, symulacji fizycznych i systemów o wysokiej wydajności. Są one dobrze udokumentowane, posiadają wsparcie komercyjne (np. TBB) oraz charakteryzują się dużą kompatybilnością z istniejącą infrastrukturą sprzętową i programową. Niemniej jednak, wymagają od programisty głębokiej wiedzy w zakresie zarządzania pamięcią oraz synchronizacji, co przekłada się na wyższy próg wejścia i podatność na błędy (np. wyścigi danych czy zakleszczenia).
-
-Z kolei Rust, jako język nowszy, oferuje bardziej nowoczesny zestaw narzędzi do programowania równoległego, w tym biblioteki takie jak Tokio, Rayon czy Crossbeam. Mimo mniejszej liczby lat rozwoju, biblioteki te szybko dojrzewają i zdobywają popularność dzięki silnym gwarancjom bezpieczeństwa pamięci na poziomie kompilatora oraz ergonomicznemu API. Rust promuje bezpieczne podejście do współbieżności poprzez system własności \eng{ownership} i brak domyślnego współdzielenia zasobów, co w praktyce eliminuje całą klasę błędów typowych dla C++. Dzięki temu biblioteki w Rust, choć mniej rozpowszechnione w starszych zastosowaniach, zyskują przewagę w projektach tworzonych od podstaw, zwłaszcza w środowiskach wymagających wysokiej niezawodności.
-
-\subsubsection{PPL4: Czy istnieją systematyczne metodologie porównywania języków programowania w kontekście problemu pracy, które można zastosować do analizy Rust i C++?}
-
-W literaturze przedmiotu można znaleźć prace proponujące sformalizowane, systematyczne metodologie służące do porównywania języków programowania w kontekście ich wsparcia dla współbieżności i równoległości. Jednakzę zdecydowana większość badań skupia się na aspektach wydajnościowych, bezpieczeństwa pamięci lub ekspresyjności języka, dodatkowo często przyjmują one podejścia ad hoc, oparte na wybranych przypadkach użycia, bez spójnych ram metodologicznych.
-
-Niektóre opracowania, jak np. porównania publikowane w ramach blogów technicznych czy artykułów na platformach takich jak Medium, wykorzystują podejścia oparte na konteneryzacji programów testowych i ich uruchamianiu na jednorodnej infrastrukturze. Przykładowo, w metodzie \textit{Rainbow} \cite{rainbow} badana jest przepustowość obliczeń przy wykorzystaniu kontenerów i zewnętrznego systemu, jak Redis, do monitorowania wyników. Choć takie podejścia są ciekawe, narażone są na zakłócenia wynikające z różnic w czasie inicjalizacji kontenerów, rozmiarze obrazu czy użyciu pamięci, co może zafałszowywać końcowe wyniki porównawcze.
-
-Znacznie bardziej sformalizowanym podejściem jest wykorzystanie ustandaryzowanych pakietów benchmarkowych, takich jak NAS Parallel Benchmarks (NPB), które zostały opracowane przez NASA w celu obiektywnej oceny wydajności systemów wieloprocesorowych. Przykładem zastosowania tej metodologii jest praca „NPB-Rust” \cite{martins2025npbrustnasparallelbenchmarks}, w której autorzy przeprowadzili systematyczne porównanie implementacji benchmarków NAS w języku Rust (z użyciem biblioteki Rayon) oraz C++ (z użyciem OpenMP). Ocenie poddano nie tylko wydajność obliczeniową, ale również skalowalność, zużycie pamięci oraz nakład implementacyjny, mierząc m.in. liczbę linii kodu i szacowany koszt harmonogramowania według modelu COCOMO - \eng{Constructive Cost Model} - to model szacowania kosztów związanych z rozwojem oprogramowania.
-
-Takie podejścia, oparte na zweryfikowanych zestawach testowych, umożliwiają bardziej wiarygodne i powtarzalne porównania pomiędzy językami programowania w kontekście współbieżności i równoległości. W związku z tym, zastosowanie frameworków benchmarkowych takich jak NPB powinno być traktowane jako wzorzec dla przyszłych badań w tej dziedzinie.
-
-\subsubsection{PPL5: Jakie aspekty programowania współbieżnego i równoległego w Rust i C++ nie zostały dostatecznie zbadane w literaturze?}
-Dotychczasowe badania naukowe dotyczące programowania współbieżnego w językach Rust i C++ koncentrowały się przede wszystkim na ogólnych aspektach, takich jak bezpieczeństwo pamięci, kontrola dostępu do danych, ergonomia kodu oraz wydajność kompilacji i wykonania. W szczególności analizowano podejście języków do eliminacji błędów wykonawczych (np. data races), mechanizmy typowania oraz zarządzanie zasobami systemowymi. Przykładem mogą być prace \cite{heyman2020comparison}, które zestawiają Rust i C++ w kontekście praktycznych implementacji aplikacji wielowątkowych, czy badania \cite{martins2025npbrustnasparallelbenchmarks}, porównujące implementacje benchmarków równoległych.
-
-Niemniej jednak, najnowsze publikacje wskazują na wypełnienie wielu wcześniej istniejących luk, zwłaszcza w zakresie porównania konkretnych konstrukcji językowych (np. async/await, kanały, skeletons) oraz empirycznej weryfikacji wydajności bibliotek wspierających równoległość (np. PPL, Rayon, OpenMP).
-
-Pomimo tego, w literaturze wciąż można zidentyfikować kilka istotnych obszarów badawczych, które pozostają niewystarczająco zbadane:
-\begin{itemize}
-    \item \textbf{Wpływ architektury sprzętowej na zachowanie systemów współbieżnych:}\\
-    Większość dotychczasowych badań prowadzono na klasycznych architekturach x86\_64. Brakuje natomiast analiz zachowania aplikacji wielowątkowych w Rust i C++ na alternatywnych platformach, takich jak ARM, RISC-V czy systemy heterogeniczne (np. SoC zawierające zarówno CPU, jak i akceleratory). Tego typu analizy są szczególnie istotne w kontekście rozwoju systemów wbudowanych oraz IoT, gdzie Rust zyskuje coraz większą popularność.
-    \item \textbf{Koszt abstrakcji oraz narzut związany z modelem bezpieczeństwa Rust:}\\
-    Choć bezpieczeństwo współbieżności w Rust jest jego kluczowym atutem, literatura rzadko podejmuje próbę precyzyjnego oszacowania narzutu wydajnościowego wynikającego z jego rygorystycznego modelu własności i borrow checkera. Istnieje potrzeba eksperymentalnych badań porównawczych, które wykazałyby, w jakim stopniu koszt ten wpływa na skalowalność aplikacji w środowiskach o dużym współczynniku równoległości.
-    \item \textbf{Porównanie ergonomii rozwiązań współbieżnych na poziomie idiomatycznym i bibliotekowym:}\\
-    Chociaż wiele prac omawia techniczne możliwości języków (np. std::thread, tokio, OpenMP, std::thread w C++), nadal brakuje badań jakościowych dotyczących ergonomii kodu, łatwości debugowania oraz odporności na błędy logiczne podczas implementacji systemów wielowątkowych. Takie analizy mogłyby obejmować porównania idiomatycznych podejść (np. actor model, CSP, fork-join), oferowanych przez biblioteki Rust i C++.
-    \item \textbf{Zachowanie systemów współbieżnych w warunkach zmiennego obciążenia i konkurencyjnego dostępu:}\\
-    Istnieje luka w badaniach dotyczących stabilności i odporności aplikacji na skoki obciążenia lub dynamiczną alokację wątków. Potrzebne są badania stresowe i profilowanie systemów w warunkach rzeczywistej konkurencji (np. serwery HTTP, silniki obliczeniowe), co pozwoliłoby ocenić adaptacyjność strategii planowania i zarządzania wątkami w Rust i C++.
-    \item \textbf{Weryfikacja formalna i modelowanie błędów współbieżności:}\\
-    Pomimo iż język Rust oferuje silne gwarancje bezpieczeństwa na etapie kompilacji - statyczna gwarancja bezpieczeństwa, zagadnienia związane z formalną weryfikacją własności współbieżnych, takich jak żywotność \eng{liveness}, brak zagłodzenia \eng{starvation-freedom} czy deterministyczność wykonania, pozostają w literaturze stosunkowo słabo zbadane. Potencjalnie wartościowym kierunkiem dalszych analiz byłoby porównanie dostępnych narzędzi formalnych, takich jak weryfikatory modeli, w kontekście języka Rust oraz innych języków programowania współbieżnego. Tego rodzaju zestawienie mogłoby przyczynić się do lepszego zrozumienia możliwości i ograniczeń istniejących podejść do formalnej weryfikacji w środowiskach wielowątkowych.
-\end{itemize}
+    handle.join().unwrap();  // Oczekiwanie na zakończenie wątku
+}
+\end{lstlisting}
+\subsubsection{Niebezpieczny Rust (Unsafe Rust)}
+TBD \cite{UnsafeRust}
+\input{teoria_rust/programowanie_współbieżne}
+\input{teoria_rust/programowanie_równoległe}
 
 
-\subsubsection{PPL6: Jaki jest stan wiedzy na temat wykorzystania programowania współbieżnego w ramach GPU w językach Rust i C++?}
-W literaturze przedmiotowej oraz w praktyce programistycznej, zagadnienie wykorzystania programowania współbieżnego na GPU ewoluuje w różnym tempie w zależności od języka programowania. W przypadku języka Rust obserwujemy dynamiczny rozwój narzędzi, które umożliwiają wykorzystanie mocy obliczeniowej kart graficznych przy jednoczesnym zachowaniu wysokich gwarancji bezpieczeństwa pamięci i wątków.
-
-Projekty takie jak rust‑gpu \cite{rustgpuRust} dążą do umożliwienia pisania shaderów w języku Rust, oferując podejście, które integruje możliwości GPU z bezpiecznymi konstrukcjami języka. Dokumentacja dostępna na stronie github \cite{rustgpuRust} wskazuje na intensywne prace nad przeniesieniem wielu korzyści wynikających z systemu własności i typowania Rust na środowisko GPU, co może przyczynić się do zmniejszenia ryzyka błędów współbieżności, które są szczególnie krytyczne w obliczeniach równoległych.
-
-Równolegle, biblioteka Vulkano (dostępna m.in. poprzez dokumentację \cite{docsVulkanoRust}) stanowi wysokopoziomowy, bezpieczny interfejs do API Vulkan, które jest standardem w programowaniu GPU. Vulkano umożliwia abstrakcję złożoności niskopoziomowych interfejsów, jednocześnie oferując możliwość pełnego wykorzystania równoległości GPU. W podobnym nurcie znajduje się projekt wgpu, który implementuje standard WebGPU, umożliwiając przenośne aplikacje graficzne i obliczeniowe, a jednocześnie integrując współczesne podejścia do zarządzania zasobami i synchronizacji.
-
-W przeciwieństwie do podejścia Rust, w środowisku C++ dominującym rozwiązaniem jest platforma CUDA, rozwijana i wspierana przez firmę NVIDIA \cite{nvidiaCUDAToolkit}. CUDA oferuje bardzo dojrzały, zoptymalizowany i szeroko stosowany framework, który pozwala na bezpośrednią implementację algorytmów równoległych na GPU. W odróżnieniu od narzędzi rozwijanych dla Rust, CUDA posiada ugruntowaną pozycję w środowisku przemysłowym, co przekłada się na bogatą dokumentację, szerokie wsparcie techniczne oraz liczne biblioteki wspomagające rozwój aplikacji wykorzystujących GPU.
-
-Podsumowując, stan wiedzy dotyczący programowania współbieżnego na GPU w języku Rust znajduje się na etapie intensywnego rozwoju i eksperymentacji, gdzie projekty takie jak rust‑gpu, Vulkano oraz wgpu \cite{wgpuWgpuPortable} pokazują potencjał tego podejścia, zwłaszcza w kontekście bezpieczeństwa i nowoczesnych abstrakcji. Z kolei w C++ platforma CUDA, dzięki swojej dojrzałości oraz szerokiemu wsparciu ze strony przemysłu, pozostaje głównym narzędziem wykorzystywanym do implementacji wysokowydajnych obliczeń równoległych na GPU.
-
-\subsection{Kierunki dalszych badań}
-Na podstawie przeglądu literatury oraz odpowiedzi na pytania do przeglądu literatury można wskazać na kilka kierunków dalszych badań w dziedzinie programowania współbieżnego i równoległego w językach Rust i C++:
-\begin{itemize}
-    \item \textbf{Rozszerzone porównania systematyczne mechanizmów współbieżnych i równoległych} — z uwzględnieniem nie tylko wydajności, ale także ergonomii, bezpieczeństwa pamięci, ekspresyjności kodu oraz kosztu implementacyjnego.
-    \item \textbf{Analiza porównawcza konkretnych mechanizmów i bibliotek} — takich jak \texttt{std::thread} w C++ i Rust, \texttt{OpenMP} vs \texttt{Rayon}, czy też mechanizmy asynchroniczne (\texttt{async/await} w Rust kontra \texttt{futures}, \texttt{std::coroutine} w C++20 i nowszych).
-    \item \textbf{Analiza wpływu zastosowania unsafe code w Rust} — w kontekście uzyskiwanej wydajności i kompromisów względem bezpieczeństwa pamięci oraz czytelności kodu.
-    \item \textbf{Zastosowania programowania równoległego na GPU} — porównanie możliwości Rust (np. poprzez biblioteki takie jak \texttt{rust-gpu} czy \texttt{wgpu}) z rozwiązaniami dostępnymi w ekosystemie C++ (np. CUDA, SYCL, OpenCL).
-    \item \textbf{Badanie wpływu konstrukcji językowych na podatność na błędy współbieżności} — np. warunki wyścigu, zakleszczenia, użycie nieprawidłowych referencji lub wskaźników, z uwzględnieniem poziomu ochrony oferowanego przez kompilator.
-\end{itemize}

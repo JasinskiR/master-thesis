@@ -1,109 +1,11 @@
-\chapter{Wybrane mechanizmy w języku Rust}
-o czym rozdział
-\section{Podejście do współbieżności i równoległości}
-
-Rozwój języka Rust oferuje szereg funkcji, które czynią go dobrym wyborem do programowania współbieżnego oraz równoległego. Kluczowymi elementami, które wyróżniają go na tle innych języków programowania są \cite{rustPolishNames}:
-\begin{enumerate}
-    \item Własność \eng {ownership} i pożyczanie \eng {borrow}: Model własności języka Rust zapewnia, że dane są bezpiecznie współdzielone między wątkami bez ryzyka wyścigów danych \eng{races}.
-    \item Nieustraszona współbieżność \eng{Fearless Concurrency}: System typów Rusta wymusza reguły w czasie kompilacji, pozwalając programistom na pisanie współbieżnego kodu bez obawy o typowe pułapki.
-    \item Inteligentne wskaźniki \eng{smart pointers}: Abstrakcje wspierające korzystanie oraz przesyłanie danych w programowaniu współbieżnym oraz równoległym.
-\end{enumerate}
-
-\subsection{Ownership oraz borrow}
-\label{ownership_borrow}
-Własność \eng {ownership} jest fundamentalnym konceptem w języku Rust, który zapewnia bezpieczeństwo pamięci bez konieczności stosowania mechanizmu odśmiecania \eng{garbage collection}. Każda wartość posiada jednego właściciela, który jest odpowiedzialny za zwolnienie pamięci zajmowanej przez tę wartość, gdy wychodzi ona z zakresu \eng{scope}. Model własności zapobiega wyścigom danych i zapewnia efektywne zarządzanie pamięcią.\\
-Kluczowe zasady własności:
-\begin{itemize}
-    \item Każda wartość ma jednego właściciela.
-    \item Gdy właściciel wychodzi z zakresu, wartość zostaje usunięta \eng{ropped}.
-    \item Własność może zostać przeniesiona \eng{moved} na inną zmienną.
-\end{itemize}
-
-Pożyczanie \eng{borrowing} umożliwia tworzenie referencji do wartości bez przejmowania jej własności. Jest to kluczowe dla umożliwienia różnym częściom programu dostępu do danych bez ich duplikowania. Rust pozwala na pożyczanie wartości według dwóch zasad:
-\begin{itemize}
-    \item Pożyczanie niemutowalne (domyślne) \eng{immutable}: Można utworzyć wiele referencji, ale żadna z nich nie może modyfikować wartości.
-    \item Pożyczanie mutowalne \eng{mutable}: W danym momencie może istnieć tylko jedna mutowalna referencja, co zapobiega wyścigom danych.
-\end{itemize}
-\begin{lstlisting}[language=Rust,caption=Przykład mechanizmu borrow, label=borrow_example]
-fn main() {
-    let s1 = String::from("Hello World");
-    let s2 = &s1; // Immutable borrow - pożyczka niemutowalna
-    println!("{}", s2); // Ok
-    // let s3 = &mut s1; // Error
-}
-\end{lstlisting}
-W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \textit{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \textit{s3} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \textit{s2} (domyślnie)
+%Porównanie Rust i C++
+\chapter{Wybrene mechanizmy w języku C++}
+\section{Programowanie współbieżne}
 
 
-\subsection{Nieustraszona współbieżność}
-Mechanizm ten wynika bezpośrednio z rygorystycznych reguł systemu typów i modelu własności, które są integralną częścią tego języka. Dzięki temu Rust pozwala na tworzenie kodu współbieżnego, minimalizując ryzyko wystąpienia typowych błędów, takich jak wyścigi danych czy nieokreślone zachowanie wynikające z użycia wskaźników do już zwolnionej pamięci \eng{dangling pointers}.
+\section{Programowanie równoległe}
 
-Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez analizę własności i okresu życia danych \eng{lifetimes}. Mechanizm ten zapobiega jednoczesnemu mutowalnemu dostępowi do tych samych danych w różnych wątkach (opisane w punkcie \ref{ownership_borrow}), co eliminuje potrzebę ręcznego zarządzania pamięcią czy synchronizacji przez programistę. Takie podejście czyni współbieżność w Rust nie tylko bezpieczną, ale również przewidywalną, co znacząco ułatwia jej implementację. \cite{RustFC}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\linewidth]{images/FearlesRustExplain.png}
-    \caption{Spektrum nieustraszonej współbieżności \cite{WhenIsParallelismFearlessandZeroCostwithRust?}}
-    \label{fig:FearlessSpectrum}
-\end{figure}
-Autorzy \cite{WhenIsParallelismFearlessandZeroCostwithRust?}
-uważają, że nieustraszona współbieżność jest lepiej interpretowana jako spektrum, zilustrowane na \ref{fig:FearlessSpectrum} idealnie eliminując wszelkie obawy przed błędami współbieżności w czasie kompilacji (Fearless), ale jeśli nie jest to możliwe, utrzymując objawy błędów w czasie wykonywania blisko ich przyczyn (Comfortable) lub w inny sposób nie dając gwarancji odtworzenia przyczyny ani objawu (Scared).
-
-Przetłumaczono z DeepL.com (wersja darmowa)
-
-\subsection{Inteligentne wskaźniki \eng{Smart Pointers}}
-Smart pointery w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu bez konieczności korzystania z garbage collectora. Ponadto, smart pointery są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane smart pointery w Rust: Box, Rc oraz Arc.
-
-\subsubsection{Box}
-\label{BOX}
-Własność Danych na Stercie
-Smart pointer Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
-Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji.
-
-\begin{lstlisting}[language=Rust, caption=Box smart pointer, label=box_smart_pointer]
-fn main() {
-    let b = Box::new(5); // Alokacja liczby całkowitej na stercie
-    println!("{}", b);   // Dostęp do wartości za pomocą wskaźnika Box
-}
-\end{lstlisting}
-
-\subsubsection{Rc: Wskaźnik z Liczeniem Referencji}
-\label{RC}
-Smart pointer Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
-Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi.
-
-\begin{lstlisting}[language=Rust, caption=Rc smart pointer, label=rc_smart_pointer]
-use std::rc::Rc;
-
-fn main() {
-    let a = Rc::new(5);      // Utworzenie licznika referencji
-    let b = Rc::clone(&a);   // Klonowanie zwiększa licznik referencji
-    println!("{}", b);       // Dostęp do współdzielonych danych
-}
-\end{lstlisting}
-
-\subsubsection{Arc: Atomowy Wskaźnik z Liczeniem Referencji}
-\label{ARC}
-Dla programowania współbieżnego Rust oferuje Arc (Atomic Reference Counted), czyli wersję \textbf{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych.
-
-\begin{lstlisting}[language=Rust, caption=Arc smart pointer, label=arc_smart_pointer]
-use std::sync::Arc;
-use std::thread;
-
-fn main() {
-    let a = Arc::new(5);     // Utworzenie atomowego licznika referencji
-    let a_clone = Arc::clone(&a); // Klonowanie dla bezpiecznego współdzielenia
-
-    let handle = thread::spawn(move || {
-        println!("{}", a_clone); // Dostęp do współdzielonych danych w nowym wątku
-    });
-
-    handle.join().unwrap();  // Oczekiwanie na zakończenie wątku
-}
-\end{lstlisting}
-\subsubsection{Niebezpieczny Rust (Unsafe Rust)}
-TBD \cite{UnsafeRust}
-\input{teoria_rust/programowanie_współbieżne}
-\input{teoria_rust/programowanie_równoległe}
-
-
+\subsection{OpenMP}
+Biblioteka ta pozwala uruchomić wybraną część kodu na wielu wątkach. Działa to podobnie do uruchamiania kody z wykorzystaniem GPU - kod, który zostanie uruchomiony na wielu wątkach umieszczany jest w specjalnym zakresie \eng{scope}. 
+Kompilacja kodu z OpenMP odbywa się z wykorzystaniem flagi \texttt{-fopenmp} w przypadku kompilatora \texttt{g++}.\\
+Użycie pamięci cache może pomóc w zwiększeniu wydajności czasowej programu kosztem pamięci. W przypadku OpenMP, zmienna \texttt{shared} oznacza, że zmienna jest współdzielona pomiędzy wątkami, a \texttt{private} oznacza, że każdy wątek ma swoją kopię zmiennej?\\
