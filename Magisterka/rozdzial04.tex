@@ -32,13 +32,13 @@ fn main() {
     // let s3 = &mut s1; // Error
 }
 \end{lstlisting}
-W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \textit{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \textit{s3} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \textit{s2} (domyślnie)
+W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \textit{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \textit{s1} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \textit{s2} (domyślnie)
 
 
 \subsection{Nieustraszona współbieżność}
 Mechanizm ten wynika bezpośrednio z rygorystycznych reguł systemu typów i modelu własności, które są integralną częścią tego języka. Dzięki temu Rust pozwala na tworzenie kodu współbieżnego, minimalizując ryzyko wystąpienia typowych błędów, takich jak wyścigi danych czy nieokreślone zachowanie wynikające z użycia wskaźników do już zwolnionej pamięci \eng{dangling pointers}.
 
-Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez analizę własności i okresu życia danych \eng{lifetimes}. Mechanizm ten zapobiega jednoczesnemu mutowalnemu dostępowi do tych samych danych w różnych wątkach (opisane w punkcie \ref{ownership_borrow}), co eliminuje potrzebę ręcznego zarządzania pamięcią czy synchronizacji przez programistę. Takie podejście czyni współbieżność w Rust nie tylko bezpieczną, ale również przewidywalną, co znacząco ułatwia jej implementację. \cite{RustFC}
+Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez analizę własności i okresu życia danych \eng{lifetimes}. Mechanizm ten zapobiega jednoczesnemu mutowalnemu dostępowi do tych samych danych w różnych wątkach (opisane w punkcie \ref{ownership_borrow}), co eliminuje potrzebę ręcznego zarządzania pamięcią czy synchronizacji przez programistę. Takie podejście czyni współbieżność w Rust nie tylko bezpieczną, ale również przewidywalną, co znacząco ułatwia jej implementację \cite{RustFC}.
 
 \begin{figure}[H]
     \centering
@@ -52,7 +52,7 @@ uważają, że nieustraszona współbieżność jest lepiej interpretowana jako 
 Przetłumaczono z DeepL.com (wersja darmowa)
 
 \subsection{Inteligentne wskaźniki \eng{Smart Pointers}}
-Smart pointery w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu bez konieczności korzystania z garbage collectora. Ponadto, smart pointery są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane smart pointery w Rust: Box, Rc oraz Arc.
+Inteligentne wskaźniki w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu, bez konieczności korzystania z automatycznego systemu zarządzania pamięcią. Ponadto, wskaźniki te są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane inteligentne wskaźniki w Rust: Box, Rc oraz Arc.
 
 \subsubsection{Box}
 \label{BOX}

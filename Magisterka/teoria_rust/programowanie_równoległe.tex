@@ -1,2 +1,15 @@
 \section{Programowanie równoległe}
+Rust oferuje nowoczesne podejście do programowania równoległego, które pozwala na bezpieczne i wydajne wykorzystanie wielu rdzeni procesora. Dzięki statycznemu systemowi typów, modelowi własności oraz bogatemu ekosystemowi bibliotek, programowanie równoległe w Rust jest zarówno ergonomiczne, jak i odporne na typowe błędy związane z współdzieleniem pamięci.
 \subsection{Biblioteki}
+Jednym z kluczowych komponentów wspierających programowanie równoległe w Rust jest biblioteka Rayon. Została ona zaprojektowana jako ergonomiczne narzędzie do równoległego przetwarzania kolekcji oraz rekurencyjnych algorytmów, takich jak mapowanie, filtrowanie czy redukcja. W przeciwieństwie do tradycyjnych podejść wymagających ręcznego tworzenia i zarządzania wątkami, Rayon oferuje wysokopoziomowe abstrakcje, które ukrywają złożoność alokacji wątków oraz synchronizacji, przy zachowaniu bezpieczeństwa typów i braku wyścigów danych.\\
+Przykładowe wykorzystanie biblioteki Rayon może wyglądać następująco:
+\begin{lstlisting}[language=Rust, caption=Przykład użycia par\_iter, label=pariter_example]
+use rayon::prelude::*;
+
+fn main() {
+    let numbers = vec![1, 2, 3, 4, 5];
+    let squared: Vec<_> = numbers.par_iter().map(|x| x * x).collect();
+    println!("{:?}", squared);
+}
+\end{lstlisting}
+W powyższym przykładzie listing \ref{pariter_example} użycie par\_iter() zamiast standardowego iteratora iter() umożliwia równoległe przetwarzanie elementów wektora. Dzięki temu możliwe jest wykorzystanie wielu rdzeni procesora bez konieczności implementowania własnego mechanizmu rozdzielania zadań i zarządzania synchronizacją.

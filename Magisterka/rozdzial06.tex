@@ -42,9 +42,12 @@
 % FFT (Fast Fourier Transform)
 % N-body simulation
 
-\chapter{Porównanie mechanizmów w językach Rust oraz C++}
+% \chapter{Porównanie mechanizmów w językach Rust oraz C++}
+\chapter{Założenia i metodologia porównania mechanizmów w językach Rust oraz C++}
 W tym rozdziale przedstawiono metryki oraz algorytmy do analizy wydajności mechanizmów programowania współbieżnego i równoległego w językach Rust oraz C++. 
 \section{Programowanie współbieżne}
+Dla mechanizmów programowania współbieżnego autor nie znalazł obecnie zunifikowanego, powszechnie uznanego zestawu benchmarków odpowiadający randze NPB. W związku z tym, w ramach niniejszej pracy, opracowano własny zestaw mini-aplikacji testowych, zaprojektowanych w taki sposób, aby odzwierciedlały typowe scenariusze współbieżności: komunikację między wątkami, synchronizację, obsługę asynchronicznych operacji wejścia/wyjścia, sytuacje ryzyka zakleszczenia, a także przypadki intensywnego przetwarzania danych z wykorzystaniem wielu wątków.
+
 \subsection{Zarządzanie wątkami}
 Porównanie tworzenia i zarządzania wątkami obejmuje następujące parametry:
 \begin{itemize}
@@ -68,7 +71,7 @@ W kontekście narzutu związanego z mechanizmami bezpieczeństwa w językach Rus
 \item zużycie pamięci podczas wykonywania programu (w MB).
 \end{itemize}
 
-\subsection{Wybrane algorytmy do analizy wydajności}
+\subsection{Wybrane algorytmy do analizy}
 Dla porównania mechanizmów współbieżności wybrano następujące algorytmy:
 \begin{itemize}
     \item Model producent-konsument (z wykorzystaniem aktorów),
@@ -78,7 +81,7 @@ Algorytmy te pozwalają na analizę zdolności języków Rust i C++ do efektywne
 
 
 \section{Programowanie równoległe}
-
+W przypadku programowania równoległego, zdecydowano się na wykorzystanie uznanego zestawu testowego NAS Parallel Benchmarks (NPB) \cite{nasaParallelBenchmarks}. Zestaw ten jest szeroko stosowany w środowisku naukowym do oceny wydajności systemów wysokowydajnych (HPC) i stanowi wiarygodny punkt odniesienia przy analizie efektywności obliczeniowej.
 \subsection{Wydajność obliczeniowa}
 Główne metryki oceny wydajności algorytmów równoległych to:
 \begin{itemize}
@@ -105,17 +108,55 @@ Analiza zużycia zasobów przez algorytmy równoległe obejmuje:
 \item liczbę operacji wejścia-wyjścia na sekundę.
 \end{itemize}
 
-\subsection{Wybrane algorytmy do analizy wydajności}
-Dla porównania mechanizmów równoległości wybrano następujące algorytmy:
+\subsection{Wybrane algorytmy do analizy}
+Dla porównania mechanizmów równoległości wybrano następujące algorytmy z zestawu testowego NPB:
 \begin{itemize}
-\item Mnożenie macierzy (Matrix Multiplication),
-\item Transformata Fouriera (Fast Fourier Transform, FFT).
+    \item CG - \eng{conjugate gradient} - gradient sprzężony
+    \item EP - \eng{embarrassingly parallel} - problem trywialnie równoległy
+    \item IS - \eng{intiger sorting} - sortowanie liczb całkowitych
 \end{itemize}
-Algorytmy te pozwolą na analizę efektywności zarządzania zasobami oraz synchronizacji w językach Rust i C++.
 
 Wybór powyższych benchmarków pozwoli na szczegółową analizę wydajności oraz stabilności obu języków w kontekście programowania współbieżnego i równoległego, umożliwiając sformułowanie rekomendacji dotyczących wyboru narzędzi w zależności od specyfiki projektu.
 
-\section{Metodologia badań}
-W celu zminimalizowania wpływu czynników zewnętrznych na wyniki badań, wszystkie testy zostaną przeprowadzone na tej samej konfiguracji sprzętowej oraz oprogramowania (instancje maszyn EC2 w usłudze Amazon Web Services - AWS) oraz z tymi samymi danymi testowymi. Wyniki badań zostaną przedstawione w formie tabel i wykresów, co pozwoli na łatwe porównanie wyników oraz wyciągnięcie wniosków dotyczących wydajności języków Rust i C++ w kontekście programowania współbieżnego i równoległego.
+\subsubsection{CG - Gradient sprzężony}
+Benchmark CG \eng{conjugate gradient} służy do oceny wydajności systemów wysokowydajnych (HPC) w kontekście rozwiązywania rzadkich układów równań liniowych metodą iteracyjną. Algorytm ten znajduje zastosowanie w wielu dziedzinach nauk obliczeniowych, takich jak mechanika płynów czy analiza strukturalna, gdzie układy równań wynikają z dyskretyzacji równań różniczkowych cząstkowych. W benchmarku CG generowana jest syntetyczna macierz rzadkich współczynników o dużych rozmiarach, a następnie przeprowadzana jest iteracyjna procedura wyznaczania przybliżonego rozwiązania układu równań. Test ten charakteryzuje się intensywnym wykorzystaniem operacji wektorowych i punktowych operacji na danych rozproszonych, co czyni go szczególnie użytecznym przy ocenie efektywności komunikacji między wątkami oraz przepustowości pamięci w systemach równoległych \cite{nasaParallelBenchmarks}.
 
-%Do analizy wydajności zostaną wykorzystane narzędzia do profilowania kodu, takie jak Valgrind, GDB, LLVM oraz biblioteki do testów wydajnościowych, takie jak Google Benchmark.
+\subsubsection{EP - Problem trywialnie równoległy}
+Benchmark EP \eng{embarrassingly parallel} został zaprojektowany w celu oceny wydajności systemów obliczeniowych w scenariuszach, w których niemal całkowicie eliminuje się konieczność komunikacji między procesami lub wątkami. Test ten polega na generowaniu dużej liczby losowych punktów i przeprowadzaniu na nich niezależnych obliczeń statystycznych, takich jak estymacja wartości $\pi$ lub momentów rozkładu. Dzięki swojej naturze, EP umożliwia niemal idealną skalowalność równoległą i jest wykorzystywany przede wszystkim do pomiaru czystej mocy obliczeniowej procesorów, efektywności rozdziału zadań oraz narzutu wynikającego z zarządzania wątkami. Ze względu na minimalne wymagania względem synchronizacji i komunikacji, benchmark ten stanowi punkt odniesienia przy analizie teoretycznego maksimum wydajności danego systemu dla obciążeń równoległych \cite{nasaParallelBenchmarks}.
+
+\subsubsection{IS - Sortowanie liczb całkowitych}
+Benchmark IS \eng{integer sorting} służy do oceny wydajności systemów obliczeniowych w zakresie operacji nieciągłych i trudnych do zrównoleglenia, takich jak sortowanie i przemieszczanie danych w pamięci. Test polega na wygenerowaniu losowego zestawu liczb całkowitych, a następnie ich posortowaniu przy użyciu metody sortowania kubełkowego \eng{bucket sort} z zastosowaniem rozproszonej synchronizacji i komunikacji między wątkami lub procesami. Benchmark IS jest szczególnie przydatny do analizy przepustowości podsystemów pamięciowych, efektywności komunikacji w architekturach wieloprocesorowych oraz odporności systemu na nierównomierne rozłożenie danych. Ze względu na swoją nieregularną strukturę dostępu do danych i znaczną liczbę operacji porządkowania, IS stanowi istotne uzupełnienie pozostałych testów NPB, koncentrując się na problemach wymagających intensywnej pracy z pamięcią i synchronizacją \cite{nasaParallelBenchmarks}.
+
+\section{Metodologia badań}
+Badania eksperymentalne zostały zaprojektowane w taki sposób, aby umożliwić porównanie mechanizmów współbieżnych i równoległych w językach Rust oraz C++ przy wykorzystaniu dwóch odmiennych architektur sprzętowych: x86\_64 (architektura tradycyjna, Windows/Linux) oraz ARM64 (architektura Apple Silicon – M1, macOS). Dzięki temu możliwa będzie analiza wpływu typu procesora i systemu operacyjnego na wydajność oraz efektywność implementacji.
+
+\subsection{Środowisko testowe}
+W ramach środowiska testowego zostały wykorzystane następujące urządzenia wraz z oprogoramowaniem:
+\subsubsection{Architektura ARM}
+W ramach architektury ARM został wykorzystany laptop firmy Apple - MacBook Pro z następującymi specyfikacjami:
+\begin{itemize}
+    \item procesor Apple M1
+    \item pamięć RAM 16 GB
+    \item system - macOS Sonoma wersja 14.5 (23F79)
+\end{itemize}
+\subsubsection{Architektura x86\_64}
+W ramach architektury x86\_64 został wykorzystany laptop firmy HP z następującymi specyfikacjami:
+\begin{itemize}
+    \item procesor
+    \item pamięć RAM 32 GB
+    \item system - Linux Ubuntu 24.04 LST
+\end{itemize}
+\subsection{Procedura testowa}
+Procedura testowa będzie obejmowała uruchomienie zestawu benchmarków w różnych konfiguracjach, takich jak liczba wątków oraz różne klasy algorytmów w przypadku NPB oraz na dwóch architekturach procesora. Każdy test będzie uruchamiany wielokrotnie - 10 razy, aby uzyskać uśrednione wyniki. Algorytmy zawierają również swoje logi zdzarzeń, które zostaną użyte do weryfikacji poprawności działania samego algorytmu jak i do późniejszej analizy wyników.
+\subsection{Narzędzia pomiarowe}
+W ramach przeprowadzania testów zostaną wykorzystane następujące narzędzia pomiarowe:
+\begin{itemize}
+    \item perf - narzędzie do profilowania kodu, które pozwala na analizę wydajności aplikacji w czasie rzeczywistym (jednakże nie jest dostępne na systemach Apple)
+    \item instruments (Xcode) - oficjalne narzędzie do profilowania od firmy Apple - zamiennik narzędzia \textit{perf} w tym przypadku,
+    \item hwloc - narzędzie pozwalające zbadać zachowanie programu jeżeli chodzi o dostęp do podzespołów komputera
+    \item threadsanitizer - flaga do kompilatora (dla języka C++ w tym przypadku), która pozwala sprawdzić czy w fazie kompilwoania nie zachodzi sytuacja wyścigów
+\end{itemize}
+
+\section{Porównanie międzyjęzykowe}
+\input{benchmarki/rownolegle/benchmarks.tex}
+\input{benchmarki/wspolbiezne/benchmarks.tex}

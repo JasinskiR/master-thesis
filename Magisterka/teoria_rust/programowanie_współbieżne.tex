@@ -6,9 +6,69 @@ Centralnym elementem podejścia Rusta do współbieżności jest model własnoś
 
 \subsection{Biblioteki}
 \subsubsection{std::thread}
+Jednym z podstawowych narzędzi oferowanych przez standardową bibliotekę Rust jest moduł std::thread, który umożliwia tworzenie niezależnych wątków wykonawczych. Pomimo że zapewnia on niski poziom abstrakcji i bezpośrednią kontrolę nad wątkami, jego użycie wymaga większej ostrożności w kontekście synchronizacji i zarządzania danymi współdzielonymi.
+Przykładowa konstrukcja:
+\begin{lstlisting}[language=Rust, caption=Przykład tworzenia wątku, label=thread_example]
+use std::thread;
+
+fn main() {
+    let handle = thread::spawn(|| {
+        // kod wykonywany równolegle
+    });
+    handle.join().unwrap();
+}
+\end{lstlisting}
+W przedstawionym przykładzie listing \ref{thread_example} wykorzystano funkcję thread::spawn, która tworzy nowy wątek wykonawczy, umożliwiając równoległe przetwarzanie danych lub zadań. Ciało funkcji anonimowej przekazanej do spawn zawiera kod, który zostanie wykonany w kontekście nowo utworzonego wątku. Zmienna handle przechowuje uchwyt do tego wątku, umożliwiając synchronizację z jego wykonaniem.
+Wywołanie handle.join().unwrap() służy do zablokowania głównego wątku programu do momentu zakończenia pracy wątku potomnego. Metoda join zwraca wynik zakończenia wątku
 \subsubsection{Tokio}
-\subsubsection{Rayon}
-\subsubsection{crossbeam::channel}
+Tokio to biblioteka służąca do obsługi zadań asynchronicznych (ang. asynchronous tasks) oraz wejścia-wyjścia bez blokad \eng{non-blocking I/O}. Wykorzystuje pętlę zdarzeń \eng{event loop}, dzięki której możliwe jest współbieżne przetwarzanie wielu zadań bez konieczności tworzenia oddzielnych wątków systemowych dla każdego z nich. Tokio wspiera zarówno jednowątkowy jak i wielowątkowy tryb działania, co pozwala na rozwój aplikacji zgodnie z potrzebami.
+
+\begin{lstlisting}[language=Rust, caption=Przykład użycia Tokio, label=tokio_example]
+use tokio::net::TcpListener;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+#[tokio::main]
+async fn main() {
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
+    loop {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        tokio::spawn(async move {
+            let mut buf = [0; 1024];
+            let n = socket.read(&mut buf).await.unwrap();
+            socket.write_all(&buf[0..n]).await.unwrap();
+        });
+    }
+}
+\end{lstlisting}
+W powyższym przykładzie listing \ref{tokio_example} tokio::spawn inicjuje współbieżne zadanie, które przetwarza połączenie TCP bez blokowania głównej pętli programu.
+
+\subsubsection{Crossbeam::channel – komunikacja między wątkami}
+Crossbeam to zestaw narzędzi wspierających programowanie współbieżne. Jednym z kluczowych komponentów tej biblioteki są kanały komunikacyjne \eng{channels}, implementowane w module crossbeam::channel. Stanowią one bezpieczny i efektywny sposób przesyłania wiadomości pomiędzy wątkami, umożliwiając implementację wzorca producent–konsument.
+
+\begin{lstlisting}[language=Rust, caption=Przykład użycia kanałów Crossbeam, label=crossbeam_channel_example]
+use crossbeam::channel;
+use std::thread;
+
+fn main() {
+let (sender, receiver) = channel::unbounded();
+
+let producer = thread::spawn(move || {
+    for i in 0..5 {
+        sender.send(i).unwrap();
+    }
+});
+
+let consumer = thread::spawn(move || {
+    while let Ok(msg) = receiver.recv() {
+        println!("Odebrano: {}", msg);
+    }
+});
+
+producer.join().unwrap();
+consumer.join().unwrap();
+}
+\end{lstlisting}
+W tym przypadku listing \ref{crossbeam_channel_example} channel::unbounded() tworzy kanał bez ograniczenia pojemności \eng{ unbounded channel}, który może służyć do swobodnej komunikacji między wątkami.
 \subsubsection{actix}
 \subsection{Wątki}
 \subsubsection{Pule wątków \eng{Thread Pools}}
@@ -89,7 +149,7 @@ fn main() {
 \end{lstlisting}
 W tym przykładzie \ref{multi_channel_spawn} tworzymy trzy wątki konsumentów, z których każdy odbiera wiadomości z tego samego kanału. Wątek główny wysyła trzy wiadomości, które są odbierane przez konsumentów.
 \begin{itemize}
-    \item Dodatkowo została użyta struktura \textbf{\textit{Arc<Mutex<Receiver>>}} \ref{ARC} do umożliwienia współdzielenia odbiorcy (Receiver) między wątkami. Mutex zapewnia synchronizację dostępu do kanału, dzięki czemu tylko jeden wątek na raz może odbierać wiadomości.
+    \item Dodatkowo została użyta struktura \textbf{\textit{Arc<Mutex<Receiver> >}} \ref{ARC} do umożliwienia współdzielenia odbiorcy (Receiver) między wątkami. Mutex zapewnia synchronizację dostępu do kanału, dzięki czemu tylko jeden wątek w danej chwili może odbierać wiadomości.
     \item \textbf{\textit{Arc::clone}} klonuje Arc, a nie Receiver. \textit{Arc} tworzy nowy uchwyt do tego samego obiektu w pamięci, dzięki czemu wszystkie wątki mogą uzyskać dostęp do tego samego kanału.
     \item \textbf{\textit{lock()}} Każdy wątek przed odebraniem wiadomości blokuje mutex, aby uzyskać dostęp do kanału w bezpieczny sposób.
 \end{itemize}

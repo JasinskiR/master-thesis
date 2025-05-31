@@ -552,3 +552,32 @@ doi = {10.1016/j.infsof.2012.08.013}
   pages={78-87},
   keywords={Schedules;Parallel programming;Image processing;Ecosystems;Benchmark testing;Libraries;Hardware;Structured parallel programming;parallel processing;programming;rust;skeletal programming},
   doi={10.1109/PDP62718.2024.00019}}
+
+@misc{nasaParallelBenchmarks,
+	author = {},
+	title = {{N}{A}{S} {P}arallel {B}enchmarks --- nas.nasa.gov},
+	howpublished = {\url{https://www.nas.nasa.gov/software/npb.html}},
+	year = {},
+	note = {[Accessed 17-04-2025]},
+}
+@article{CPPNPB,
+title = {The NAS Parallel Benchmarks for evaluating C++ parallel programming frameworks on shared-memory architectures},
+journal = {Future Generation Computer Systems},
+volume = {125},
+pages = {743-757},
+year = {2021},
+issn = {0167-739X},
+doi = {https://doi.org/10.1016/j.future.2021.07.021},
+url = {https://www.sciencedirect.com/science/article/pii/S0167739X21002831},
+author = {Júnior Löff and Dalvan Griebler and Gabriele Mencagli and Gabriell Araujo and Massimo Torquati and Marco Danelutto and Luiz Gustavo Fernandes},
+keywords = {NAS Parallel Benchmarks, Parallel programming, Multicore architectures, Performance evaluation},
+abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in Fortran, is a consolidated suite containing several benchmarks extracted from Computational Fluid Dynamics (CFD) models. The benchmark suite has important characteristics such as intensive memory communications, complex data dependencies, different memory access patterns, and hardware components/sub-systems overload. Parallel programming APIs, libraries, and frameworks that are written in C++ as well as new optimizations and parallel processing techniques can benefit if NPB is made fully available in this programming language. In this paper we present NPB-CPP, a fully C++ translated version of NPB consisting of all the NPB kernels and pseudo-applications developed using OpenMP, Intel TBB, and FastFlow parallel frameworks for multicores. The design of NPB-CPP leverages the Structured Parallel Programming methodology (essentially based on parallel design patterns). We show the structure of each benchmark application in terms of composition of few patterns (notably Map and MapReduce constructs) provided by the selected C++ frameworks. The experimental evaluation shows the accuracy of NPB-CPP with respect to the original NPB source code. Furthermore, we carefully evaluate the parallel performance on three multi-core systems (Intel, IBM Power, and AMD) with different C++ compilers (gcc, icc, and clang) by discussing the performance differences in order to give to the researchers useful insights to choose the best parallel programming framework for a given type of problem.}
+}
+
+@misc{NPBRust,
+  author       = {Gabriel Leite Bessa and Luan Mark Da Silva Borela and João A. Soares},
+  title        = {NPB-Rust: NAS Parallel Benchmarks in Rust},
+  year         = {2025},
+  howpublished = {\url{https://github.com/glbessa/NPB-Rust}},
+  note         = {Dostęp: 2025-05-18}
+}

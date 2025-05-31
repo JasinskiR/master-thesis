@@ -20,6 +20,11 @@
 \newblock \url{https://www.linkedin.com/advice/1/how-do-you-compare-programming-languages-coding}.
 \newblock [Dostęp 16-03-2025].
 
+\bibitem{nasaParallelBenchmarks}
+{N}{A}{S} {P}arallel {B}enchmarks --- nas.nasa.gov.
+\newblock \url{https://www.nas.nasa.gov/software/npb.html}.
+\newblock [Accessed 17-04-2025].
+
 \bibitem{rustgpuRust}
 {R}ust {G}{P}{U} --- rust-gpu.github.io.
 \newblock \url{https://rust-gpu.github.io}.
@@ -72,6 +77,12 @@ V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
 V.~Besozzi.
 \newblock Ppl: Structured parallel programming meets rust.
 \newblock {\em 2024 32nd Euromicro International Conference on Parallel, Distributed and Network-Based Processing (PDP)}, strony 78--87, 2024.
+
+\bibitem{NPBRust}
+G.~L. Bessa, L.~M. D.~S. Borela, J.~A. Soares.
+\newblock Npb-rust: Nas parallel benchmarks in rust.
+\newblock \url{https://github.com/glbessa/NPB-Rust}, 2025.
+\newblock Dostęp: 2025-05-18.
 
 \bibitem{rustPolishNames}
 J.~Blandy, J.~Orendorff, L.~Tindall.
@@ -186,6 +197,11 @@ M.~Lindgren.
 \newblock {I}ntroduction - {C}omparing parallel {R}ust and {C}++ --- parallel-rust-cpp.github.io.
 \newblock \url{https://parallel-rust-cpp.github.io}.
 \newblock [Dostęp 28-01-2025].
+
+\bibitem{CPPNPB}
+J.~Löff, D.~Griebler, G.~Mencagli, G.~Araujo, M.~Torquati, M.~Danelutto, L.~G. Fernandes.
+\newblock The nas parallel benchmarks for evaluating c++ parallel programming frameworks on shared-memory architectures.
+\newblock {\em Future Generation Computer Systems}, 125:743--757, 2021.
 
 \bibitem{martins2025npbrustnasparallelbenchmarks}
 E.~M. Martins, L.~G. Faé, R.~B. Hoffmann, L.~S. Bianchessi, D.~Griebler.
