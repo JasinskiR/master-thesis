@@ -1,5 +1,66 @@
 \section{Programowanie równoległe}
-\subsection{OpenMP}
-Biblioteka ta pozwala uruchomić wybraną część kodu na wielu wątkach. Działa to podobnie do uruchamiania kody z wykorzystaniem GPU - kod, który zostanie uruchomiony na wielu wątkach umieszczany jest w specjalnym zakresie \eng{scope}. 
-Kompilacja kodu z OpenMP odbywa się z wykorzystaniem flagi \texttt{-fopenmp} w przypadku kompilatora \texttt{g++}.\\
-Użycie pamięci cache może pomóc w zwiększeniu wydajności czasowej programu kosztem pamięci. W przypadku OpenMP, zmienna \texttt{shared} oznacza, że zmienna jest współdzielona pomiędzy wątkami, a \texttt{private} oznacza, że każdy wątek ma swoją kopię zmiennej\\
+\subsection{OpenMP -  Open Multi-Processing}
+OpenMP to biblioteka umożliwiająca programowanie równoległe w modelu pamięci współdzielonej. Jest dostępna dla języków C, C++ oraz Fortran i opiera się na użyciu dyrektyw preprocesora (ang. compiler directives) pozwalających na uproszczone rozproszenie zadań pomiędzy wątki w sposób deklaratywny.
+
+Podstawowym celem OpenMP jest ułatwienie implementacji aplikacji równoległych poprzez maksymalne ograniczenie ręcznego zarządzania wątkami i synchronizacją. W kodzie C++ użycie tej technologii wymaga aktywacji flagi -fopenmp podczas kompilacji przy użyciu kompilatora g++.
+Przedstawia podstawowe pojęcia:
+\begin{itemize}
+    \item \#pragma omp parallel — dyrektywa inicjująca blok kodu, który ma zostać wykonany równolegle przez wiele wątków,
+    \item shared — oznacza zmienne współdzielone pomiędzy wszystkimi wątkami,
+    \item private — każdemu wątkowi przypisywana jest prywatna kopia zmiennej,
+    \item cache locality — pamięć podręczna (ang. cache) może znacznie poprawić wydajność przetwarzania, choć kosztem większego zużycia pamięci.
+\end{itemize}
+
+\begin{lstlisting}[language=C++, caption={Przykład użycia OpenMP w C++}, label={lst:openmp_example}]
+#include <omp.h>
+#include <iostream>
+
+int main() {
+    int sum = 0;
+    #pragma omp parallel for reduction(+:sum)
+    for (int i = 1; i <= 100; ++i) {
+        sum += i;
+    }
+    std::cout << "Suma: " << sum << std::endl;
+    return 0;
+}
+\end{lstlisting}    
+W powyższym przykładzie w listingu \ref{lst:openmp_example} zmienna sum jest sumą liczb od 1 do 100 obliczaną równolegle. Dzięki użyciu dyrektywy \#pragma omp parallel for każda iteracja pętli może być wykonana w osobnym wątku. Atrybut reduction(+:sum) zapewnia bezpieczne sumowanie wyników lokalnych wątków do jednej wartości globalnej. OpenMP automatycznie zarządza synchronizacją i agregacją wyników, dzięki czemu użytkownik nie musi implementować ręcznego zarządzania zasobami współdzielonymi
+.
+
+\subsection{Intel TBB (Threading Building Blocks)}
+Intel Threading Building Blocks (TBB) to nowoczesna biblioteka programistyczna dla języka C++, przeznaczona do tworzenia aplikacji równoległych w sposób wysoce elastyczny i skalowalny. W przeciwieństwie do OpenMP, TBB opiera się na programowaniu funkcyjnym i komponentowym, umożliwiając dekompozycję zadań \eng{ task-based parallelism}, a nie operacji niskiego poziomu.
+
+Cechy charakterystyczne:
+\begin{itemize}
+    \item Deklaratywny styl programowania, który umożliwia oddelegowanie decyzji o wykonaniu do systemu planowania zadań.
+    \item Dynamiczna alokacja wątków w oparciu o dostępność zasobów.
+    \item Wbudowana obsługa synchronizacji oraz struktur danych przystosowanych do środowisk wielowątkowych (np. concurrent\_vector, concurrent\_queue).
+\end{itemize}
+
+\begin{lstlisting}[language=C++, caption={Przykład użycia Intel TBB w C++}, label={lst:tbb_example}]
+#include <tbb/tbb.h>
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> data(1000, 1);
+    int sum = 0;
+
+    tbb::parallel_reduce(
+        tbb::blocked_range<size_t>(0, data.size()),
+        0,
+        [&](const tbb::blocked_range<size_t>& r, int local_sum) {
+            for (size_t i = r.begin(); i < r.end(); ++i)
+                local_sum += data[i];
+            return local_sum;
+        },
+        std::plus<int>()
+    );
+
+    std::cout << "Suma: " << sum << std::endl;
+    return 0;
+}
+\end{lstlisting}
+W powyższym przykładzie w listingu \ref{lst:tbb_example} funkcja tbb::parallel\_reduce automatycznie dzieli zakres danych na bloki (blocked\_range), które przetwarzane są równolegle przez dostępne wątki. Funkcja lambda odpowiada za lokalne przetwarzanie danych (w tym przypadku sumowanie wartości), a następnie lokalne wyniki są agregowane przy użyciu funkcji std::plus<int>. TBB samodzielnie zarządza planowaniem zadań oraz synchronizacją, co czyni go potężnym narzędziem w budowie skalowalnych aplikacji równoległych.
+

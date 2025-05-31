@@ -29,6 +29,9 @@
 \contentsline {lstlisting}{\numberline {5.5}{\ignorespaces Przykład użycia std::async}}{45}{lstlisting.5.5}%
 \contentsline {lstlisting}{\numberline {5.6}{\ignorespaces Przykład użycia std::promise}}{45}{lstlisting.5.6}%
 \contentsline {lstlisting}{\numberline {5.7}{\ignorespaces Przykład użycia std::packaged\_task}}{46}{lstlisting.5.7}%
+\contentsline {lstlisting}{\numberline {5.8}{\ignorespaces Przykład użycia OpenMP w C++}}{47}{lstlisting.5.8}%
+\contentsline {lstlisting}{\numberline {5.9}{\ignorespaces Przykład użycia Intel TBB w C++}}{48}{lstlisting.5.9}%
+\addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
