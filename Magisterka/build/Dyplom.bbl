@@ -15,6 +15,11 @@
 \newblock \url{https://developer.nvidia.com/cuda-toolkit}.
 \newblock [Dostęp 22-03-2025].
 
+\bibitem{cpp26}
+{E}xecution control library (since {C}++26) - cppreference.com --- en.cppreference.com.
+\newblock \url{https://en.cppreference.com/w/cpp/execution.html}.
+\newblock [Accessed 31-05-2025].
+
 \bibitem{LanguageComparison_4}
 {H}ow do you compare programming languages in a coding interview? --- linkedin.com.
 \newblock \url{https://www.linkedin.com/advice/1/how-do-you-compare-programming-languages-coding}.

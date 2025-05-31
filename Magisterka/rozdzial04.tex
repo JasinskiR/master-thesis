@@ -60,7 +60,7 @@ Własność Danych na Stercie
 Smart pointer Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
 Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji.
 
-\begin{lstlisting}[language=Rust, caption=Box smart pointer, label=box_smart_pointer]
+\begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik Box, label=box_smart_pointer]
 fn main() {
     let b = Box::new(5); // Alokacja liczby całkowitej na stercie
     println!("{}", b);   // Dostęp do wartości za pomocą wskaźnika Box
@@ -72,7 +72,7 @@ fn main() {
 Smart pointer Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
 Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi.
 
-\begin{lstlisting}[language=Rust, caption=Rc smart pointer, label=rc_smart_pointer]
+\begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik RC, label=rc_smart_pointer]
 use std::rc::Rc;
 
 fn main() {
@@ -86,7 +86,7 @@ fn main() {
 \label{ARC}
 Dla programowania współbieżnego Rust oferuje Arc (Atomic Reference Counted), czyli wersję \textbf{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych.
 
-\begin{lstlisting}[language=Rust, caption=Arc smart pointer, label=arc_smart_pointer]
+\begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik Arc, label=arc_smart_pointer]
 use std::sync::Arc;
 use std::thread;
 
@@ -102,8 +102,30 @@ fn main() {
 }
 \end{lstlisting}
 \subsubsection{Niebezpieczny Rust (Unsafe Rust)}
-TBD \cite{UnsafeRust}
+Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpieczeństwa pamięci, realizowany poprzez model własności \eng{ownership}, pożyczania \eng{borrowing} oraz statyczną kontrolę mutowalności. Niemniej jednak, w niektórych przypadkach – szczególnie przy niskopoziomowych operacjach systemowych, interoperacyjności z językiem C lub zaawansowanej optymalizacji – konieczne staje się tymczasowe zawieszenie niektórych mechanizmów ochronnych. W tym celu Rust oferuje specjalny blok językowy: unsafe. \\
+Deklaracja unsafe nie oznacza, że kod z założenia jest błędny lub niewłaściwy. Oznacza jedynie, że kompilator przestaje gwarantować bezpieczeństwo pamięciowe i odpowiedzialność za poprawność działania spoczywa w pełni na programiście. Z poziomu unsafe można wykonać następujące operacje \cite{UnsafeRust} :
+\begin{itemize}
+\item dereferencję wskaźników surowych \eng{raw pointers},
+\item wywołanie funkcji lub interfejsów oznaczonych jako unsafe (np. z FFI - \eng{Foreign Function Interface}, czyli interfejs do wywoływania funkcji z innych języków, np. C),
+\item dostęp do zmiennych statycznych o niesynchronizowanym dostępie,
+\item implementację niektórych cech \eng{traits} systemowych w sposób potencjalnie niebezpieczny,
+\item bezpośrednią manipulację pamięcią (alokacja, kopiowanie, itd.).
+\end{itemize} 
+Poniższy przykład demonstruje dereferencję wskaźnika surowego (*const T, *mut T), która wymaga bloku unsafe:
+\begin{lstlisting}[language=Rust, caption=Przykład użycia unsafe Rust, label=unsafe_rust_example]
+fn main() {
+    let x: i32 = 42;
+    let ptr: *const i32 = &x;
+
+    unsafe {
+        println!("Wartość pod wskaźnikiem ptr: {}", *ptr);
+    }
+}
+\end{lstlisting}
+W powyższym kodzie listing \ref{unsafe_rust_example} wskaźnik ptr jest wskaźnikiem surowym \eng{raw pointer}, który nie posiada gwarancji poprawności, jakie zapewniają referencje bezpośrednie (\&T, \&mut T). Aby móc odczytać wartość spod tego wskaźnika, konieczne jest oznaczenie operacji jako unsafe.
+
+Warto jednak podkreślić, że Rust promuje zasadę minimalnego zaufania \eng{principle of minimal trust}, dlatego zaleca się ograniczanie użycia unsafe do niezbędnych sekcji oraz hermetyzowanie ich w bezpiecznych abstrakcjach (np. typach własnych, modułach lub API) \cite{UnsafeRust}.
 \input{teoria_rust/programowanie_współbieżne}
 \input{teoria_rust/programowanie_równoległe}
-
+\input{teoria_rust/wspolne.tex}
 

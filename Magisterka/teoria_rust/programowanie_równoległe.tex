@@ -7,9 +7,26 @@ Przykładowe wykorzystanie biblioteki Rayon może wyglądać następująco:
 use rayon::prelude::*;
 
 fn main() {
-    let numbers = vec![1, 2, 3, 4, 5];
-    let squared: Vec<_> = numbers.par_iter().map(|x| x * x).collect();
-    println!("{:?}", squared);
+    let data = vec![1, 2, 3, 4, 5, 6, 7, 8];
+
+    let result: i32 = data
+        .par_iter()                  // <- równoległa wersja iteratora
+        .map(|x| x * 2)              // <- równolegle podwajamy każdą wartość
+        .reduce(|| 0, |a, b| a + b); // <- redukcja do sumy, start = 0
+
+    println!("Wynik: {}", result); // Oczekiwany wynik: 72
 }
+    
 \end{lstlisting}
-W powyższym przykładzie listing \ref{pariter_example} użycie par\_iter() zamiast standardowego iteratora iter() umożliwia równoległe przetwarzanie elementów wektora. Dzięki temu możliwe jest wykorzystanie wielu rdzeni procesora bez konieczności implementowania własnego mechanizmu rozdzielania zadań i zarządzania synchronizacją.
+Kod przedstawiony w listingu \ref{pariter_example} realizuje prostą operację podwajania wartości elementów wektora oraz ich sumowania, jednak kluczową cechą jest to, że wszystkie operacje wykonywane są równolegle. Funkcja \texttt{par\_iter()} zamienia standardowy iterator sekwencyjny na jego równoległy odpowiednik, co oznacza, że kolejne elementy będą przetwarzane na wielu rdzeniach procesora w sposób automatyczny i zoptymalizowany przez bibliotekę.
+
+Następnie funkcja \texttt{map} pozwala na równoległe zastosowanie tej samej operacji - w tym przypadku mnożenia przez 2 - do każdego elementu kolekcji. Nie wymaga to żadnej ręcznej synchronizacji ani zarządzania współbieżnością — biblioteka zajmuje się podziałem pracy i wykonaniem w sposób optymalny względem dostępnych zasobów sprzętowych.
+
+Ostatni etap przetwarzania to \texttt{reduce}, który agreguje wyniki cząstkowe w jeden wynik końcowy. Funkcja ta działa również równolegle: najpierw sumowane są wartości lokalnie (w ramach każdego wątku roboczego), a dopiero potem następuje łączenie tych częściowych sum w jedną finalną wartość. Neutralny element funkcji redukującej to 0, co jest standardowym przypadkiem przy sumowaniu liczb całkowitych.
+
+Cały proces ilustruje typowy model MapReduce, w którym dane są:
+\begin{itemize}
+\item dzielone na fragmenty \eng{split},
+\item transformowane \eng{map},
+\item a następnie agregowane \eng{reduce}.
+\end{itemize}

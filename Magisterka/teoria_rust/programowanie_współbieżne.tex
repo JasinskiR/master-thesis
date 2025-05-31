@@ -5,21 +5,6 @@ Współbieżność to zdolność systemu do obsługi wielu zadań, które potenc
 Centralnym elementem podejścia Rusta do współbieżności jest model własności pamięci, który umożliwia programistom tworzenie kodu współbieżnego bez ryzyka wystąpienia błędów związanych z niebezpiecznym dostępem do współdzielonej pamięci. Mechanizm ten, oparty na koncepcjach własności, pożyczania oraz systemu typów, pozwala kompilatorowi Rust na statyczne wykrywanie potencjalnych problemów, takich jak wyścigi danych (data races). Własność pamięci zapewnia, że tylko jeden wątek może posiadać mutowalny dostęp do danej zmiennej w danym czasie, eliminując tym samym możliwość niespodziewanej ingerencji ze strony innych wątków \ref{ownership_borrow}.
 
 \subsection{Biblioteki}
-\subsubsection{std::thread}
-Jednym z podstawowych narzędzi oferowanych przez standardową bibliotekę Rust jest moduł std::thread, który umożliwia tworzenie niezależnych wątków wykonawczych. Pomimo że zapewnia on niski poziom abstrakcji i bezpośrednią kontrolę nad wątkami, jego użycie wymaga większej ostrożności w kontekście synchronizacji i zarządzania danymi współdzielonymi.
-Przykładowa konstrukcja:
-\begin{lstlisting}[language=Rust, caption=Przykład tworzenia wątku, label=thread_example]
-use std::thread;
-
-fn main() {
-    let handle = thread::spawn(|| {
-        // kod wykonywany równolegle
-    });
-    handle.join().unwrap();
-}
-\end{lstlisting}
-W przedstawionym przykładzie listing \ref{thread_example} wykorzystano funkcję thread::spawn, która tworzy nowy wątek wykonawczy, umożliwiając równoległe przetwarzanie danych lub zadań. Ciało funkcji anonimowej przekazanej do spawn zawiera kod, który zostanie wykonany w kontekście nowo utworzonego wątku. Zmienna handle przechowuje uchwyt do tego wątku, umożliwiając synchronizację z jego wykonaniem.
-Wywołanie handle.join().unwrap() służy do zablokowania głównego wątku programu do momentu zakończenia pracy wątku potomnego. Metoda join zwraca wynik zakończenia wątku
 \subsubsection{Tokio}
 Tokio to biblioteka służąca do obsługi zadań asynchronicznych (ang. asynchronous tasks) oraz wejścia-wyjścia bez blokad \eng{non-blocking I/O}. Wykorzystuje pętlę zdarzeń \eng{event loop}, dzięki której możliwe jest współbieżne przetwarzanie wielu zadań bez konieczności tworzenia oddzielnych wątków systemowych dla każdego z nich. Tokio wspiera zarówno jednowątkowy jak i wielowątkowy tryb działania, co pozwala na rozwój aplikacji zgodnie z potrzebami.
 
@@ -50,29 +35,59 @@ use crossbeam::channel;
 use std::thread;
 
 fn main() {
-let (sender, receiver) = channel::unbounded();
+    let (sender, receiver) = channel::unbounded();
 
-let producer = thread::spawn(move || {
-    for i in 0..5 {
-        sender.send(i).unwrap();
-    }
-});
+    let producer = thread::spawn(move || {
+        for i in 0..5 {
+            sender.send(i).unwrap();
+        }
+    });
 
-let consumer = thread::spawn(move || {
-    while let Ok(msg) = receiver.recv() {
-        println!("Odebrano: {}", msg);
-    }
-});
+    let consumer = thread::spawn(move || {
+        while let Ok(msg) = receiver.recv() {
+            println!("Odebrano: {}", msg);
+        }
+    });
 
-producer.join().unwrap();
-consumer.join().unwrap();
+    producer.join().unwrap();
+    consumer.join().unwrap();
 }
 \end{lstlisting}
 W tym przypadku listing \ref{crossbeam_channel_example} channel::unbounded() tworzy kanał bez ograniczenia pojemności \eng{ unbounded channel}, który może służyć do swobodnej komunikacji między wątkami.
-\subsubsection{actix}
-\subsection{Wątki}
-\subsubsection{Pule wątków \eng{Thread Pools}}
-\subsubsection{Kradzież zadania \eng{Work Stealing}}
+\subsubsection{Actix}
+Actix to framework do tworzenia współbieżnych aplikacji opartych na modelu aktorowym. W tym podejściu jednostką obliczeniową jest aktor, który posiada własny stan i komunikuje się z innymi aktorami wyłącznie za pomocą wiadomości. Takie podejście eliminuje potrzebę stosowania blokad.
+\begin{lstlisting}[language=Rust, caption=Przykład użycia Actix, label=actix_example]
+use actix::prelude::*;
+
+struct Ping;
+
+impl Message for Ping {
+    type Result = &'static str;
+}
+
+struct MyActor;
+
+impl Actor for MyActor {
+    type Context = Context<Self>;
+}
+
+impl Handler<Ping> for MyActor {
+    type Result = &'static str;
+
+    fn handle(&mut self, _: Ping, _: &mut Context<Self>) -> Self::Result {
+        "pong"
+    }
+}
+
+#[actix::main]
+async fn main() {
+    let addr = MyActor.start();
+    let res = addr.send(Ping).await.unwrap();
+    println!("{}", res);
+}
+\end{lstlisting}
+W zaprezentowanym przykładzie aktor MyActor odbiera wiadomości typu Ping i odpowiada komunikatem pong. Każdy aktor działa w swoim własnym kontekście, co zapewnia izolację stanu i zwiększa bezpieczeństwo współbieżne bez użycia mutexów.
+
 \subsection{Kanały}
 
 Kanały \eng{channels} to mechanizm w języku Rust, który umożliwia bezpieczną i efektywną komunikację między wątkami. Kanały są jednym z kluczowych elementów modelu współbieżności w tym języku, zapewniając sposób przesyłania danych z jednego wątku do drugiego, jednocześnie minimalizując ryzyko problemów związanych z współdzieleniem pamięci. Kanały są oparte na wzorcu producenta-konsumenta, gdzie jeden wątek (producent) wysyła dane, a inny wątek (konsument) je odbiera.
@@ -191,18 +206,46 @@ Received: End of messages
 No more messages!
 \end{verbatim}
 
-\subsubsection{Kanały poprzeczne \eng{Crossbeam Channels}}
-\subsubsection{Aktorzy}
-
-\subsection{Synchronizacja}
-\subsection{Mutex i RwLock}
-
-Dla sytuacji wymagających współdzielenia pamięci Rust oferuje synchronizowane struktury, takie jak Mutex \eng{mutual exclusion} oraz RwLock. Umożliwiają one zarządzanie dostępem do danych w sposób bezpieczny, jednocześnie wymagając od programisty jawnego określenia momentów blokady i odblokowania zasobów.
-
-\subsection{Wartości atomiczne}
-Rust obsługuje także operacje na typach atomowych, które pozwalają na wykonywanie niepodzielnych operacji na współdzielonych zmiennych bez potrzeby stosowania bardziej zaawansowanych mechanizmów synchronizacji.
-
-\subsection{Bariery i semafory}
-
 \subsection{Asynchroniczność}
 Chociaż współbieżność i asynchroniczność nie są tożsame, w Rust oba te podejścia są ze sobą ściśle powiązane. Rust implementuje asynchroniczność za pomocą konstrukcji takich jak async/await oraz bibliotek takich jak Tokio czy async-std. Podejście to pozwala na wykonywanie wielu operacji współbieżnie w ramach pojedynczego wątku, eliminując narzut związany z tworzeniem wielu wątków.
+Podstawowe elementy asynchroniczności to:
+\begin{itemize}
+    \item async / await – konstrukcje językowe umożliwiające deklaratywne definiowanie funkcji asynchronicznych i ich późniejsze wywoływanie bez blokowania wątku.
+    \item Future – futury, typ reprezentujący wartość, która będzie dostępna w przyszłości. Futures są wykonywane leniwie i wymagają uruchomienia w ramach runtime’u.
+    \item Tokio i async-std – najpopularniejsze asynchroniczne runtimes, implementujące własne planisty i pętle zdarzeń (event loops).
+    \item Asynchroniczne kanały (tokio::sync::mpsc, broadcast, oneshot) – umożliwiają komunikację bez blokowania wątków.
+    \item Asynchroniczne semafory (tokio::sync::Semaphore) – pozwalają ograniczyć liczbę jednocześnie wykonywanych zadań asynchronicznych bez blokowania wątku. Są często stosowane do kontroli równoczesnych operacji na zasobach zewnętrznych, takich jak dostęp do bazy danych lub API.
+\end{itemize}
+W standardowej bibliotece Rust nie ma semafora, ale tokio udostępnia asynchroniczny semafor (tokio::sync::Semaphore), który można również użyć w środowisku wielowątkowym z tokio::main.
+
+\begin{lstlisting}[language=Rust, caption=Przykład użycia semafora, label=semaphore_example]
+use tokio::sync::Semaphore;
+use std::sync::Arc;
+use tokio::task;
+use std::time::Duration;
+
+#[tokio::main]
+async fn main() {
+    let semaphore = Arc::new(Semaphore::new(2)); // maks. 2 równoczesne zasoby
+    let mut handles = vec![];
+
+    for i in 0..5 {
+        let sem_clone = Arc::clone(&semaphore);
+        let handle = task::spawn(async move {
+            let permit = sem_clone.acquire().await.unwrap();
+            println!("Zadanie {}: rozpoczęło pracę", i);
+
+            tokio::time::sleep(Duration::from_secs(1)).await;
+
+            println!("Zadanie {}: kończy pracę", i);
+            drop(permit); // zwolnienie zasobu
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.await.unwrap();
+    }
+}
+\end{lstlisting}
+W tym przykładzie listing \ref{semaphore_example} semafor o pojemności 2 (Semaphore::new(2)) umożliwia maksymalnie dwóm zadaniom równoczesny dostęp do sekcji krytycznej. Pozostałe zadania oczekują w kolejce, aż jedno zezwolenie zostanie zwolnione. tokio::sync::Semaphore jest semaforem asynchronicznym (nie blokuje fizycznego wątku), dlatego nadaje się zarówno do środowisk asynchronicznych, jak i do ograniczania zasobów w systemach hybrydowych (np. współbieżno-równoległych).
