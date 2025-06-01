@@ -10,6 +10,11 @@
 \newblock \url{https://www.cs.ucf.edu/~leavens/ComS541Fall98/hw-pages/comparing/}.
 \newblock [Dostęp 16-03-2025].
 
+\bibitem{HWLOC555}
+{C}{P}{U} binding on {M}ac{O}{S} · {I}ssue {\#}555 · open-mpi/hwloc --- github.com.
+\newblock \url{https://github.com/open-mpi/hwloc/issues/555}.
+\newblock [Dostęp 01-06-2025].
+
 \bibitem{nvidiaCUDAToolkit}
 {C}{U}{D}{A} {T}oolkit - {F}ree {T}ools and {T}raining --- developer.nvidia.com.
 \newblock \url{https://developer.nvidia.com/cuda-toolkit}.
@@ -18,7 +23,12 @@
 \bibitem{cpp26}
 {E}xecution control library (since {C}++26) - cppreference.com --- en.cppreference.com.
 \newblock \url{https://en.cppreference.com/w/cpp/execution.html}.
-\newblock [Accessed 31-05-2025].
+\newblock [Dostęp 31-05-2025].
+
+\bibitem{hwlocHardwareLocality}
+{H}ardware {L}ocality (hwloc): {H}ardware {L}ocality --- hwloc.readthedocs.io.
+\newblock \url{https://hwloc.readthedocs.io/en/stable/}.
+\newblock [Dostęp 01-06-2025].
 
 \bibitem{LanguageComparison_4}
 {H}ow do you compare programming languages in a coding interview? --- linkedin.com.

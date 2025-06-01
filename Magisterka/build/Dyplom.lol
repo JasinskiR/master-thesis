@@ -36,12 +36,14 @@
 \contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Modularna struktura benchmarku CG w języku Rust}}{54}{lstlisting.7.1}%
 \contentsline {lstlisting}{\numberline {7.2}{\ignorespaces Struktura benchmarku CG w języku C++}}{55}{lstlisting.7.2}%
 \contentsline {lstlisting}{\numberline {7.3}{\ignorespaces Nowoczesna struktura benchmarku CG w języku C++}}{55}{lstlisting.7.3}%
-\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Zarządzanie pamięcią w Rust}}{56}{lstlisting.7.4}%
-\contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Zarządzanie pamięcią w C++ (styl Fortran)}}{57}{lstlisting.7.5}%
-\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Zarządzanie pamięcią w nowoczesnym C++}}{58}{lstlisting.7.6}%
-\contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Równoległość danych w Rust z Rayon}}{59}{lstlisting.7.7}%
-\contentsline {lstlisting}{\numberline {7.8}{\ignorespaces Równoległość w C++ (styl Fortran)}}{60}{lstlisting.7.8}%
-\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Równoległość w nowoczesnym C++}}{61}{lstlisting.7.9}%
+\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Struktura benchmarku CG w C++ z TBB}}{56}{lstlisting.7.4}%
+\contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Zarządzanie pamięcią w Rust}}{57}{lstlisting.7.5}%
+\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Zarządzanie pamięcią w C++ (styl Fortran)}}{58}{lstlisting.7.6}%
+\contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Zarządzanie pamięcią w nowoczesnym C++}}{59}{lstlisting.7.7}%
+\contentsline {lstlisting}{\numberline {7.8}{\ignorespaces Równoległość danych w Rust z Rayon}}{60}{lstlisting.7.8}%
+\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Równoległość w C++ (styl Fortran)}}{61}{lstlisting.7.9}%
+\contentsline {lstlisting}{\numberline {7.10}{\ignorespaces Równoległość w nowoczesnym C++}}{62}{lstlisting.7.10}%
+\contentsline {lstlisting}{\numberline {7.11}{\ignorespaces Równoległość w C++ z TBB}}{62}{lstlisting.7.11}%
 \addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}

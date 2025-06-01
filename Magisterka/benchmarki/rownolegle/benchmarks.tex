@@ -116,6 +116,60 @@ ModernCG::ModernCG(const Problem& params)
 }
 \end{lstlisting}
 
+\subsubsection{C++ z wykorzystaniem TBB}
+Implementacja TBB w benchmarku CG bazuje na tym samym podejściu co wersja OpenMP, zastępując dyrektywy preprocesora wywołaniami funkcji biblioteki TBB:
+\begin{lstlisting}[language=C++, caption={Struktura benchmarku CG w C++ z TBB}, label={lst:cg_tbb_structure}]
+#include "tbb/parallel_for.h"
+#include "tbb/parallel_reduce.h"
+#include "tbb/blocked_range.h"
+#include "tbb/task_scheduler_init.h"
+#include "../common/npb-CPP.hpp"
+#include "npbparams.hpp"
+
+// Identyczne globalne zmienne jak w wersji OpenMP
+#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
+static int colidx[NZ];
+static int rowstr[NA+1];
+static double a[NZ];
+static double x[NA+2];
+static double z[NA+2];
+static double p[NA+2];
+static double q[NA+2];
+static double r[NA+2];
+#else
+static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
+static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
+static double (*a)=(double*)malloc(sizeof(double)*(NZ));
+static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*z)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*p)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*q)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*r)=(double*)malloc(sizeof(double)*(NA+2));
+#endif
+
+// Inicjalizacja TBB w main()
+int main(int argc, char **argv){
+    int num_workers;
+    if(const char * nw = std::getenv("TBB_NUM_THREADS")) {
+        num_workers = atoi(nw);
+    } else {
+        num_workers = 1;
+    }
+    
+    tbb::task_scheduler_init init(num_workers);
+    
+    // Reszta kodu identyczna jak w wersji klasycznej
+}
+\end{lstlisting}
+Kluczowe cechy organizacji kodu TBB:
+\begin{itemize}
+    \item Minimalne zmiany względem OpenMP: Zachowanie struktury proceduralnej z globalnymi zmiennymi
+    \item Proceduralne funkcje: Identyczne sygnatury funkcji jak conj\_grad(), makea(), sparse()
+    \item Ręczne zarządzanie pamięcią: Wykorzystanie malloc() jak w wersji klasycznej
+    \item Inicjalizacja schedulera: Jedyna różnica - jawne utworzenie tbb::task\_scheduler\_init
+\end{itemize}
+
+
 \subsection{Zarządzanie pamięcią}
 \subsubsection{Rust}
 Rust wykorzystuje unikatowy system własności eliminujący ręczne zarządzanie pamięcią:
@@ -178,6 +232,9 @@ int main(int argc, char **argv) {
     // Brak eksplicitnego zwalniania pamięci
 }
 \end{lstlisting}
+
+\subsubsection{C++ z wykorzystaniem TBB}
+Implementacja TBB wykorzystuje identyczny model zarządzania pamięcią jak wersja OpenMP - nie wprowadza żadnych ulepszeń w tym zakresie listing \ref{lst:cg_cpp_memory}.
 
 \subsubsection{Nowoczesne podejście C++}
 \begin{lstlisting}[language=C++, caption={Zarządzanie pamięcią w nowoczesnym C++}, label={lst:cg_modern_cpp_memory}]
@@ -330,35 +387,150 @@ double SparseMatrix::conjugate_gradient() {
 }
 \end{lstlisting}
 
+\subsubsection{C++ z wykorzystaniem TBB}
+TBB w implementacji CG zastępuje dyrektywy OpenMP wywołaniami funkcji biblioteki, zachowując tę samą logikę algorytmu:
+\begin{lstlisting}[language=C++, caption={Równoległość w C++ z TBB}, label={lst:cg_tbb_parallelism}]
+// Zastąpienie OpenMP reduction TBB parallel_reduce
+static void conj_grad(/* parametry */) {
+    rho = tbb::parallel_reduce(
+        tbb::blocked_range<size_t>(0, lastcol-firstcol+1), 
+        0.0, 
+        [&](const tbb::blocked_range<size_t>& r_tbb, double worker_sum){
+            for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
+                worker_sum += r[j]*r[j];
+            }
+            return worker_sum;
+        }, 
+        std::plus<double>()
+    );
+...
+tbb::parallel_for(
+        tbb::blocked_range<size_t>(0, lastrow-firstrow+1), 
+        [&](const tbb::blocked_range<size_t>& r_tbb){
+            for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
+                double sum = 0.0;
+                for(int k = rowstr[j]; k < rowstr[j+1]; k++){
+                    sum = sum + a[k]*p[colidx[k]];
+                }
+                q[j] = sum;
+            }
+        }
+    );
+...
+rho = tbb::parallel_reduce(
+    tbb::blocked_range<size_t>(0, lastcol-firstcol+1), 
+    0.0, 
+    [&](const tbb::blocked_range<size_t>& r_tbb, double worker_sum){
+        for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
+            z[j] = z[j] + alpha*p[j];      // aktualizacja z
+            r[j] = r[j] - alpha*q[j];      // aktualizacja r
+            worker_sum += r[j]*r[j];       // obliczenie nowego rho
+        }
+        return worker_sum;
+    }, 
+    std::plus<double>()
+);
+...
+// Prosty parallel_for dla operacji wektorowych
+tbb::parallel_for(
+    tbb::blocked_range<size_t>(0, lastrow-firstrow+1), 
+    [&](const tbb::blocked_range<size_t>& r_tbb){
+        for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
+            p[j] = r[j] + beta*p[j];
+        }
+    }
+);
+
+\end{lstlisting}
+Cechy mechanizmów równoległości w bibliotece TBB w porównaniu z OpenMP:
+\begin{itemize}
+    \item Funkcyjny interfejs API – biblioteka TBB wykorzystuje wyrażenia lambda i podejście funkcyjne, w przeciwieństwie do OpenMP, które opiera się na dyrektywach preprocesora.
+    \item Zakres blokowy – TBB automatycznie dzieli przestrzeń danych na bloki, co odpowiada mechanizmowi chunk\_size w OpenMP, lecz odbywa się w sposób bardziej deklaratywny i niezależny od użytkownika.
+    \item Kradzież zadań – domyślny planista zadań w TBB oparty jest na strategii "kradzieży pracy", co stanowi alternatywę dla ręcznie konfigurowanych strategii harmonogramowania (statycznej/dynamicznej) w OpenMP.
+    \item Bezpieczeństwo typów – dzięki wykorzystaniu szablonów (templates), TBB zapewnia silniejsze typowanie niż OpenMP, choć nie gwarantuje pełnej weryfikacji poprawności współbieżności na etapie kompilacji, jak ma to miejsce w języku Rust.
+    \item Większy narzut składniowy – implementacja równoległości w TBB wymaga bardziej rozbudowanej struktury kodu, co zwiększa złożoność implementacyjną w porównaniu do bardziej zwięzłych konstrukcji dostępnych w OpenMP.
+
+\end{itemize}
+
+
+
 \subsection{Podsumowanie różnic implementacyjnych}
 \subsubsection{Architektura i design}
 
+% \begin{table}[H]
+%     \centering
+%     \caption{Porównanie podejść architektonicznych w Rust i C++}
+%     \begin{tabular}{|>{\centering}m{3.2cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{3.3cm}|}
+%     \hline
+%     \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (klasyczny)} & \textbf{C++ (nowoczesny)} \\
+%     \hline
+%     Organizacja kodu & Modułowa, strukturalna & Proceduralna, globalna & Obiektowa, z enkapsulacją \\ \hline
+%     Zarządzanie stanem & Własność i pożyczanie & Zmienne globalne & RAII i inteligentne wskaźniki \\ \hline
+%     Bezpieczeństwo typów & Gwarantowane w czasie kompilacji & Sprawdzane w czasie wykonania & Podejście mieszane \\ \hline
+%     Obsługa błędów & \texttt{Result<T,E>} i \texttt{Option<T>} & Minimalna lub brak & Wyjątki i \texttt{std::optional} \\
+%     \hline
+%     \end{tabular}
+% \end{table}
 \begin{table}[H]
     \centering
-    \caption{Porównanie podejść architektonicznych w Rust i C++}
-    \begin{tabular}{|>{\centering}m{3.2cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{3.3cm}|}
+    \caption{Porównanie podejść architektonicznych w implementacjach CG}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|>{\centering}m{3.2cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{2.8cm}|}
     \hline
-    \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (klasyczny)} & \textbf{C++ (nowoczesny)} \\
+    \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
     \hline
-    Organizacja kodu & Modułowa, strukturalna & Proceduralna, globalna & Obiektowa, z enkapsulacją \\ \hline
-    Zarządzanie stanem & Własność i pożyczanie & Zmienne globalne & RAII i inteligentne wskaźniki \\ \hline
-    Bezpieczeństwo typów & Gwarantowane w czasie kompilacji & Sprawdzane w czasie wykonania & Podejście mieszane \\ \hline
-    Obsługa błędów & \texttt{Result<T,E>} i \texttt{Option<T>} & Minimalna lub brak & Wyjątki i \texttt{std::optional} \\
+    Organizacja kodu & Modułowa, strukturalna & Proceduralna, globalna & Obiektowa, z enkapsulacją & Proceduralna, globalna \\
+    \hline
+    Zarządzanie stanem & Własność i pożyczanie & Zmienne globalne & RAII i inteligentne wskaźniki & Zmienne globalne \\
+    \hline
+    Zarządzanie pamięci & Automatyczne (ownership) & Ręczne (malloc/free) & Automatyczne (std::vector) & Ręczne (malloc/free) \\
+    \hline
+    Bezpieczeństwo typów & Gwarantowane w czasie kompilacji & Sprawdzane w czasie wykonania & Podejście mieszane & Sprawdzane w czasie wykonania \\
+    \hline
+    Obsługa błędów & \texttt{Result<T,E>} i \texttt{Option<T>} & Minimalna lub brak & Wyjątki i \texttt{std::optional} & Minimalna lub brak \\
+    \hline
+    Enkapsulacja & Wysoka (moduły + struktury) & Brak (funkcje globalne) & Średnia (klasy) & Brak (funkcje globalne) \\
+    \hline
+    \end{tabular}
+    }
+\end{table}
+
+\subsubsection{Mechanizmy równoległości}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Porównanie modeli i API równoległości w implementacjach CG}
+    \begin{tabular}{|p{3cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
+    \hline
+    \textbf{Cecha} & \textbf{Rust (Rayon)} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
+    \hline
+    Model równoległości & Równoległość danych & Równoległość wątków & Wątki + OOP & Równoległość zadań \\
+    \hline
+    API & Funkcyjny (iteratory) & Dyrektywy preprocesora & Dyrektywy + klasy & Funkcyjny (lambda) \\
+    \hline
+    Planowanie zadań & Work-stealing & Static / dynamic & Static / dynamic & Work-stealing \\
+    \hline
+    Kontrola granularności & Automatyczna & Ręczna (chunk) & Ręczna (schedule) & Automatyczna (blocked range) \\
     \hline
     \end{tabular}
 \end{table}
 
-\subsubsection{Mechanizmy równoległości}
 \begin{table}[H]
     \centering
-    \caption{Porównanie podejść do równoległości w Rust i C++}
-    \begin{tabular}{|>{\centering}m{3cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{3.3cm}|}
+    \scriptsize
+    \caption{Porównanie ergonomii i bezpieczeństwa równoległości}
+    \begin{tabular}{|p{3cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
     \hline
-    \textbf{Cecha} & \textbf{Rust (Rayon)} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny + OpenMP)} \\
+    \textbf{Cecha} & \textbf{Rust (Rayon)} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
     \hline
-    Model & Równoległość danych & Równoległość wątków & Równoległość wątków w OOP \\ \hline
-    API & Funkcyjny (iteratorowy) & Oparty na dyrektywach & Dyrektywy + enkapsulacja \\ \hline
-    Bezpieczeństwo & Czas kompilacji & Czas wykonania & Czas wykonania + RAII \\ \hline
-    Ergonomia & Wysoka & Średnia & Średnia–wysoka \\ \hline
+    Bezpieczeństwo współbieżności & Czas kompilacji & Czas wykonania & Czas wykonania & Czas wykonania \\
+    \hline
+    Ergonomia API & Wysoka & Średnia & Średnio-wysoka & Średnia \\
+    \hline
+    Składnia równoległości & `par\_iter()` & `\#pragma omp` & `\#pragma omp` + klasy & `parallel\_for(...)` \\
+    \hline
+    Redukcje & Wbudowane & `reduction(+:var)` & `reduction(+:var)` & `parallel\_reduce(...)` \\
+    \hline
     \end{tabular}
 \end{table}
