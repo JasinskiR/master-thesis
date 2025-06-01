@@ -33,6 +33,16 @@
 \contentsline {lstlisting}{\numberline {5.9}{\ignorespaces Przykład użycia Intel TBB w C++}}{48}{lstlisting.5.9}%
 \addvspace {3pt}
 \addvspace {3pt}
+\contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Modularna struktura benchmarku CG w języku Rust}}{54}{lstlisting.7.1}%
+\contentsline {lstlisting}{\numberline {7.2}{\ignorespaces Struktura benchmarku CG w języku C++}}{55}{lstlisting.7.2}%
+\contentsline {lstlisting}{\numberline {7.3}{\ignorespaces Nowoczesna struktura benchmarku CG w języku C++}}{55}{lstlisting.7.3}%
+\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Zarządzanie pamięcią w Rust}}{56}{lstlisting.7.4}%
+\contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Zarządzanie pamięcią w C++ (styl Fortran)}}{57}{lstlisting.7.5}%
+\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Zarządzanie pamięcią w nowoczesnym C++}}{58}{lstlisting.7.6}%
+\contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Równoległość danych w Rust z Rayon}}{59}{lstlisting.7.7}%
+\contentsline {lstlisting}{\numberline {7.8}{\ignorespaces Równoległość w C++ (styl Fortran)}}{60}{lstlisting.7.8}%
+\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Równoległość w nowoczesnym C++}}{61}{lstlisting.7.9}%
+\addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
