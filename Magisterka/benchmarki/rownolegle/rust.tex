@@ -1,0 +1,416 @@
+\section{Implementacje w języku Rust}
+\subsection{Struktura i organizacja kodu}
+Implementacje w języku Rust charakteryzują się konsystentną, modularną strukturą wykorzystującą system własności i enkapsulacji. Wszystkie benchmarki (EP, CG, IS) następują podobny wzorzec architektoniczny:
+
+\begin{lstlisting}[language=Rust, caption={Struktura kodu benchmarków w języku Rust}, label={lst:rust_structure}]
+pub struct NPBBenchmark {
+// Parametry problemu
+params: Problem,
+class: &'static str,
+
+// Struktury danych z automatycznym zarządzaniem pamięci
+data_structures: Vec<T>,
+
+// Wyniki i stan
+results: BenchmarkResults,
+verified: bool,
+
+// Konfiguracja równoległości
+num_threads: usize,
+}
+
+impl NPBBenchmark {
+pub fn new(class: &str, num_threads: usize) -> Self {
+    // Automatyczna inicjalizacja z zarządzaniem pamięcią
+}
+
+pub fn run(&mut self) -> Result<BenchmarkResults, NPBError> {
+    self.init()?;
+    self.compute()?;
+    self.verify_results()
+}
+}
+\end{lstlisting}
+Kluczowe cechy organizacji kodu Rust:
+\begin{itemize}
+    \item Enkapsulacja danych: wszystkie dane algorytmu zawarte w strukturach
+    \item System własności: automatyczne zarządzanie pamięcią bez mechanizm odśmiecania pamięci 
+    \item Modularna architektura: separacja logiki biznesowej od implementacji równoległej
+    \item Bezpieczeństwo typów: silne typowanie eliminuje błędy konwersji
+    \item Obsługa błędów: konsekwentne wykorzystanie Result<T, E> dla niezawodności
+\end{itemize}
+
+
+\subsection{Zarządzanie pamięcią}
+Rust wykorzystuje unikatowy system własności eliminujący ręczne zarządzanie pamięcią we wszystkich implementacjach NPB:
+\begin{lstlisting}[language=Rust, caption={Zarządzanie pamięcią w benchmarkach NPB w języku Rust}, label={lst:rust_memory_management}]
+impl NPBBenchmark {
+    fn allocate_working_memory(&mut self) {
+        // Automatyczne zarządzanie przez Vec<T>
+        self.working_arrays = vec![vec![0.0; self.params.size]; self.params.dimensions];
+        
+        // Thread-local storage dla bezpieczeństwa współbieżności
+        thread_local! {
+            static THREAD_STORAGE: RefCell<Vec<f64>> = 
+                RefCell::new(vec![0.0; MAX_THREAD_STORAGE]);
+        }
+        
+        // Automatyczna dealokacja po wyjściu z zakresu
+    }
+    
+    fn process_data(&mut self) {
+        // Borrowing pozwala na bezpieczny dostęp bez przenoszenia ownership
+        self.parallel_computation(&mut self.data, &self.params);
+        
+        // Kompilator gwarantuje brak data races i use-after-free
+    }
+}
+\end{lstlisting}
+Zalety modelu własności:
+\begin{itemize}
+    \item Automatyczna dealokacja: pamięć zwalniana automatycznie po wyjściu z zakresu
+    \item Brak wycieków pamięci: gwarancja na poziomie kompilatora
+    \item Abstrakcje bez narzutu kosztów: brak narzutu wydajnościowego
+    \item Bezpieczeństwo wątków: mechanizm sprawdzania pożyczania eliminuje wyścigi danych
+\end{itemize}
+
+\subsection{Mechanizmy równoległości}
+Wszystkie implementacje Rust wykorzystują bibliotekę Rayon dla spójnego podejścia do równoległości:
+\begin{lstlisting}[language=Rust, caption={Równoległość w benchmarkach NPB w języku Rust}, label={lst:rust_parallelism}]
+use rayon::prelude::*;
+
+impl NPBBenchmark {
+    fn parallel_computation(&mut self) {
+        // Uniwersalny wzorzec work-stealing dla wszystkich benchmarków
+        let results: Vec<_> = self.data
+            .par_chunks(self.optimal_chunk_size())
+            .map(|chunk| self.process_chunk(chunk))
+            .collect();
+            
+        // Równoległe redukcje z automatycznym zarządzaniem synchronizacją
+        let final_result = results.par_iter()
+            .fold(|| ResultAccumulator::new(), |acc, result| acc.merge(result))
+            .reduce(|| ResultAccumulator::new(), |acc1, acc2| acc1.combine(acc2));
+    }
+    
+    fn process_chunk(&self, chunk: &[DataType]) -> ChunkResult {
+        // Bezpieczne przetwarzanie bez mutexów
+        // Rayon gwarantuje thread safety
+    }
+}
+\end{lstlisting}
+\begin{itemize}
+    \item Harmonogram z kradzieżą pracy \eng{work-stealing scheduler} – automatyczne równoważenie obciążenia pomiędzy wątkami poprzez dynamiczne przydzielanie zadań.
+    
+    \item Równoległość danych – naturalne ukierunkowanie na przetwarzanie kolekcji danych w sposób równoległy.
+    
+    \item Bezpieczeństwo w czasie kompilacji – brak warunków wyścigu  gwarantowany przez mechanizm pożyczania.
+    
+    \item Ergonomiczne API – intuicyjne przekształcenie kodu sekwencyjnego na równoległy bez znacznego zwiększania złożoności.
+    
+    \item Komponowalne abstrakcje \eng{composable abstractions} – możliwość łatwego łączenia różnych wzorców równoległości w ramach jednej aplikacji.
+  \end{itemize}
+  
+
+  \subsection{Specyfika benchmarku EP}
+  \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku EP w języku Rust}, label={lst:ep_rust}]
+    impl EPBenchmark {
+        fn compute_gaussian_pairs(&mut self) {
+            // Równoległe przetwarzanie Monte Carlo
+            let result = (1..self.nn+1)
+                .collect::<Vec<_>>()
+                .par_chunks(self.optimal_chunk_size())
+                .fold(|| (0.0, 0.0), |mut acc, chunk| {
+                    for &k in chunk {
+                        // Thread-local storage dla generatora liczb pseudolosowych
+                        THREAD_X.with(|x_cell| {
+                            let mut x = x_cell.borrow_mut();
+                            randdp::vranlc((2 * NK) as i32, &mut t1, A, &mut x);
+                            
+                            // Wektoryzowane przetwarzanie Box-Muller transform
+                            for chunk_start in (0..NK).step_by(CHUNK_SIZE) {
+                                let chunk_end = (chunk_start + CHUNK_SIZE).min(NK);
+                                
+                                for i in chunk_start..chunk_end {
+                                    let x1 = 2.0 * x[2 * i] - 1.0;
+                                    let x2 = 2.0 * x[2 * i + 1] - 1.0;
+                                    let t1 = x1 * x1 + x2 * x2;
+                                    
+                                    if t1 <= 1.0 {
+                                        let t2 = (-2.0 * t1.ln() / t1).sqrt();
+                                        let t3 = x1 * t2;
+                                        let t4 = x2 * t2;
+                                        let l = t3.abs().max(t4.abs()) as usize;
+                                        
+                                        if l < NQ as usize {
+                                            local_counts[l] += 1;
+                                            acc.0 += t3;
+                                            acc.1 += t4;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    acc
+                })
+                .reduce(|| (0.0, 0.0), |mut acc1, acc2| {
+                    acc1.0 += acc2.0;
+                    acc1.1 += acc2.1;
+                    acc1
+                });
+        }
+    }
+\end{lstlisting}
+Specyficzne optymalizacje EP listing \ref{lst:ep_rust}:
+\begin{itemize}
+    \item Wektoryzacja przetwarzania danych wejściowych z wykorzystaniem SIMD.
+    \item Użycie lokalnego stanu generatora liczb pseudolosowych dla każdego wątku.
+    \item Atomiczne aktualizacje histogramów bez blokad, co zwiększa wydajność.
+\end{itemize}
+
+\subsection{Specyfika benchmarku CG}
+\begin{lstlisting}[language=Rust, caption={Implementacja benchmarku CG w języku Rust}, label={lst:cg_rust}]
+    fn main() {
+        // Inicjalizacja z Rayon thread pool
+        rayon::ThreadPoolBuilder::new()
+            .num_threads(num_threads)
+            .build_global()
+            .unwrap();
+    
+        println!(" Using {} threads", num_threads);
+        
+        // Globalne zmienne - podobnie jak w C++
+        let mut colidx: Vec<i32> = vec![0; NZ as usize];
+        let mut rowstr: Vec<i32> = vec![0; (NA + 1) as usize];
+        let mut a: Vec<f64> = vec![0.0; NZ as usize];
+        let mut x: Vec<f64> = vec![1.0; (NA + 2) as usize];
+        let mut z: Vec<f64> = vec![0.0; (NA + 2) as usize];
+        let mut p: Vec<f64> = vec![0.0; (NA + 2) as usize];
+        let mut q: Vec<f64> = vec![0.0; (NA + 2) as usize];
+        let mut r: Vec<f64> = vec![0.0; (NA + 2) as usize];
+    
+        // Generowanie macierzy rzadkiej
+        makea(&mut naa, &mut nzz, &mut a, &mut colidx, &mut rowstr, 
+              &firstrow, &lastrow, &firstcol, &lastcol, 
+              &mut arow, &mut acol, &mut aelt, &mut iv, &mut tran, &amult);
+    
+        // Główna pętla iteracyjna
+        for it in 1..=NITER {
+            conj_grad(&mut colidx, &mut rowstr, &mut x, &mut z, &mut a, 
+                     &mut p, &mut q, &mut r, &mut rnorm, &naa, &lastcol, 
+                     &firstcol, &lastrow, &firstrow);
+            
+            // Równoległe dot products z Rayon
+            let len = (lastcol - firstcol + 1) as usize;
+            
+            norm_temp1 = x[..len]
+                .par_iter()
+                .zip(&z[..len])
+                .map(|(&xi, &zi)| xi * zi)
+                .sum();
+    
+            norm_temp2 = z[..len]
+                .par_iter()
+                .map(|&zi| zi * zi)
+                .sum();
+    
+            if norm_temp2.abs() < 1e-30 {
+                norm_temp2 = 1e-30;
+            }
+    
+            norm_temp2 = 1.0 / norm_temp2.sqrt();
+            
+            if norm_temp1.abs() < 1e-30 {
+                norm_temp1 = 1e-30;
+            }
+            
+            zeta = SHIFT + 1.0 / norm_temp1;
+            
+            // Równoległa aktualizacja wektora x
+            x[..=(lastcol - firstcol) as usize].par_iter_mut()
+                .zip(&z[..=(lastcol - firstcol) as usize])
+                .for_each(|(xi, &zi)| {
+                    *xi = norm_temp2 * zi;
+                });
+        }
+    }
+    
+    fn conj_grad(/* parametry */) {
+        let cgitmax: i32 = 25;
+        
+        // Inicjalizacja sekwencyjna - bezpieczeństwo Rust
+        for j in 0..=*naa {
+            let j = j as usize;
+            q[j] = 0.0;
+            z[j] = 0.0;
+            r[j] = x[j];
+            p[j] = r[j];
+        }
+    
+        // Równoległe obliczenie rho z Rayon
+        rho = (0..=(*lastcol - *firstcol))
+            .into_par_iter()
+            .map(|j| {
+                let idx = j as usize;
+                r[idx] * r[idx]
+            })
+            .sum();
+    
+        for _cgit in 1..=cgitmax {
+            // Równoległe mnożenie macierz-wektor używając chunks
+            q.par_chunks_mut(1)
+                .enumerate()
+                .for_each(|(j, q_slice)| {
+                    if j <= (*lastrow - *firstrow) as usize {
+                        let mut sum = 0.0;
+                        for k in rowstr[j]..rowstr[j + 1] {
+                            let k = k as usize;
+                            let cidx = colidx[k];
+                            if cidx >= 0 && (cidx as usize) < p.len() {
+                                sum += a[k] * p[cidx as usize];
+                            }
+                        }
+                        q_slice[0] = sum;
+                    }
+                });
+    
+            // Równoległe obliczenie d (dot product)
+            d = (0..=(*lastcol - *firstcol))
+                .into_par_iter()
+                .map(|j| {
+                    let j = j as usize;
+                    p[j] * q[j]
+                })
+                .sum();
+    
+            if d.abs() < 1e-30 {
+                d = 1e-30;
+            }
+    
+            alpha = rho / d;
+            rho0 = rho;
+    
+            // Równoległe aktualizacje wektorów z wykorzystaniem slice
+            let range = 0..=(*lastcol - *firstcol) as usize;
+            let z_slice = &mut z[range.clone()];
+            let r_slice = &mut r[range.clone()];
+            let p_slice = &p[range.clone()];
+            let q_slice = &q[range.clone()];
+    
+            z_slice.par_iter_mut()
+                .zip(p_slice)
+                .for_each(|(z_val, &p_val)| {
+                    *z_val = *z_val + alpha * p_val;
+                });
+    
+            r_slice.par_iter_mut()
+                .zip(q_slice)
+                .for_each(|(r_val, &q_val)| {
+                    *r_val = *r_val - alpha * q_val;
+                });
+    
+            // Nowe rho z równoległą redukcją
+            rho = r_slice.par_iter()
+                .map(|&r_val| r_val * r_val)
+                .sum();
+    
+            if rho0.abs() < 1e-30 {
+                rho0 = 1e-30;
+            }
+    
+            beta = rho / rho0;
+    
+            // Aktualizacja p równolegle
+            p[range.clone()].par_iter_mut()
+                .zip(&r[range.clone()])
+                .for_each(|(p_val, &r_val)| {
+                    *p_val = r_val + beta * *p_val;
+                });
+        }
+    
+        // Końcowe obliczenie residuum
+        r.par_chunks_mut(1)
+            .enumerate()
+            .for_each(|(j, r_slice)| {
+                if j >= 1 && j <= (*lastrow - *firstrow) as usize {
+                    let mut d = 0.0;
+                    for k in rowstr[j]..rowstr[j + 1] {
+                        let k = k as usize;
+                        let cidx = colidx[k];
+                        if cidx >= 0 && (cidx as usize) < z.len() {
+                            d = d + a[k] * z[cidx as usize];
+                        }
+                    }
+                    r_slice[0] = d;
+                }
+            });
+    
+        // Końcowa suma równoległa
+        sum = (0..=(*lastcol - *firstcol))
+            .into_par_iter()
+            .map(|j| {
+                let j = j as usize;
+                let diff = x[j] - r[j];
+                diff * diff
+            })
+            .sum();
+    
+        if sum < 0.0 {
+            sum = 0.0;
+        }
+        *rnorm = sum.sqrt();
+    }
+\end{lstlisting}
+\begin{itemize}
+    \item Podejście hybrydowe – połączenie globalnych struktur danych charakterystycznych dla C++ z gwarancjami bezpieczeństwa oferowanymi przez język Rust.
+    
+    \item par\_chunks\_mut – bezpieczna, równoległa modyfikacja danych poprzez dzielenie tablicy na niezachodzące fragmenty, co zapobiega warunkom wyścigu.
+    
+    \item Sprawdzanie granic – automatyczna weryfikacja indeksów tablicowych w celu zapobiegania nielegalnemu dostępowi do pamięci.
+    
+    \item Bezpieczeństwo pamięci – eliminacja błędów typu segmentation fault, nawet przy dostępie do rzadkich struktur danych, takich jak macierze rzadkie.
+    
+    \item Operacje na wycinkach \eng{slice operations} – efektywne i bezpieczne operacje na fragmentach wektorów, umożliwiające optymalizację przetwarzania danych.
+  \end{itemize}
+  
+\subsection{Specyfika benchmarku IS}
+\begin{lstlisting}[language=Rust, caption={Implementacja benchmarku IS w języku Rust}, label={lst:is_rust}]
+impl ISBenchmark {
+    fn integer_sort(&mut self) {
+        // Równoległy bucket sort z histogram
+        let histogram = self.keys.par_iter()
+            .fold(|| vec![0usize; NUM_BUCKETS], |mut hist, &key| {
+                hist[self.bucket_for_key(key)] += 1;
+                hist
+            })
+            .reduce(|| vec![0usize; NUM_BUCKETS], |mut hist1, hist2| {
+                for (h1, h2) in hist1.iter_mut().zip(hist2.iter()) {
+                    *h1 += *h2;
+                }
+                hist1
+            });
+        
+        // Parallel prefix sum for bucket offsets
+        let mut offsets = vec![0usize; NUM_BUCKETS + 1];
+        for i in 1..=NUM_BUCKETS {
+            offsets[i] = offsets[i-1] + histogram[i-1];
+        }
+        
+        // Parallel redistribution phase
+        self.redistributed_keys.par_chunks_mut(CHUNK_SIZE)
+            .enumerate()
+            .for_each(|(chunk_id, chunk)| {
+                // Complex data movement with atomics
+            });
+    }
+}
+\end{lstlisting}
+\begin{itemize}
+    \item Losowy dostęp do pamięci – nieprzewidywalny wzorzec odwołań do pamięci, który utrudnia efektywne wykorzystanie pamięci podręcznej procesora.
+    
+    \item Nierównomierne obciążenie – niejednorodne rozłożenie kluczy pomiędzy kubełki (buckets), prowadzące do nieefektywnego wykorzystania zasobów obliczeniowych.
+    
+    \item Narzut synchronizacji – konieczność stosowania operacji atomowych podczas równoczesnej aktualizacji kubełków, co może obniżać wydajność.
+  \end{itemize}
+  

@@ -43,19 +43,25 @@ W końcowej części pracy, rozdział dziewiąty prezentuje wnioski oraz rekomen
 \section{Słownik wybranych pojęć}
 
 \begin{itemize}
-    \item \textbf{Własność \eng {ownership}} - system zarządzania pamięcią, który eliminuje konieczność używania automatycznego odśmiecania, jednocześnie zapobiegając błędom takim jak użycie po zwolnieniu czy podwójne zwolnienie.
+    \item \textbf{licznik Redis} - to mechanizm wykorzystujący bazę danych Redis do przechowywania i aktualizowania liczników w czasie rzeczywistym. Redis, jako szybka baza typu klucz-wartość, pozwala na błyskawiczne operacje inkrementacji i dekrementacji wartości przypisanej do danego klucza.
 
-
-    \item \textbf{Pożyczanie \eng {borrow}} - również występujący pod inną nazwą jako przenoszenie własności \cite{rustPolishNames}, jest to mechanizm pozwalający na używanie wartości bez przejmowania jej na własność. Dzięki temu możemy przekazywać dane do funkcji lub między częściami programu bez ich kopiowania czy przenoszenia.
-    
-    \item \textbf{Programowanie współbieżne} -  to sposób wykonywania wielu zadań jednocześnie lub przeplatania ich w czasie, co zwiększa wydajność programu. Może być realizowane za pomocą wątków, procesów lub programowania asynchronicznego.
-    
-    \item \textbf{Programowanie równoległe} - to sposób wykonywania wielu zadań jednocześnie, co zwiększa wydajność programu. W odróżnieniu od programowania współbieżnego, programowanie równoległe polega na wykonywaniu zadań w tym samym czasie, a nie przeplataniu ich w czasie.
-    
-    \item \textbf{Wątek} - część programu wykonywana współbieżnie w obrębie jednego procesu - w jednym procesie może istnieć wiele wątków. Główna różnica między procesem a wątkiem polega na tym, że wszystkie wątki należące do tego samego procesu współdzielą przestrzeń adresową oraz inne zasoby systemowe, takie jak listy otwartych plików czy gniazda sieciowe. Natomiast każdy proces dysponuje własnym, odrębnym zestawem zasobów.
-    \item \textbf{Proces} - to instancja programu, która jest wykonywana w systemie operacyjnym. Procesy są izolowane od siebie i mają własne zasoby, takie jak pamięć i przestrzeń adresowa.
-    \item \textbf{Wyścigi danych \eng{Race conditions}} - to sytuacja, w której dwa lub więcej wątków lub procesów próbuje modyfikować wspólną zmienną w tym samym czasie, co prowadzi do nieprzewidywalnych wyników.
-    \item \textbf{SIMD} - \eng{Single Instruction, Multiple Data} - pojedyncza instrukcja wykonywana na wielu danych jednocześnie. Jest to technika optymalizacji wydajności obliczeń, która wykorzystuje jednostki wektorowe dostępne w nowoczesnych procesorach.
-    \item \textbf{Licznik Redis} - to mechanizm wykorzystujący bazę danych Redis do przechowywania i aktualizowania liczników w czasie rzeczywistym. Redis, jako szybka baza typu klucz-wartość, pozwala na błyskawiczne operacje inkrementacji i dekrementacji wartości przypisanej do danego klucza.
     \item \textbf{LLVM} - \eng{Low Level Virtual Machine} - to zestaw narzędzi i bibliotek do budowania kompilatorów, który umożliwia generowanie, analizę i optymalizację kodu (zarówno w czasie kompilacji, jak i wykonania). LLVM nie jest maszyną wirtualną w tradycyjnym sensie, ale raczej infrastrukturą kompilatora, która operuje na pośrednim języku reprezentacji (LLVM IR), z którego może generować kod maszynowy dla różnych architektur.
+    
+    \item \textbf{nieustraszona współbieżność} - \eng{fearless concurrency} - to podejście do programowania współbieżnego, które eliminuje problemy związane z bezpieczeństwem pamięci i synchronizacją wątków. W Rust osiągnięto to dzięki systemowi własności, który zapewnia, że dane mogą być modyfikowane tylko przez jeden wątek na raz, eliminując ryzyko wyścigów danych i błędów synchronizacji.
+
+    \item \textbf{pożyczanie} \eng{borrow} - również występujący pod inną nazwą jako przenoszenie własności \cite{rustPolishNames}, jest to mechanizm pozwalający na używanie wartości bez przejmowania jej na własność. Dzięki temu możemy przekazywać dane do funkcji lub między częściami programu bez ich kopiowania czy przenoszenia.
+
+    \item \textbf{proces} - to instancja programu, która jest wykonywana w systemie operacyjnym. Procesy są izolowane od siebie i mają własne zasoby, takie jak pamięć i przestrzeń adresowa.
+
+    \item \textbf{programowanie równoległe} - to sposób wykonywania wielu zadań jednocześnie, co zwiększa wydajność programu. W odróżnieniu od programowania współbieżnego, programowanie równoległe polega na wykonywaniu zadań w tym samym czasie, a nie przeplataniu ich w czasie.
+
+    \item \textbf{programowanie współbieżne} - technika programistyczna polegająca na jednoczesnym wykonywaniu wielu zadań lub ich przeplataniu w czasie, mająca na celu zwiększenie efektywności działania programu. Współbieżność może być realizowana z wykorzystaniem wielu wątków, procesów bądź mechanizmów programowania asynchronicznego, które wewnętrznie mogą operować na wątkach lub innych zasobach udostępnianych przez system operacyjny.
+
+    \item \textbf{SIMD} - \eng{Single Instruction, Multiple Data} - pojedyncza instrukcja wykonywana na wielu danych jednocześnie. Jest to technika optymalizacji wydajności obliczeń, która wykorzystuje jednostki wektorowe dostępne w nowoczesnych procesorach.
+
+    \item \textbf{wątek} - część programu wykonywana współbieżnie w obrębie jednego procesu - w jednym procesie może istnieć wiele wątków. Główna różnica między procesem a wątkiem polega na tym, że wszystkie wątki należące do tego samego procesu współdzielą przestrzeń adresową oraz inne zasoby systemowe, takie jak listy otwartych plików czy gniazda sieciowe. Natomiast każdy proces dysponuje własnym, odrębnym zestawem zasobów.
+
+    \item \textbf{własność} \eng{ownership} - system zarządzania pamięcią, który eliminuje konieczność używania automatycznego odśmiecania, jednocześnie zapobiegając błędom takim jak użycie po zwolnieniu czy podwójne zwolnienie.
+
+    \item \textbf{wyścigi danych} \eng{race conditions} - to sytuacja, w której dwa lub więcej wątków lub procesów próbuje modyfikować wspólną zmienną w tym samym czasie, co prowadzi do nieprzewidywalnych wyników.
 \end{itemize}

@@ -141,6 +141,11 @@ R.~DeWolf.
 \newblock \url{https://medium.com/better-programming/introducing-rainbow-compare-the-performance-of-different-programming-languages-f08a67453cd4 }.
 \newblock [Dostęp 16-03-2025].
 
+\bibitem{TBBARMCONCLUSIONS}
+J.~Duke.
+\newblock Memory forensics comparison of apple m1 and intel architecture using volatility framework.
+\newblock Master's thesis, Louisiana State University, 2021.
+
 \bibitem{RustDifferences1}
 Z.~Fehervari.
 \newblock {R}ust vs {C}++: {M}odern {D}evelopers' {D}ilemma --- bluebirdinternational.com.
@@ -286,6 +291,10 @@ H.~Team.
 B.~Troutwine.
 \newblock {\em Hands-On Concurrency with Rust: Confidently build memory-safe, parallel, and efficient software in Rust}.
 \newblock Packt Publishing, 2018.
+
+\bibitem{ARMTBB}
+A.~Tuby,  A.~Morrison.
+\newblock Reverse engineering the apple m1 conditional branch predictor for out-of-place spectre mistraining, 2025.
 
 \bibitem{ZamiennikWEmbedded}
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.

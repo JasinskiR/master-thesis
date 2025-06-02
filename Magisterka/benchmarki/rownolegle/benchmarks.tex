@@ -1,536 +1,104 @@
 \chapter{Porównanie międzyjęzykowe - programowanie równoległe}
 W ramach programów równoległych wykorzystano jako wzorzec, gotowe implementacje problemów z zestawu NPB w ramach istniejącej pracy The NAS Parallel Benchmarks for evaluating C++ parallel programming frameworks on shared-memory architectures \cite{CPPNPB} oraz programów bazujących na nich w języku Rust, napisanych w ramach proejktu na studia przez G.Bessa et al. \cite{NPBRust}.
 
-\section{Benchmark CG - gradient sprzężony}
-\subsection{Struktura i organizacja kodu}
-\subsubsection{Rust}
-Implementacja w języku Rust charakteryzuje się modularną strukturą wykorzystującą system modułów oraz traits:
-\begin{lstlisting}[language=Rust, caption={Modularna struktura benchmarku CG w języku Rust}, label={lst:cg_rust_structure}]
-pub struct SparseMatrix {
-    params: Problem,
-    a: Vec<f64>,           // elementy macierzy
-    colidx: Vec<i64>,      // indeksy kolumn
-    rowstr: Vec<i64>,      // wskaźniki wierszy
-    x: Vec<f64>,           // wektor rozwiązania
-    z: Vec<f64>,           // wektor tymczasowy
-    p: Vec<f64>,           // kierunek sprzężony
-    q: Vec<f64>,           // wektor tymczasowy
-    r: Vec<f64>,           // residuum
-    zeta: f64,             // wartość własna
-}
+\input{benchmarki/rownolegle/rust.tex}
+\input{benchmarki/rownolegle/openmp.tex}
+\input{benchmarki/rownolegle/tbb.tex}
+\input{benchmarki/rownolegle/new.tex}
 
-impl SparseMatrix {
-    pub fn new(params: Problem) -> Self {
-        // Inicjalizacja z automatycznym zarządzaniem pamięcią
-        Self {
-            params,
-            a: vec![0.0; params.nz],
-            colidx: vec![0; params.nz],
-            // ... pozostałe pola
-        }
-    }
-    
-    pub fn solve(&mut self) -> CGResult {
-        // Główna logika algorytmu
-    }
-}
-\end{lstlisting}
-Kluczowe cechy implementacji Rust:
-\begin{itemize}
-    \item Enkapsulacja danych: wszystkie dane algorytmu są zawarte w strukturze SparseMatrix
-    \item Cechy własności: automatyczne zarządzanie pamięcią przez system własności
-    \item Bezpieczeństwo typów: silne typowanie eliminuje błędy konwersji typów
-    \item Obsługa błędów: wykorzystanie Result<T, E> dla obsługi błędów
-\end{itemize}
-
-\subsubsection{C++ (styl Fortran)}
-\begin{lstlisting}[language=C++, caption={Struktura benchmarku CG w języku C++}, label={lst:cg_cpp_structure}]
-// Globalne zmienne statyczne
-static double (*a)=(double*)malloc(sizeof(double)*(NZ));
-static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
-static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
-static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*z)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*p)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*q)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*r)=(double*)malloc(sizeof(double)*(NA+2));
-
-// Funkcje proceduralne
-static void conj_grad(int colidx[], int rowstr[], double x[], 
-                     double z[], double a[], double p[], 
-                     double q[], double r[], double* rnorm);
-
-static void makea(int n, int nz, double a[], int colidx[], 
-                 int rowstr[], /* ... parametry ... */);
-
-int main(int argc, char **argv) {
-    // Główna logika programu
-}
-\end{lstlisting}
-Charakterystyka implementacji C++ (styl Fortran):
-\begin{itemize}
-    \item Globalny stan: wszystkie dane przechowywane jako zmienne globalne
-    \item Ręczne zarządzanie pamięcią: explicitne alokacje przez malloc
-    \item Styl proceduralny: funkcje operujące na globalnych danych
-    \item Minimalna enkapsulacja: brak hermetyzacji danych
-\end{itemize}
-\subsubsection{Nowoczesne podejście C++}
-Implementacja wykorzystująca nowoczesne konstrukcje C++:
-\begin{lstlisting}[language=C++, caption={Nowoczesna struktura benchmarku CG w języku C++}, label={lst:cg_modern_cpp_structure}]
-class ModernCG {
-private:
-    struct Problem {
-        int64_t na, nonzer, max_iter;
-        double shift, rcond;
-        char problem_class;
-    };
-    
-    Problem params_;
-    std::vector<double> a_;
-    std::vector<int64_t> colidx_;
-    std::vector<int64_t> rowstr_;
-    std::vector<double> x_, z_, p_, q_, r_;
-    double zeta_{0.0};
-    
-public:
-    explicit ModernCG(const Problem& params);
-    CGResult solve();
-    
-private:
-    double conjugate_gradient();
-    void make_matrix();
-};
-
-// RAII i automatyczne zarządzanie zasobów
-ModernCG::ModernCG(const Problem& params) 
-    : params_(params),
-        a_(params.nz),
-        colidx_(params.nz),
-        rowstr_(params.na + 1),
-        x_(params.na + 2, 1.0),
-        z_(params.na + 2, 0.0),
-        p_(params.na + 2, 0.0),
-        q_(params.na + 2, 0.0),
-        r_(params.na + 2, 0.0) {
-    make_matrix();
-}
-\end{lstlisting}
-
-\subsubsection{C++ z wykorzystaniem TBB}
-Implementacja TBB w benchmarku CG bazuje na tym samym podejściu co wersja OpenMP, zastępując dyrektywy preprocesora wywołaniami funkcji biblioteki TBB:
-\begin{lstlisting}[language=C++, caption={Struktura benchmarku CG w C++ z TBB}, label={lst:cg_tbb_structure}]
-#include "tbb/parallel_for.h"
-#include "tbb/parallel_reduce.h"
-#include "tbb/blocked_range.h"
-#include "tbb/task_scheduler_init.h"
-#include "../common/npb-CPP.hpp"
-#include "npbparams.hpp"
-
-// Identyczne globalne zmienne jak w wersji OpenMP
-#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
-static int colidx[NZ];
-static int rowstr[NA+1];
-static double a[NZ];
-static double x[NA+2];
-static double z[NA+2];
-static double p[NA+2];
-static double q[NA+2];
-static double r[NA+2];
-#else
-static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
-static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
-static double (*a)=(double*)malloc(sizeof(double)*(NZ));
-static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*z)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*p)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*q)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*r)=(double*)malloc(sizeof(double)*(NA+2));
-#endif
-
-// Inicjalizacja TBB w main()
-int main(int argc, char **argv){
-    int num_workers;
-    if(const char * nw = std::getenv("TBB_NUM_THREADS")) {
-        num_workers = atoi(nw);
-    } else {
-        num_workers = 1;
-    }
-    
-    tbb::task_scheduler_init init(num_workers);
-    
-    // Reszta kodu identyczna jak w wersji klasycznej
-}
-\end{lstlisting}
-Kluczowe cechy organizacji kodu TBB:
-\begin{itemize}
-    \item Minimalne zmiany względem OpenMP: Zachowanie struktury proceduralnej z globalnymi zmiennymi
-    \item Proceduralne funkcje: Identyczne sygnatury funkcji jak conj\_grad(), makea(), sparse()
-    \item Ręczne zarządzanie pamięcią: Wykorzystanie malloc() jak w wersji klasycznej
-    \item Inicjalizacja schedulera: Jedyna różnica - jawne utworzenie tbb::task\_scheduler\_init
-\end{itemize}
-
+\section{Porównanie międzyjęzykowe}
+\subsection{Architektura i organizacja kodu}
+\begin{table}[H]
+    \centering
+    \caption{Porównanie aspektów zarządzania i organizacji kodu w Rust i różnych stylach C++}
+    \begin{tabularx}{\textwidth}{lXXXX}
+    \toprule
+    \textbf{Aspekt} &
+    \textbf{Rust} &
+    \textbf{C++ (OpenMP)} &
+    \textbf{C++ (TBB)} &
+    \textbf{C++ (nowoczesny)} \\
+    \midrule
+    Organizacja kodu &
+    Modułowa, strukturalna &
+    Proceduralna, globalna &
+    Proceduralna, globalna &
+    Obiektowa, enkapsulowana \\
+    \hline
+    Zarządzanie stanem &
+    Ownership + borrowing &
+    Zmienne globalne &
+    Zmienne globalne &
+    RAII + smart pointers \\
+    \hline
+    Enkapsulacja &
+    Wysoka (moduły + traits) &
+    Brak &
+    Brak &
+    Średnia (klasy) \\
+    \hline
+    Bezpieczeństwo typów &
+    Compile-time guarantees &
+    Runtime checks &
+    Runtime checks &
+    Mixed approach \\
+    \hline
+    Obsługa błędów &
+    \texttt{Result<T,E>} + \texttt{Option<T>} &
+    Minimalna / brak &
+    Minimalna / brak &
+    Wyjątki + \texttt{std::optional} \\
+    \hline
+    Bezpieczeństwo pamięci &
+    Gwarantowane &
+    Ręczne zarządzanie &
+    Ręczne zarządzanie &
+    RAII-based \\
+    \bottomrule
+    \end{tabularx}
+\end{table}
 
 \subsection{Zarządzanie pamięcią}
-\subsubsection{Rust}
-Rust wykorzystuje unikatowy system własności eliminujący ręczne zarządzanie pamięcią:
-\begin{lstlisting}[language=Rust, caption={Zarządzanie pamięcią w Rust}, label={lst:cg_rust_memory}]
-    impl SparseMatrix {
-    fn make_matrix(&mut self) {
-        // Utworzenie lokalnych struktur danych
-        let mut arow = vec![0; self.params.na];
-        let mut acol = vec![vec![0; self.params.nonzer + 1]; self.params.na];
-        let mut aelt = vec![vec![0.0; self.params.nonzer + 1]; self.params.na];
-        
-        // Przeniesienie ownership do funkcji
-        self.sparse_matrix_assembly(
-            &mut self.a, 
-            &mut self.colidx, 
-            &mut self.rowstr,
-            // ... parametry
-        );
-        
-        // Automatyczne dealokacja `arow`, `acol`, `aelt` 
-        // po wyjściu z zakresu
-    }
-    
-    fn sparse_matrix_assembly(&mut self, 
-                             a: &mut Vec<f64>, 
-                             colidx: &mut Vec<i64>, 
-                             rowstr: &mut Vec<i64>) {
-        // Borrowing pozwala na bezpieczny dostęp bez przenoszenia ownership
-        // Kompilator gwarantuje brak data races
-    }
-}
-\end{lstlisting}
-Zalety modelu własności:
-\begin{itemize}
-    \item Automatyczna dealokacja: pamięć zwalniana automatycznie po wyjściu z zakresu
-    \item Brak wycieków pamięci: gwarancja na poziomie kompilatora
-    \item Abstrakcje bez narzutu kosztów: brak narzutu wydajnościowego
-    \item Bezpieczeństwo wątków: mechanizm sprawdzania pożyczania eliminuje wyścigi danych
-\end{itemize}
-
-\subsubsection{C++ (styl Fortran)}
-\begin{lstlisting}[language=C++, caption={Zarządzanie pamięcią w C++ (styl Fortran)}, label={lst:cg_cpp_memory}]
-    // Globalne zmienne z alokacją dynamiczną
-#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
-static int colidx[NZ];
-static int rowstr[NA+1];
-static double a[NZ];
-static double x[NA+2];
-static double z[NA+2];
-#else
-static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
-static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
-static double (*a)=(double*)malloc(sizeof(double)*(NZ));
-static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
-static double (*z)=(double*)malloc(sizeof(double)*(NA+2));
-#endif
-
-int main(int argc, char **argv) {
-    // Inicjalizacja bez sprawdzania błędów alokacji
-    // Brak eksplicitnego zwalniania pamięci
-}
-\end{lstlisting}
-
-\subsubsection{C++ z wykorzystaniem TBB}
-Implementacja TBB wykorzystuje identyczny model zarządzania pamięcią jak wersja OpenMP - nie wprowadza żadnych ulepszeń w tym zakresie listing \ref{lst:cg_cpp_memory}.
-
-\subsubsection{Nowoczesne podejście C++}
-\begin{lstlisting}[language=C++, caption={Zarządzanie pamięcią w nowoczesnym C++}, label={lst:cg_modern_cpp_memory}]
-class SparseMatrix {
-    private:
-        // std::vector automatycznie zarządza pamięcią
-        std::vector<double> a_;
-        std::vector<int64_t> colidx_;
-        std::vector<int64_t> rowstr_;
-        std::vector<double> x_, z_, p_, q_, r_;
-        
-    public:
-        explicit SparseMatrix(const Problem& params) 
-            : params_(params),
-                a_(params.nz),
-                colidx_(params.nz),
-                rowstr_(params.na + 1),
-                x_(params.na + 2, 1.0),
-                z_(params.na + 2, 0.0),
-                p_(params.na + 2, 0.0),
-                q_(params.na + 2, 0.0),
-                r_(params.na + 2, 0.0) {
-            make_matrix();
-        }
-        
-        // Destruktor automatycznie zwalnia pamięć
-        ~SparseMatrix() = default;
-    };
-\end{lstlisting}
-
-\subsubsection{Podsumowanie zarządzania pamięcią}
 \begin{table}[H]
     \centering
-    \caption{Porównanie bezpieczeństwa pamięci w Rust i C++}
-    \begin{tabular}{|>{\centering}m{3cm}|>{\centering}m{3cm}|c|>{\centering\arraybackslash}m{3.5cm}|}
-    \hline
-    \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (klasyczny)} & \textbf{C++ (nowoczesny)} \\
-    \hline
-    Wycieki pamięci & Niemożliwe (czas kompilacji) & Możliwe (czas wykonania) & Rzadkie (RAII) \\ \hline
-    Użycie po zwolnieniu & Niemożliwe (borrow checker) & Możliwe & Rzadkie (inteligentne wskaźniki) \\ \hline
-    Przekroczenie bufora & Sprawdzane (kontrola zakresu) & Możliwe & Sprawdzane (std::vector) \\ \hline
-    Podwójne zwolnienie pamięci & Niemożliwe (własność) & Możliwe & Niemożliwe (RAII) \\ \hline
-    Dereferencja pustego wskaźnika & Niemożliwe (Option\textless T\textgreater) & Możliwe & Rzadkie \\
-    \hline
-    \end{tabular}
-
-\end{table}
-
-\subsection{Mechanizmy równoległości}
-\subsubsection{Rust}
-Rust wykorzystuje bibliotekę Rayon dla równoległości danych
-\begin{lstlisting}[language=Rust, caption={Równoległość danych w Rust z Rayon}, label={lst:cg_rust_parallelism}]
-use rayon::prelude::*;
-
-impl SparseMatrix {
-    fn conjugate_gradient(&mut self) -> f64 {
-        // Równoległe obliczenie iloczynu skalarnego
-        let rho: f64 = self.r.par_iter()
-            .map(|&r_val| r_val * r_val)
-            .sum();
-        
-        // Równoległe mnożenie macierz-wektor
-        self.q.par_iter_mut()
-            .enumerate()
-            .for_each(|(j, q_j)| {
-                let sum: f64 = (self.rowstr[j]..self.rowstr[j+1])
-                    .map(|k| self.a[k] * self.p[self.colidx[k]])
-                    .sum();
-                *q_j = sum;
-            });
-        
-        // Równoległe operacje wektorowe z redukcją
-        let d: f64 = self.p.par_iter()
-            .zip(&self.q)
-            .map(|(&p_val, &q_val)| p_val * q_val)
-            .sum();
-        
-        rho
-    }
-}
-\end{lstlisting}
-Cechy równoległości Rayon:
-\begin{itemize}
-    \item Kradzierz zadań: automatyczne równoważenie obciążenia
-    \item Równoległośc przetwarzania danych: skupienie na przetwarzaniu kolekcji
-    \item Bezpieczeństwo typów: brak data races na poziomie kompilatora
-    \item Ergonomiczne API: łatwe przekształcenie kodu sekwencyjnego
-\end{itemize}
-
-\subsubsection{C++ (styl Fortran)}
-\begin{lstlisting}[language=C++, caption={Równoległość w C++ (styl Fortran)}, label={lst:cg_cpp_parallelism}]
-static void conj_grad(/* parametry */) {
-    double rho, d, alpha, beta;
+    \caption{Porównanie modelu alokacji i bezpieczeństwa pamięci w Rust i różnych stylach C++}
+    \begin{tabularx}{\textwidth}{lXXXX}
+    \toprule
+    \textbf{Aspekt} &
+    \textbf{Rust} &
+    \textbf{C++ (OpenMP)} &
+    \textbf{C++ (TBB)} &
+    \textbf{C++ (nowoczesny)} \\
+    \midrule
+    Model alokacji &
+    Automatyczny (ownership) &
+    Ręczny (\texttt{malloc}/\texttt{free}) &
+    Ręczny (\texttt{malloc}/\texttt{free}) &
+    Automatyczny (\texttt{std::vector}) \\
     
-    // Równoległe obliczenie iloczynu skalarnego
-    #pragma omp parallel for reduction(+:rho) schedule(static)
-    for (int64_t j = 0; j < params.na; j++) {
-        rho += r[j] * r[j];
-    }
+    Wycieki pamięci &
+    Niemożliwe &
+    Możliwe &
+    Możliwe &
+    Rzadkie (RAII) \\
     
-    // Równoległe mnożenie macierz-wektor
-    #pragma omp parallel for schedule(static)
-    for (int64_t j = 0; j < params.na; j++) {
-        double sum = 0.0;
-        for (int64_t k = rowstr[j]; k < rowstr[j+1]; k++) {
-            sum += a[k] * p[colidx[k]];
-        }
-        q[j] = sum;
-    }
+    Use-after-free &
+    Niemożliwe &
+    Możliwe &
+    Możliwe &
+    Rzadkie \\
     
-    // Równoległa redukcja
-    #pragma omp parallel for reduction(+:d) schedule(static)
-    for (int64_t j = 0; j < params.na; j++) {
-        d += p[j] * q[j];
-    }
-}
-\end{lstlisting}
-Charakterystyka OpenMP:
-\begin{itemize}
-    \item Równoległość oparta na dyrektywach: wykorzystanie dyrektyw \#pragma do realizacji przetwarzania równoległego
-    \item Ręczna synchronizacja: konieczność samodzielnego zarządzania synchronizacją wątków
-    \item Dojrzały ekosystem: rozbudowany zbiór dyrektyw oraz mechanizmów optymalizacyjnych
-    \item Równoległość oparta na wątkach: jawne zarządzanie wątkami wykonywania
-\end{itemize}
-
-\subsubsection{Nowoczesne podejście C++}
-W nowoczesnej implementacji C++ nadal wykorzystano OpenMP, ale w ramach klasy zamiast funkcji globalnych:
-\begin{lstlisting}[language=C++, caption={Równoległość w nowoczesnym C++}, label={lst:cg_modern_cpp_parallelism}]
-double SparseMatrix::conjugate_gradient() {
-    constexpr int64_t cgitmax = 25;
+    Przepełnienia bufora &
+    Sprawdzanie granic &
+    Możliwe &
+    Możliwe &
+    Sprawdzanie granic \\
     
-    // Równoległe mnożenie macierz-wektor z OpenMP
-    #pragma omp parallel for schedule(static)
-    for (int64_t j = 0; j < params_.na; j++) {
-        double sum = 0.0;
-        for (int64_t k = rowstr_[j]; k < rowstr_[j+1]; k++) {
-            sum += a_[k] * p_[colidx_[k]];
-        }
-        q_[j] = sum;
-    }
-    
-    // Równoległa redukcja
-    double d = 0.0;
-    #pragma omp parallel for reduction(+:d) schedule(static)
-    for (int64_t j = 0; j < params_.na; j++) {
-        d += p_[j] * q_[j];
-    }
-    
-    return std::sqrt(sum);
-}
-\end{lstlisting}
-
-\subsubsection{C++ z wykorzystaniem TBB}
-TBB w implementacji CG zastępuje dyrektywy OpenMP wywołaniami funkcji biblioteki, zachowując tę samą logikę algorytmu:
-\begin{lstlisting}[language=C++, caption={Równoległość w C++ z TBB}, label={lst:cg_tbb_parallelism}]
-// Zastąpienie OpenMP reduction TBB parallel_reduce
-static void conj_grad(/* parametry */) {
-    rho = tbb::parallel_reduce(
-        tbb::blocked_range<size_t>(0, lastcol-firstcol+1), 
-        0.0, 
-        [&](const tbb::blocked_range<size_t>& r_tbb, double worker_sum){
-            for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
-                worker_sum += r[j]*r[j];
-            }
-            return worker_sum;
-        }, 
-        std::plus<double>()
-    );
-...
-tbb::parallel_for(
-        tbb::blocked_range<size_t>(0, lastrow-firstrow+1), 
-        [&](const tbb::blocked_range<size_t>& r_tbb){
-            for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
-                double sum = 0.0;
-                for(int k = rowstr[j]; k < rowstr[j+1]; k++){
-                    sum = sum + a[k]*p[colidx[k]];
-                }
-                q[j] = sum;
-            }
-        }
-    );
-...
-rho = tbb::parallel_reduce(
-    tbb::blocked_range<size_t>(0, lastcol-firstcol+1), 
-    0.0, 
-    [&](const tbb::blocked_range<size_t>& r_tbb, double worker_sum){
-        for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
-            z[j] = z[j] + alpha*p[j];      // aktualizacja z
-            r[j] = r[j] - alpha*q[j];      // aktualizacja r
-            worker_sum += r[j]*r[j];       // obliczenie nowego rho
-        }
-        return worker_sum;
-    }, 
-    std::plus<double>()
-);
-...
-// Prosty parallel_for dla operacji wektorowych
-tbb::parallel_for(
-    tbb::blocked_range<size_t>(0, lastrow-firstrow+1), 
-    [&](const tbb::blocked_range<size_t>& r_tbb){
-        for (size_t j = r_tbb.begin(); j != r_tbb.end(); j++) {
-            p[j] = r[j] + beta*p[j];
-        }
-    }
-);
-
-\end{lstlisting}
-Cechy mechanizmów równoległości w bibliotece TBB w porównaniu z OpenMP:
-\begin{itemize}
-    \item Funkcyjny interfejs API – biblioteka TBB wykorzystuje wyrażenia lambda i podejście funkcyjne, w przeciwieństwie do OpenMP, które opiera się na dyrektywach preprocesora.
-    \item Zakres blokowy – TBB automatycznie dzieli przestrzeń danych na bloki, co odpowiada mechanizmowi chunk\_size w OpenMP, lecz odbywa się w sposób bardziej deklaratywny i niezależny od użytkownika.
-    \item Kradzież zadań – domyślny planista zadań w TBB oparty jest na strategii "kradzieży pracy", co stanowi alternatywę dla ręcznie konfigurowanych strategii harmonogramowania (statycznej/dynamicznej) w OpenMP.
-    \item Bezpieczeństwo typów – dzięki wykorzystaniu szablonów (templates), TBB zapewnia silniejsze typowanie niż OpenMP, choć nie gwarantuje pełnej weryfikacji poprawności współbieżności na etapie kompilacji, jak ma to miejsce w języku Rust.
-    \item Większy narzut składniowy – implementacja równoległości w TBB wymaga bardziej rozbudowanej struktury kodu, co zwiększa złożoność implementacyjną w porównaniu do bardziej zwięzłych konstrukcji dostępnych w OpenMP.
-
-\end{itemize}
-
-
-
-\subsection{Podsumowanie różnic implementacyjnych}
-\subsubsection{Architektura i design}
-
-% \begin{table}[H]
-%     \centering
-%     \caption{Porównanie podejść architektonicznych w Rust i C++}
-%     \begin{tabular}{|>{\centering}m{3.2cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{3.3cm}|}
-%     \hline
-%     \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (klasyczny)} & \textbf{C++ (nowoczesny)} \\
-%     \hline
-%     Organizacja kodu & Modułowa, strukturalna & Proceduralna, globalna & Obiektowa, z enkapsulacją \\ \hline
-%     Zarządzanie stanem & Własność i pożyczanie & Zmienne globalne & RAII i inteligentne wskaźniki \\ \hline
-%     Bezpieczeństwo typów & Gwarantowane w czasie kompilacji & Sprawdzane w czasie wykonania & Podejście mieszane \\ \hline
-%     Obsługa błędów & \texttt{Result<T,E>} i \texttt{Option<T>} & Minimalna lub brak & Wyjątki i \texttt{std::optional} \\
-%     \hline
-%     \end{tabular}
-% \end{table}
-\begin{table}[H]
-    \centering
-    \caption{Porównanie podejść architektonicznych w implementacjach CG}
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|>{\centering}m{3.2cm}|>{\centering}m{3cm}|>{\centering}m{3.3cm}|>{\centering}m{3.3cm}|>{\centering\arraybackslash}m{2.8cm}|}
-    \hline
-    \textbf{Aspekt} & \textbf{Rust} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
-    \hline
-    Organizacja kodu & Modułowa, strukturalna & Proceduralna, globalna & Obiektowa, z enkapsulacją & Proceduralna, globalna \\
-    \hline
-    Zarządzanie stanem & Własność i pożyczanie & Zmienne globalne & RAII i inteligentne wskaźniki & Zmienne globalne \\
-    \hline
-    Zarządzanie pamięci & Automatyczne (ownership) & Ręczne (malloc/free) & Automatyczne (std::vector) & Ręczne (malloc/free) \\
-    \hline
-    Bezpieczeństwo typów & Gwarantowane w czasie kompilacji & Sprawdzane w czasie wykonania & Podejście mieszane & Sprawdzane w czasie wykonania \\
-    \hline
-    Obsługa błędów & \texttt{Result<T,E>} i \texttt{Option<T>} & Minimalna lub brak & Wyjątki i \texttt{std::optional} & Minimalna lub brak \\
-    \hline
-    Enkapsulacja & Wysoka (moduły + struktury) & Brak (funkcje globalne) & Średnia (klasy) & Brak (funkcje globalne) \\
-    \hline
-    \end{tabular}
-    }
-\end{table}
-
-\subsubsection{Mechanizmy równoległości}
-
-\begin{table}[H]
-    \centering
-    \scriptsize
-    \caption{Porównanie modeli i API równoległości w implementacjach CG}
-    \begin{tabular}{|p{3cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
-    \hline
-    \textbf{Cecha} & \textbf{Rust (Rayon)} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
-    \hline
-    Model równoległości & Równoległość danych & Równoległość wątków & Wątki + OOP & Równoległość zadań \\
-    \hline
-    API & Funkcyjny (iteratory) & Dyrektywy preprocesora & Dyrektywy + klasy & Funkcyjny (lambda) \\
-    \hline
-    Planowanie zadań & Work-stealing & Static / dynamic & Static / dynamic & Work-stealing \\
-    \hline
-    Kontrola granularności & Automatyczna & Ręczna (chunk) & Ręczna (schedule) & Automatyczna (blocked range) \\
-    \hline
-    \end{tabular}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \scriptsize
-    \caption{Porównanie ergonomii i bezpieczeństwa równoległości}
-    \begin{tabular}{|p{3cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
-    \hline
-    \textbf{Cecha} & \textbf{Rust (Rayon)} & \textbf{C++ (OpenMP)} & \textbf{C++ (nowoczesny)} & \textbf{C++ (TBB)} \\
-    \hline
-    Bezpieczeństwo współbieżności & Czas kompilacji & Czas wykonania & Czas wykonania & Czas wykonania \\
-    \hline
-    Ergonomia API & Wysoka & Średnia & Średnio-wysoka & Średnia \\
-    \hline
-    Składnia równoległości & `par\_iter()` & `\#pragma omp` & `\#pragma omp` + klasy & `parallel\_for(...)` \\
-    \hline
-    Redukcje & Wbudowane & `reduction(+:var)` & `reduction(+:var)` & `parallel\_reduce(...)` \\
-    \hline
-    \end{tabular}
+    Podwójne zwolnienie &
+    Niemożliwe &
+    Możliwe &
+    Możliwe &
+    Rzadkie \\
+    \bottomrule
+    \end{tabularx}
 \end{table}

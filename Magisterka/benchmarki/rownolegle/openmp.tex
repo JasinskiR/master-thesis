@@ -1,0 +1,345 @@
+\section{Implementacje w C++ (OpenMP)}
+\subsection{Struktura i organizacja kodu}
+Implementacje C++ z OpenMP następują klasyczny wzorzec proceduralny wywodzący się z oryginalnych implementacji Fortran:
+
+% \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku CG w języku Rust}, label={lst:cg_rust}]
+% \begin{lstlisting}[language=Rust, caption={Struktura kodu benchmarków w języku Rust}, label={lst:rust_structure}]
+\begin{lstlisting}[language=C++, caption={Struktura kodu benchmarków w języku C++ z OpenMP}, label={lst:openmp_structure}]
+// Globalne zmienne statyczne dla wszystkich benchmarków
+#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
+static DataType primary_array[MAX_SIZE];
+static DataType secondary_array[MAX_SIZE];
+#else
+static DataType (*primary_array)=(DataType*)malloc(sizeof(DataType)*(MAX_SIZE));
+static DataType (*secondary_array)=(DataType*)malloc(sizeof(DataType)*(MAX_SIZE));
+#endif
+
+// Funkcje proceduralne operujące na globalnych danych
+static void algorithm_core(/* parametry */);
+static void initialize_data(/* parametry */);
+static void verify_results(/* parametry */);
+
+int main(int argc, char **argv){
+    // Główna logika bez enkapsulacji
+    initialize_data(/* argumenty */);
+    algorithm_core(/* argumenty */);
+    verify_results(/* argumenty */);
+}
+\end{lstlisting}
+\begin{itemize}
+    \item Globalny stan – wszystkie dane przechowywane są jako zmienne globalne, co upraszcza współdzielenie zasobów pomiędzy wątkami.
+    
+    \item Styl proceduralny – funkcje operują bezpośrednio na globalnych strukturach danych, zgodnie z tradycyjnym podejściem programowania proceduralnego.
+    
+    \item Minimalna enkapsulacja – brak hermetyzacji danych i logiki prowadzi do luźnej struktury kodu oraz ograniczonej kontroli nad jego modyfikacjami.
+    
+    \item Kompatybilność wsteczna – zachowanie zgodności z kodem Fortran ułatwia migrację i integrację z istniejącymi systemami HPC.
+    
+    \item Warunkowa alokacja – możliwość wyboru pomiędzy alokacją statyczną a dynamiczną umożliwia dostosowanie strategii zarządzania pamięcią do charakterystyki platformy.
+\end{itemize}
+  
+\subsection{Zarządzanie pamięcią}
+\begin{lstlisting}[language=C++, caption={Zarządzanie pamięcią w benchmarkach C++ z OpenMP}, label={lst:openmp_memory}]
+// Warunkowa strategia alokacji pamięci
+#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
+static int colidx[NZ];
+static int rowstr[NA+1];
+static double a[NZ];
+static double x[NA+2];
+#else
+static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
+static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
+static double (*a)=(double*)malloc(sizeof(double)*(NZ));
+static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
+#endif
+
+int main(int argc, char **argv) {
+    // Brak sprawdzania błędów alokacji
+    // Brak eksplicytnego zwalniania pamięci
+    // Potencjalne wycieki pamięci przy wcześniejszym wyjściu
+    
+    // Warunkowe zwalnianie (jeśli w ogóle)
+    #if !defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
+    // Często brakuje free() calls
+    #endif
+}
+\end{lstlisting}
+\begin{itemize}
+    \item Ręczne zarządzanie pamięcią – eksplicytne wywołania \texttt{malloc} i \texttt{free} bez wsparcia automatyzacji, co zwiększa ryzyko błędów programistycznych.
+    
+    \item Brak sprawdzania błędów alokacji – operacje przydziału pamięci mogą zakończyć się niepowodzeniem, a ich wyniki często nie są weryfikowane.
+    
+    \item Wycieki pamięci – brak gwarancji, że zaalokowane zasoby zostaną zwolnione, co prowadzi do stopniowego wzrostu zużycia pamięci.
+    
+    \item Niezdefiniowane zachowanie – możliwość błędów takich jak \textit{use-after-free} czy \textit{double-free}, które mogą skutkować niestabilnością programu lub lukami bezpieczeństwa.
+    
+    \item Przekroczenia bufora (buffer overflows) – brak automatycznego sprawdzania granic tablic sprzyja nadpisywaniu pamięci poza przydzielonym obszarem.
+\end{itemize}
+  
+\subsection{Mechanizmy równoległości}
+\begin{lstlisting}[language=C++, caption={Mechanizmy równoległości w benchmarkach C++ z OpenMP}, label={lst:openmp_parallelism}]
+    static void parallel_computation(/* parametry */) {
+        double local_sum = 0.0;
+        
+        // Klasyczne dyrektywy OpenMP
+        #pragma omp parallel for reduction(+:local_sum) schedule(static)
+        for (int64_t i = 0; i < problem_size; i++) {
+            // Równoległe przetwarzanie z ręczną kontrolą synchronizacji
+            local_sum += compute_element(i);
+        }
+        
+        // Sekcje krytyczne dla complex operations
+        #pragma omp parallel
+        {
+            double thread_local_data[THREAD_ARRAY_SIZE];
+            
+            #pragma omp for schedule(dynamic, chunk_size)
+            for (int64_t j = 0; j < iterations; j++) {
+                // Thread-local processing
+            }
+            
+            #pragma omp critical
+            {
+                // Synchronization of shared state
+                update_global_results(thread_local_data);
+            }
+        }
+    }
+\end{lstlisting}
+\begin{itemize}
+    \item Oparte na dyrektywach – wykorzystanie konstrukcji \texttt{\#pragma} do deklaratywnego sterowania równoległością w kodzie źródłowym.
+    
+    \item Ręczna synchronizacja – konieczność samodzielnego zarządzania sekcjami krytycznymi, barierami oraz mechanizmami ochrony danych współdzielonych.
+    
+    \item Jawne planowanie – programista ma bezpośrednią kontrolę nad strategiami podziału pracy, takimi jak \texttt{static}, \texttt{dynamic} czy \texttt{guided}.
+    
+    \item Model oparty na wątkach – równoległość realizowana przez bezpośrednie zarządzanie wątkami systemowymi, co wpływa na wydajność i kontrolę niskopoziomową.
+    
+    \item Dojrzały ekosystem – bogaty zbiór dyrektyw, opcji konfiguracyjnych i narzędzi wspierających optymalizację oraz profilowanie programów równoległych.
+\end{itemize}
+  
+\subsection{Specyfika benchmarku EP}
+\begin{lstlisting}[language=C++, caption={Implementacja benchmarku EP w języku C++ z OpenMP}, label={lst:ep_openmp}]
+    #pragma omp parallel
+    {
+        double t1, t2, t3, t4, x1, x2;
+        int kk, i, ik, l;
+        double qq[NQ];        // Prywatna kopia q[0:NQ-1]
+        double x[NK_PLUS];    // Lokalna tablica na stosie
+    
+        for (i = 0; i < NQ; i++) qq[i] = 0.0;
+    
+        #pragma omp for reduction(+:sx,sy)
+        for(k=1; k<=np; k++){
+            kk = k_offset + k;
+            t1 = S;
+            t2 = an;
+            int thread_id = omp_get_thread_num();
+    
+            // Znajdowanie ziarna dla tego kk
+            for(i=1; i<=100; i++){
+                ik = kk / 2;
+                if((2*ik)!=kk){t3=randlc(&t1,t2);}
+                if(ik==0){break;}
+                t3=randlc(&t2,t2);
+                kk=ik;
+            }
+    
+            // Generowanie liczb pseudolosowych
+            if(timers_enabled && thread_id==0){timer_start(2);}
+            vranlc(2*NK, &t1, A, x);
+            if(timers_enabled && thread_id==0){timer_stop(2);}
+    
+            // Box-Muller transform
+            if(timers_enabled && thread_id==0){timer_start(1);}
+            for(i=0; i<NK; i++){
+                x1 = 2.0 * x[2*i] - 1.0;
+                x2 = 2.0 * x[2*i+1] - 1.0;
+                t1 = pow2(x1) + pow2(x2);
+                if(t1 <= 1.0){
+                    t2 = sqrt(-2.0 * log(t1) / t1);
+                    t3 = (x1 * t2);
+                    t4 = (x2 * t2);
+                    l = max(fabs(t3), fabs(t4));
+                    qq[l] += 1.0;
+                    sx = sx + t3;
+                    sy = sy + t4;
+                }
+            }
+            if(timers_enabled && thread_id==0){timer_stop(1);}
+        }
+    
+        #pragma omp critical
+        {
+            for (i = 0; i <= NQ - 1; i++) q[i] += qq[i];
+        }
+    }
+\end{lstlisting}
+
+\subsection{Specyfika benchmarku CG}
+\begin{lstlisting}[language=C++, caption={Implementacja benchmarku CG w języku C++ z OpenMP}, label={lst:cg_openmp}]
+// Globalne zmienne statyczne - identyczne w OpenMP i TBB
+#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
+static int colidx[NZ];
+static int rowstr[NA+1];
+static int iv[NA];
+static int arow[NA];
+static int acol[NAZ];
+static double aelt[NAZ];
+static double a[NZ];
+static double x[NA+2];
+static double z[NA+2];
+static double p[NA+2];
+static double q[NA+2];
+static double r[NA+2];
+#else
+static int (*colidx)=(int*)malloc(sizeof(int)*(NZ));
+static int (*rowstr)=(int*)malloc(sizeof(int)*(NA+1));
+static int (*iv)=(int*)malloc(sizeof(int)*(NA));
+static int (*arow)=(int*)malloc(sizeof(int)*(NA));
+static int (*acol)=(int*)malloc(sizeof(int)*(NAZ));
+static double (*aelt)=(double*)malloc(sizeof(double)*(NAZ));
+static double (*a)=(double*)malloc(sizeof(double)*(NZ));
+static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*z)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*p)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*q)=(double*)malloc(sizeof(double)*(NA+2));
+static double (*r)=(double*)malloc(sizeof(double)*(NA+2));
+#endif
+
+int main(int argc, char **argv){
+    // Inicjalizacja bez sprawdzania błędów
+    makea(naa, nzz, a, colidx, rowstr, firstrow, lastrow, firstcol, lastcol, 
+            arow, (int(*)[NONZER+1])(void*)acol, 
+            (double(*)[NONZER+1])(void*)aelt, iv);
+
+    // Główna pętla iteracyjna
+    for(it = 1; it <= NITER; it++){
+        if(timeron){timer_start(T_CONJ_GRAD);}
+        conj_grad(colidx, rowstr, x, z, a, p, q, r, &rnorm);
+        if(timeron){timer_stop(T_CONJ_GRAD);}
+
+        // Sekwencyjne obliczenia norm
+        norm_temp1 = 0.0;
+        norm_temp2 = 0.0;
+        for(j = 0; j < lastcol - firstcol + 1; j++){
+            norm_temp1 = norm_temp1 + x[j]*z[j];
+            norm_temp2 = norm_temp2 + z[j]*z[j];
+        }
+        norm_temp2 = 1.0 / sqrt(norm_temp2);
+        zeta = SHIFT + 1.0 / norm_temp1;
+
+        // Sekwencyjna aktualizacja x
+        for(j = 0; j < lastcol - firstcol + 1; j++){
+            x[j] = norm_temp2 * z[j];
+        }
+    }
+}
+
+static void conj_grad(int colidx[], int rowstr[], double x[], double z[], 
+                        double a[], double p[], double q[], double r[], 
+                        double* rnorm){
+    int j, k;
+    int cgit, cgitmax;
+    double d, sum, rho, rho0, alpha, beta;
+
+    cgitmax = 25;
+    rho = 0.0;
+
+    // Sekwencyjna inicjalizacja
+    for(j = 0; j < naa+1; j++){
+        q[j] = 0.0;
+        z[j] = 0.0;
+        r[j] = x[j];
+        p[j] = r[j];
+    }
+
+    // OpenMP: Równoległe obliczenie rho
+    #pragma omp parallel for reduction(+:rho)
+    for(j = 0; j < lastcol-firstcol+1; j++){
+        rho += r[j]*r[j];
+    }
+
+    for(cgit = 1; cgit <= cgitmax; cgit++){
+        // OpenMP: Równoległe mnożenie macierz-wektor
+        #pragma omp parallel for
+        for(j = 0; j < lastrow-firstrow+1; j++){
+            double sum = 0.0;
+            for(k = rowstr[j]; k < rowstr[j+1]; k++){
+                sum = sum + a[k]*p[colidx[k]];
+            }
+            q[j] = sum;
+        }
+
+        // OpenMP: Równoległe obliczenie dot product
+        d = 0.0;
+        #pragma omp parallel for reduction(+:d)
+        for (j = 0; j < lastcol-firstcol+1; j++) {
+            d += p[j]*q[j];
+        }
+
+        alpha = rho / d;
+        rho0 = rho;
+        rho = 0.0;
+
+        // OpenMP: Równoległe aktualizacje wektorów z redukcją
+        #pragma omp parallel for reduction(+:rho)
+        for(j = 0; j < lastcol-firstcol+1; j++){
+            z[j] += alpha*p[j];
+            r[j] -= alpha*q[j];
+            rho += r[j]*r[j];
+        }
+
+        beta = rho / rho0;
+
+        // OpenMP: Równoległa aktualizacja p
+        #pragma omp parallel for
+        for(j = 0; j < lastrow-firstrow+1; j++){
+            p[j] = r[j] + beta*p[j];
+        }
+    }
+
+    // Obliczenie residuum
+    sum = 0.0;
+    #pragma omp parallel for
+    for(j = 0; j < lastrow-firstrow+1; j++){
+        double d = 0.0;
+        for(k = rowstr[j]; k < rowstr[j+1]; k++){
+            d = d + a[k]*z[colidx[k]];
+        }
+        r[j] = d;
+    }
+
+    #pragma omp parallel for reduction(+:sum)
+    for(j = 0; j < lastcol-firstcol+1; j++){
+        double d = x[j] - r[j];
+        sum += d*d;
+    }
+
+    *rnorm = sqrt(sum);
+}
+\end{lstlisting}
+
+\subsection{Specyfika benchmarku IS}
+\begin{lstlisting}[language=C++, caption={Implementacja benchmarku IS w języku C++ z OpenMP}, label={lst:is_openmp}]
+static void rank(/* parametry */) {
+    // Parallel histogram construction
+    #pragma omp parallel
+    {
+        int key_buff_ptr[MAX_KEY];
+        
+        #pragma omp for
+        for (int i = 0; i < num_keys; i++) {
+            key_buff_ptr[key_buff[i]]++;
+        }
+        
+        // Complex synchronization for bucket sort
+        #pragma omp barrier
+        
+        #pragma omp for
+        for (int i = 0; i < num_buckets; i++) {
+            // Redistribute keys
+        }
+    }
+}
+\end{lstlisting}
