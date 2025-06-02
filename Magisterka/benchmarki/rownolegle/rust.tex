@@ -1,74 +1,80 @@
 \section{Implementacje w języku Rust}
 \subsection{Struktura i organizacja kodu}
-Implementacje w języku Rust charakteryzują się konsystentną, modularną strukturą wykorzystującą system własności i enkapsulacji. Wszystkie benchmarki (EP, CG, IS) następują podobny wzorzec architektoniczny:
+Implementacje w języku Rust charakteryzują się proceduralną strukturą podobną do implementacji C++, wykorzystującą globalne stałe i funkcje standalone. Wszystkie benchmarki (EP, CG, IS) następują jednolity wzorzec architektoniczny oparty na funkcji main():
 
 \begin{lstlisting}[language=Rust, caption={Struktura kodu benchmarków w języku Rust}, label={lst:rust_structure}]
 pub struct NPBBenchmark {
-// Parametry problemu
-params: Problem,
-class: &'static str,
+// Globalne parametry problemu - stałe w czasie kompilacji
+const CLASS: &str = "S";
+const M: u32 = 24;
+const MM: u32 = M - MK;
+const NN: u32 = 1 << MM;
+const NK: usize = 1 << MK;
+const NPBVERSION: &str = "4.1";
+const COMPILETIME: &str = "2024-01-15";
 
-// Struktury danych z automatycznym zarządzaniem pamięci
-data_structures: Vec<T>,
+// Główna funkcja proceduralna
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let num_threads = args.get(1)
+        .map(|s| s.parse::<usize>().unwrap_or(1))
+        .unwrap_or(1);
 
-// Wyniki i stan
-results: BenchmarkResults,
-verified: bool,
+    // Konfiguracja Rayon thread pool
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(num_threads)
+        .build_global()
+        .unwrap();
 
-// Konfiguracja równoległości
-num_threads: usize,
+    // Proceduralna logika benchmarku
+    algorithm_implementation();
+    verification_and_results();
 }
 
-impl NPBBenchmark {
-pub fn new(class: &str, num_threads: usize) -> Self {
-    // Automatyczna inicjalizacja z zarządzaniem pamięcią
-}
-
-pub fn run(&mut self) -> Result<BenchmarkResults, NPBError> {
-    self.init()?;
-    self.compute()?;
-    self.verify_results()
-}
-}
+// Standalone functions operujące na globalnych danych
+fn algorithm_implementation() { /* ... */ }
+fn verification_and_results() { /* ... */ }
 \end{lstlisting}
 Kluczowe cechy organizacji kodu Rust:
 \begin{itemize}
-    \item Enkapsulacja danych: wszystkie dane algorytmu zawarte w strukturach
-    \item System własności: automatyczne zarządzanie pamięcią bez mechanizm odśmiecania pamięci 
-    \item Modularna architektura: separacja logiki biznesowej od implementacji równoległej
-    \item Bezpieczeństwo typów: silne typowanie eliminuje błędy konwersji
-    \item Obsługa błędów: konsekwentne wykorzystanie Result<T, E> dla niezawodności
+    \item Proceduralna struktura: główna logika w funkcji main() podobnie jak w C++
+    \item Globalne stałe: parametry problemu definiowane jako const w czasie kompilacji
+    \item Standalone functions: logika algorytmu w oddzielnych funkcjach, nie metodach
+    \item Automatyczne zarządzanie pamięcią: Vec<T> zamiast malloc/free
+    \item Rayon integration: jednolite użycie biblioteki Rayon we wszystkich benchmarkach
 \end{itemize}
 
 
 \subsection{Zarządzanie pamięcią}
-Rust wykorzystuje unikatowy system własności eliminujący ręczne zarządzanie pamięcią we wszystkich implementacjach NPB:
+Rust wykorzystuje system własności z automatycznym zarządzaniem pamięcią przez Vec<T>, eliminując ręczną alokację:
 \begin{lstlisting}[language=Rust, caption={Zarządzanie pamięcią w benchmarkach NPB w języku Rust}, label={lst:rust_memory_management}]
 impl NPBBenchmark {
-    fn allocate_working_memory(&mut self) {
-        // Automatyczne zarządzanie przez Vec<T>
-        self.working_arrays = vec![vec![0.0; self.params.size]; self.params.dimensions];
-        
-        // Thread-local storage dla bezpieczeństwa współbieżności
-        thread_local! {
-            static THREAD_STORAGE: RefCell<Vec<f64>> = 
-                RefCell::new(vec![0.0; MAX_THREAD_STORAGE]);
-        }
-        
-        // Automatyczna dealokacja po wyjściu z zakresu
+fn main() {
+    // Automatyczna alokacja przez Vec<T> - odpowiednik malloc w C++
+    let mut key_array: Vec<i32> = vec![0; TOTAL_KEYS];
+    let mut key_buff1: Vec<i32> = vec![0; MAX_KEY];
+    let mut working_data: Vec<f64> = vec![0.0; PROBLEM_SIZE];
+    
+    // Thread-local storage dla bezpieczeństwa współbieżności
+    thread_local! {
+        static THREAD_X: RefCell<Vec<f64>> = RefCell::new(vec![0.0; NK_PLUS]);
     }
     
-    fn process_data(&mut self) {
-        // Borrowing pozwala na bezpieczny dostęp bez przenoszenia ownership
-        self.parallel_computation(&mut self.data, &self.params);
-        
-        // Kompilator gwarantuje brak data races i use-after-free
-    }
+    // Główna logika - Vec<T> automatycznie zarządza pamięcią
+    algorithm_core(&mut key_array, &mut working_data);
+    
+    // Automatyczna dealokacja po wyjściu z zakresu - brak potrzeby free()
+}
+
+fn algorithm_core(data: &mut Vec<i32>, working: &mut Vec<f64>) {
+    // Borrowing pozwala na bezpieczny dostęp bez przenoszenia ownership
+    parallel_processing(data, working);
+    // Kompilator gwarantuje brak data races i use-after-free
 }
 \end{lstlisting}
 Zalety modelu własności:
 \begin{itemize}
-    \item Automatyczna dealokacja: pamięć zwalniana automatycznie po wyjściu z zakresu
+    \item Automatyczna dealokacja: Vec<T> zwalnia pamięć automatycznie po wyjściu z zakresu
     \item Brak wycieków pamięci: gwarancja na poziomie kompilatora
     \item Abstrakcje bez narzutu kosztów: brak narzutu wydajnościowego
     \item Bezpieczeństwo wątków: mechanizm sprawdzania pożyczania eliminuje wyścigi danych
@@ -79,24 +85,29 @@ Wszystkie implementacje Rust wykorzystują bibliotekę Rayon dla spójnego podej
 \begin{lstlisting}[language=Rust, caption={Równoległość w benchmarkach NPB w języku Rust}, label={lst:rust_parallelism}]
 use rayon::prelude::*;
 
-impl NPBBenchmark {
-    fn parallel_computation(&mut self) {
-        // Uniwersalny wzorzec work-stealing dla wszystkich benchmarków
-        let results: Vec<_> = self.data
-            .par_chunks(self.optimal_chunk_size())
-            .map(|chunk| self.process_chunk(chunk))
-            .collect();
-            
-        // Równoległe redukcje z automatycznym zarządzaniem synchronizacją
-        let final_result = results.par_iter()
-            .fold(|| ResultAccumulator::new(), |acc, result| acc.merge(result))
-            .reduce(|| ResultAccumulator::new(), |acc1, acc2| acc1.combine(acc2));
-    }
-    
-    fn process_chunk(&self, chunk: &[DataType]) -> ChunkResult {
-        // Bezpieczne przetwarzanie bez mutexów
-        // Rayon gwarantuje thread safety
-    }
+fn parallel_computation(data: &mut Vec<f64>, num_threads: usize) {
+    // Konfiguracja thread pool - odpowiednik task_scheduler_init w TBB
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(num_threads)
+        .build_global()
+        .unwrap();
+
+    // Równoległe przetwarzanie chunks - odpowiednik #pragma omp parallel for
+    let results: Vec<_> = data
+        .par_chunks_mut(optimal_chunk_size())
+        .map(|chunk| process_chunk(chunk))
+        .collect();
+        
+    // Równoległa redukcja - odpowiednik reduction(+:sum) w OpenMP
+    let final_result = data.par_iter()
+        .fold(|| 0.0, |acc, &x| acc + compute_element(x))
+        .reduce(|| 0.0, |acc1, acc2| acc1 + acc2);
+}
+
+fn process_chunk(chunk: &mut [f64]) -> f64 {
+    // Bezpieczne przetwarzanie bez mutexów dzięki par_chunks_mut
+    // Rayon gwarantuje thread safety przez podział danych
+    chunk.iter_mut().map(|x| *x * 2.0).sum()
 }
 \end{lstlisting}
 \begin{itemize}
@@ -108,302 +119,306 @@ impl NPBBenchmark {
     
     \item Ergonomiczne API – intuicyjne przekształcenie kodu sekwencyjnego na równoległy bez znacznego zwiększania złożoności.
     
-    \item Komponowalne abstrakcje \eng{composable abstractions} – możliwość łatwego łączenia różnych wzorców równoległości w ramach jednej aplikacji.
+    \item Jednolita abstrakcja: ten sam wzorzec we wszystkich benchmarkach NPB
   \end{itemize}
   
 
   \subsection{Specyfika benchmarku EP}
   \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku EP w języku Rust}, label={lst:ep_rust}]
-    impl EPBenchmark {
-        fn compute_gaussian_pairs(&mut self) {
-            // Równoległe przetwarzanie Monte Carlo
-            let result = (1..self.nn+1)
-                .collect::<Vec<_>>()
-                .par_chunks(self.optimal_chunk_size())
-                .fold(|| (0.0, 0.0), |mut acc, chunk| {
-                    for &k in chunk {
-                        // Thread-local storage dla generatora liczb pseudolosowych
-                        THREAD_X.with(|x_cell| {
-                            let mut x = x_cell.borrow_mut();
-                            randdp::vranlc((2 * NK) as i32, &mut t1, A, &mut x);
+const CLASS: &str = "S";
+const M: u32 = 24;
+const MK: u32 = 16;
+const MM: u32 = M - MK;
+const NN: u32 = 1 << MM;
+const NK: usize = 1 << MK;
+const NQ: u32 = 10;
+const A: f64 = 1220703125.0;
+const S: f64 = 271828183.0;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let num_threads: usize = args.get(1)
+        .map(|s| s.parse::<usize>().unwrap_or(1))
+        .unwrap_or(1);
+
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(num_threads)
+        .build_global()
+        .unwrap();
+
+    // Globalne dane - odpowiednik static arrays w C++
+    let mut x: Vec<f64> = Vec::with_capacity(NK_PLUS);
+    let q: [f64; NQ as usize] = [0.0; NQ as usize];
+
+    // Thread-local storage dla dużych tablic roboczych
+    thread_local! {
+        static THREAD_X: RefCell<Vec<f64>> = RefCell::new(vec![0.0; NK_PLUS]);
+    }
+
+    // Główna pętla równoległa - odpowiednik #pragma omp parallel for reduction
+    let result = (1..NN+1)
+        .collect::<Vec<_>>()
+        .par_chunks(chunk_size)
+        .fold(|| (0.0, 0.0), |mut acc, chunk| {
+            for &k in chunk {
+                THREAD_X.with(|x_cell| {
+                    let mut x = x_cell.borrow_mut();
+                    randdp::vranlc((2 * NK) as i32, &mut t1, A, &mut x);
+                    
+                    // Box-Muller transform w chunks dla lepszej wektoryzacji
+                    for chunk_start in (0..NK).step_by(CHUNK_SIZE) {
+                        let chunk_end = (chunk_start + CHUNK_SIZE).min(NK);
+                        
+                        for i in chunk_start..chunk_end {
+                            let x1 = 2.0 * x[2 * i] - 1.0;
+                            let x2 = 2.0 * x[2 * i + 1] - 1.0;
+                            let t1 = x1 * x1 + x2 * x2;
                             
-                            // Wektoryzowane przetwarzanie Box-Muller transform
-                            for chunk_start in (0..NK).step_by(CHUNK_SIZE) {
-                                let chunk_end = (chunk_start + CHUNK_SIZE).min(NK);
+                            if t1 <= 1.0 {
+                                let t2 = (-2.0 * t1.ln() / t1).sqrt();
+                                let t3 = x1 * t2;
+                                let t4 = x2 * t2;
+                                let l = t3.abs().max(t4.abs()) as usize;
                                 
-                                for i in chunk_start..chunk_end {
-                                    let x1 = 2.0 * x[2 * i] - 1.0;
-                                    let x2 = 2.0 * x[2 * i + 1] - 1.0;
-                                    let t1 = x1 * x1 + x2 * x2;
-                                    
-                                    if t1 <= 1.0 {
-                                        let t2 = (-2.0 * t1.ln() / t1).sqrt();
-                                        let t3 = x1 * t2;
-                                        let t4 = x2 * t2;
-                                        let l = t3.abs().max(t4.abs()) as usize;
-                                        
-                                        if l < NQ as usize {
-                                            local_counts[l] += 1;
-                                            acc.0 += t3;
-                                            acc.1 += t4;
-                                        }
-                                    }
+                                if l < NQ as usize {
+                                    local_counts[l] += 1;
+                                    acc.0 += t3;
+                                    acc.1 += t4;
                                 }
                             }
-                        });
+                        }
                     }
-                    acc
-                })
-                .reduce(|| (0.0, 0.0), |mut acc1, acc2| {
-                    acc1.0 += acc2.0;
-                    acc1.1 += acc2.1;
-                    acc1
                 });
-        }
-    }
+            }
+            acc
+        })
+        .reduce(|| (0.0, 0.0), |mut acc1, acc2| {
+            acc1.0 += acc2.0;
+            acc1.1 += acc2.1;
+            acc1
+        });
+
+    // Agregacja wyników
+    sx = result.0;
+    sy = result.1;
+}
 \end{lstlisting}
-Specyficzne optymalizacje EP listing \ref{lst:ep_rust}:
-\begin{itemize}
-    \item Wektoryzacja przetwarzania danych wejściowych z wykorzystaniem SIMD.
-    \item Użycie lokalnego stanu generatora liczb pseudolosowych dla każdego wątku.
-    \item Atomiczne aktualizacje histogramów bez blokad, co zwiększa wydajność.
-\end{itemize}
 
 \subsection{Specyfika benchmarku CG}
 \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku CG w języku Rust}, label={lst:cg_rust}]
-    fn main() {
-        // Inicjalizacja z Rayon thread pool
-        rayon::ThreadPoolBuilder::new()
-            .num_threads(num_threads)
-            .build_global()
-            .unwrap();
-    
-        println!(" Using {} threads", num_threads);
+const CLASS: &str = "S";
+const NA: i32 = 1400;
+const NONZER: i32 = 7;
+const NITER: i32 = 15;
+const SHIFT: f64 = 10.0;
+const NZ: i32 = NA * (NONZER + 1) * (NONZER + 1);
+
+fn main() {
+    let num_threads = if args.len() > 1 {
+        args[1].parse::<usize>().unwrap_or(1)
+    } else { 1 };
+
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(num_threads)
+        .build_global()
+        .unwrap();
+
+    // Globalne struktury danych - odpowiednik static arrays w C++
+    let mut colidx: Vec<i32> = vec![0; NZ as usize];
+    let mut rowstr: Vec<i32> = vec![0; (NA + 1) as usize];
+    let mut a: Vec<f64> = vec![0.0; NZ as usize];
+    let mut x: Vec<f64> = vec![1.0; (NA + 2) as usize];
+    let mut z: Vec<f64> = vec![0.0; (NA + 2) as usize];
+    let mut p: Vec<f64> = vec![0.0; (NA + 2) as usize];
+    let mut q: Vec<f64> = vec![0.0; (NA + 2) as usize];
+    let mut r: Vec<f64> = vec![0.0; (NA + 2) as usize];
+
+    // Generowanie macierzy rzadkiej - standalone function
+    makea(&mut naa, &mut nzz, &mut a, &mut colidx, &mut rowstr, 
+            &firstrow, &lastrow, &firstcol, &lastcol, 
+            &mut arow, &mut acol, &mut aelt, &mut iv, &mut tran, &amult);
+
+    // Główna pętla iteracyjna
+    for it in 1..=NITER {
+        conj_grad(&mut colidx, &mut rowstr, &mut x, &mut z, &mut a, 
+                    &mut p, &mut q, &mut r, &mut rnorm, &naa, &lastcol, 
+                    &firstcol, &lastrow, &firstrow);
         
-        // Globalne zmienne - podobnie jak w C++
-        let mut colidx: Vec<i32> = vec![0; NZ as usize];
-        let mut rowstr: Vec<i32> = vec![0; (NA + 1) as usize];
-        let mut a: Vec<f64> = vec![0.0; NZ as usize];
-        let mut x: Vec<f64> = vec![1.0; (NA + 2) as usize];
-        let mut z: Vec<f64> = vec![0.0; (NA + 2) as usize];
-        let mut p: Vec<f64> = vec![0.0; (NA + 2) as usize];
-        let mut q: Vec<f64> = vec![0.0; (NA + 2) as usize];
-        let mut r: Vec<f64> = vec![0.0; (NA + 2) as usize];
-    
-        // Generowanie macierzy rzadkiej
-        makea(&mut naa, &mut nzz, &mut a, &mut colidx, &mut rowstr, 
-              &firstrow, &lastrow, &firstcol, &lastcol, 
-              &mut arow, &mut acol, &mut aelt, &mut iv, &mut tran, &amult);
-    
-        // Główna pętla iteracyjna
-        for it in 1..=NITER {
-            conj_grad(&mut colidx, &mut rowstr, &mut x, &mut z, &mut a, 
-                     &mut p, &mut q, &mut r, &mut rnorm, &naa, &lastcol, 
-                     &firstcol, &lastrow, &firstrow);
-            
-            // Równoległe dot products z Rayon
-            let len = (lastcol - firstcol + 1) as usize;
-            
-            norm_temp1 = x[..len]
-                .par_iter()
-                .zip(&z[..len])
-                .map(|(&xi, &zi)| xi * zi)
-                .sum();
-    
-            norm_temp2 = z[..len]
-                .par_iter()
-                .map(|&zi| zi * zi)
-                .sum();
-    
-            if norm_temp2.abs() < 1e-30 {
-                norm_temp2 = 1e-30;
-            }
-    
-            norm_temp2 = 1.0 / norm_temp2.sqrt();
-            
-            if norm_temp1.abs() < 1e-30 {
-                norm_temp1 = 1e-30;
-            }
-            
-            zeta = SHIFT + 1.0 / norm_temp1;
-            
-            // Równoległa aktualizacja wektora x
-            x[..=(lastcol - firstcol) as usize].par_iter_mut()
-                .zip(&z[..=(lastcol - firstcol) as usize])
-                .for_each(|(xi, &zi)| {
-                    *xi = norm_temp2 * zi;
-                });
-        }
-    }
-    
-    fn conj_grad(/* parametry */) {
-        let cgitmax: i32 = 25;
+        // Równoległe dot products - odpowiednik reduction w OpenMP
+        let len = (lastcol - firstcol + 1) as usize;
         
-        // Inicjalizacja sekwencyjna - bezpieczeństwo Rust
-        for j in 0..=*naa {
-            let j = j as usize;
-            q[j] = 0.0;
-            z[j] = 0.0;
-            r[j] = x[j];
-            p[j] = r[j];
-        }
-    
-        // Równoległe obliczenie rho z Rayon
-        rho = (0..=(*lastcol - *firstcol))
-            .into_par_iter()
-            .map(|j| {
-                let idx = j as usize;
-                r[idx] * r[idx]
-            })
+        norm_temp1 = x[..len]
+            .par_iter()
+            .zip(&z[..len])
+            .map(|(&xi, &zi)| xi * zi)
             .sum();
+
+        norm_temp2 = z[..len]
+            .par_iter()
+            .map(|&zi| zi * zi)
+            .sum();
+
+        // Równoległa aktualizacja wektora x - odpowiednik #pragma omp for
+        x[..=(lastcol - firstcol) as usize].par_iter_mut()
+            .zip(&z[..=(lastcol - firstcol) as usize])
+            .for_each(|(xi, &zi)| {
+                *xi = norm_temp2 * zi;
+            });
+    }
+}
+
+// Standalone function - odpowiednik funkcji C
+fn conj_grad(colidx: &mut Vec<i32>, rowstr: &mut Vec<i32>, 
+                x: &mut Vec<f64>, z: &mut Vec<f64>, a: &mut Vec<f64>, 
+                p: &mut Vec<f64>, q: &mut Vec<f64>, r: &mut Vec<f64>, 
+                rnorm: &mut f64, /* inne parametry */) {
+    let cgitmax: i32 = 25;
     
-        for _cgit in 1..=cgitmax {
-            // Równoległe mnożenie macierz-wektor używając chunks
-            q.par_chunks_mut(1)
-                .enumerate()
-                .for_each(|(j, q_slice)| {
-                    if j <= (*lastrow - *firstrow) as usize {
-                        let mut sum = 0.0;
-                        for k in rowstr[j]..rowstr[j + 1] {
-                            let k = k as usize;
-                            let cidx = colidx[k];
-                            if cidx >= 0 && (cidx as usize) < p.len() {
-                                sum += a[k] * p[cidx as usize];
-                            }
-                        }
-                        q_slice[0] = sum;
-                    }
-                });
-    
-            // Równoległe obliczenie d (dot product)
-            d = (0..=(*lastcol - *firstcol))
-                .into_par_iter()
-                .map(|j| {
-                    let j = j as usize;
-                    p[j] * q[j]
-                })
-                .sum();
-    
-            if d.abs() < 1e-30 {
-                d = 1e-30;
-            }
-    
-            alpha = rho / d;
-            rho0 = rho;
-    
-            // Równoległe aktualizacje wektorów z wykorzystaniem slice
-            let range = 0..=(*lastcol - *firstcol) as usize;
-            let z_slice = &mut z[range.clone()];
-            let r_slice = &mut r[range.clone()];
-            let p_slice = &p[range.clone()];
-            let q_slice = &q[range.clone()];
-    
-            z_slice.par_iter_mut()
-                .zip(p_slice)
-                .for_each(|(z_val, &p_val)| {
-                    *z_val = *z_val + alpha * p_val;
-                });
-    
-            r_slice.par_iter_mut()
-                .zip(q_slice)
-                .for_each(|(r_val, &q_val)| {
-                    *r_val = *r_val - alpha * q_val;
-                });
-    
-            // Nowe rho z równoległą redukcją
-            rho = r_slice.par_iter()
-                .map(|&r_val| r_val * r_val)
-                .sum();
-    
-            if rho0.abs() < 1e-30 {
-                rho0 = 1e-30;
-            }
-    
-            beta = rho / rho0;
-    
-            // Aktualizacja p równolegle
-            p[range.clone()].par_iter_mut()
-                .zip(&r[range.clone()])
-                .for_each(|(p_val, &r_val)| {
-                    *p_val = r_val + beta * *p_val;
-                });
-        }
-    
-        // Końcowe obliczenie residuum
-        r.par_chunks_mut(1)
+    // Sekwencyjna inicjalizacja - jak w C++
+    for j in 0..=*naa {
+        let j = j as usize;
+        q[j] = 0.0;
+        z[j] = 0.0;
+        r[j] = x[j];
+        p[j] = r[j];
+    }
+
+    // Równoległe obliczenie rho - odpowiednik #pragma omp for reduction(+:rho)
+    rho = (0..=(*lastcol - *firstcol))
+        .into_par_iter()
+        .map(|j| {
+            let idx = j as usize;
+            r[idx] * r[idx]
+        })
+        .sum();
+
+    for _cgit in 1..=cgitmax {
+        // Równoległe mnożenie macierz-wektor - odpowiednik #pragma omp for
+        q.par_chunks_mut(1)
             .enumerate()
-            .for_each(|(j, r_slice)| {
-                if j >= 1 && j <= (*lastrow - *firstrow) as usize {
-                    let mut d = 0.0;
+            .for_each(|(j, q_slice)| {
+                if j <= (*lastrow - *firstrow) as usize {
+                    let mut sum = 0.0;
                     for k in rowstr[j]..rowstr[j + 1] {
                         let k = k as usize;
                         let cidx = colidx[k];
-                        if cidx >= 0 && (cidx as usize) < z.len() {
-                            d = d + a[k] * z[cidx as usize];
+                        if cidx >= 0 && (cidx as usize) < p.len() {
+                            sum += a[k] * p[cidx as usize];
                         }
                     }
-                    r_slice[0] = d;
+                    q_slice[0] = sum;
                 }
             });
-    
-        // Końcowa suma równoległa
-        sum = (0..=(*lastcol - *firstcol))
+
+        // Równoległe obliczenie dot product
+        d = (0..=(*lastcol - *firstcol))
             .into_par_iter()
             .map(|j| {
                 let j = j as usize;
-                let diff = x[j] - r[j];
-                diff * diff
+                p[j] * q[j]
             })
             .sum();
-    
-        if sum < 0.0 {
-            sum = 0.0;
-        }
-        *rnorm = sum.sqrt();
+
+        // Równoległe aktualizacje wektorów
+        let range = 0..=(*lastcol - *firstcol) as usize;
+        z[range.clone()].par_iter_mut()
+            .zip(&p[range.clone()])
+            .for_each(|(z_val, &p_val)| {
+                *z_val = *z_val + alpha * p_val;
+            });
+
+        r[range.clone()].par_iter_mut()
+            .zip(&q[range.clone()])
+            .for_each(|(r_val, &q_val)| {
+                *r_val = *r_val - alpha * q_val;
+            });
+
+        // Nowe rho z równoległą redukcją
+        rho = r[range.clone()].par_iter()
+            .map(|&r_val| r_val * r_val)
+            .sum();
     }
+}
 \end{lstlisting}
-\begin{itemize}
-    \item Podejście hybrydowe – połączenie globalnych struktur danych charakterystycznych dla C++ z gwarancjami bezpieczeństwa oferowanymi przez język Rust.
-    
-    \item par\_chunks\_mut – bezpieczna, równoległa modyfikacja danych poprzez dzielenie tablicy na niezachodzące fragmenty, co zapobiega warunkom wyścigu.
-    
-    \item Sprawdzanie granic – automatyczna weryfikacja indeksów tablicowych w celu zapobiegania nielegalnemu dostępowi do pamięci.
-    
-    \item Bezpieczeństwo pamięci – eliminacja błędów typu segmentation fault, nawet przy dostępie do rzadkich struktur danych, takich jak macierze rzadkie.
-    
-    \item Operacje na wycinkach \eng{slice operations} – efektywne i bezpieczne operacje na fragmentach wektorów, umożliwiające optymalizację przetwarzania danych.
-  \end{itemize}
   
 \subsection{Specyfika benchmarku IS}
 \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku IS w języku Rust}, label={lst:is_rust}]
+const CLASS: &str = "S";
+const TOTAL_KEYS_LOG_2: u32 = 16;
+const MAX_KEY_LOG_2: u32 = 11;
+const NUM_BUCKETS_LOG_2: u32 = 9;
+const TOTAL_KEYS: usize = 1 << TOTAL_KEYS_LOG_2;
+const MAX_KEY: usize = 1 << MAX_KEY_LOG_2;
+const NUM_BUCKETS: usize = 1 << NUM_BUCKETS_LOG_2;
+
+// Struktura enkapsulująca złożony stan bucket sort - wyjątek od proceduralnej reguły
+struct ISBenchmark {
+    key_array: Vec<KeyType>,
+    key_buff1: Vec<KeyType>,
+    key_buff2: Vec<KeyType>,
+    bucket_size: Vec<Vec<KeyType>>,
+    bucket_ptrs: Vec<KeyType>,
+    num_threads: usize,
+}
+
 impl ISBenchmark {
-    fn integer_sort(&mut self) {
-        // Równoległy bucket sort z histogram
-        let histogram = self.keys.par_iter()
-            .fold(|| vec![0usize; NUM_BUCKETS], |mut hist, &key| {
-                hist[self.bucket_for_key(key)] += 1;
-                hist
-            })
-            .reduce(|| vec![0usize; NUM_BUCKETS], |mut hist1, hist2| {
-                for (h1, h2) in hist1.iter_mut().zip(hist2.iter()) {
-                    *h1 += *h2;
-                }
-                hist1
-            });
-        
-        // Parallel prefix sum for bucket offsets
-        let mut offsets = vec![0usize; NUM_BUCKETS + 1];
-        for i in 1..=NUM_BUCKETS {
-            offsets[i] = offsets[i-1] + histogram[i-1];
+    fn new(num_threads: usize) -> Self {
+        ISBenchmark {
+            key_array: vec![0; TOTAL_KEYS],
+            key_buff1: vec![0; MAX_KEY],
+            key_buff2: vec![0; TOTAL_KEYS],
+            bucket_size: vec![vec![0; NUM_BUCKETS]; num_threads],
+            bucket_ptrs: vec![0; NUM_BUCKETS + 1],
+            num_threads,
         }
-        
-        // Parallel redistribution phase
-        self.redistributed_keys.par_chunks_mut(CHUNK_SIZE)
-            .enumerate()
-            .for_each(|(chunk_id, chunk)| {
-                // Complex data movement with atomics
-            });
     }
+    
+    fn rank(&mut self, iteration: i32) {
+        let shift = MAX_KEY_LOG_2 - NUM_BUCKETS_LOG_2;
+        
+        // Równoległe bucket counting - odpowiednik #pragma omp parallel for
+        let chunk_size = (TOTAL_KEYS + self.num_threads - 1) / self.num_threads;
+        
+        self.key_array
+            .par_chunks(chunk_size)
+            .zip(&mut self.bucket_size)
+            .for_each(|(chunk, thread_bucket)| {
+                for &key in chunk {
+                    let bucket_idx = (key >> shift) as usize;
+                    if bucket_idx < NUM_BUCKETS {
+                        thread_bucket[bucket_idx] += 1;
+                    }
+                }
+            });
+
+        // Równoległe bucket sort z atomics
+        (0..NUM_BUCKETS).into_par_iter().for_each(|i| {
+            let key_buff1_shared = Arc::new(Mutex::new(&mut self.key_buff1));
+            // Complex parallel bucket redistribution
+        });
+    }
+}
+
+fn main() {
+    let num_threads = if args.len() > 1 {
+        args[1].parse::<usize>().unwrap_or(1)
+    } else { 1 };
+    
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(num_threads)
+        .build_global()
+        .unwrap();
+
+    let mut benchmark = ISBenchmark::new(num_threads);
+    
+    // Proceduralne wywołania na strukturze
+    benchmark.create_seq();
+    
+    for iteration in 1..=MAX_ITERATIONS {
+        benchmark.rank(iteration);
+    }
+    
+    benchmark.full_verify();
 }
 \end{lstlisting}
 \begin{itemize}

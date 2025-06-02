@@ -36,15 +36,15 @@
 \contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Struktura kodu benchmarków w języku Rust}}{55}{lstlisting.7.1}%
 \contentsline {lstlisting}{\numberline {7.2}{\ignorespaces Zarządzanie pamięcią w benchmarkach NPB w języku Rust}}{56}{lstlisting.7.2}%
 \contentsline {lstlisting}{\numberline {7.3}{\ignorespaces Równoległość w benchmarkach NPB w języku Rust}}{57}{lstlisting.7.3}%
-\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Implementacja benchmarku EP w języku Rust}}{57}{lstlisting.7.4}%
+\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Implementacja benchmarku EP w języku Rust}}{58}{lstlisting.7.4}%
 \contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Implementacja benchmarku CG w języku Rust}}{59}{lstlisting.7.5}%
-\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Implementacja benchmarku IS w języku Rust}}{63}{lstlisting.7.6}%
+\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Implementacja benchmarku IS w języku Rust}}{62}{lstlisting.7.6}%
 \contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Struktura kodu benchmarków w języku C++ z OpenMP}}{64}{lstlisting.7.7}%
 \contentsline {lstlisting}{\numberline {7.8}{\ignorespaces Zarządzanie pamięcią w benchmarkach C++ z OpenMP}}{65}{lstlisting.7.8}%
-\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Mechanizmy równoległości w benchmarkach C++ z OpenMP}}{65}{lstlisting.7.9}%
-\contentsline {lstlisting}{\numberline {7.10}{\ignorespaces Implementacja benchmarku EP w języku C++ z OpenMP}}{66}{lstlisting.7.10}%
-\contentsline {lstlisting}{\numberline {7.11}{\ignorespaces Implementacja benchmarku CG w języku C++ z OpenMP}}{67}{lstlisting.7.11}%
-\contentsline {lstlisting}{\numberline {7.12}{\ignorespaces Implementacja benchmarku IS w języku C++ z OpenMP}}{70}{lstlisting.7.12}%
+\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Mechanizmy równoległości w benchmarkach C++ z OpenMP}}{66}{lstlisting.7.9}%
+\contentsline {lstlisting}{\numberline {7.10}{\ignorespaces Implementacja benchmarku EP w języku C++ z OpenMP}}{67}{lstlisting.7.10}%
+\contentsline {lstlisting}{\numberline {7.11}{\ignorespaces Implementacja benchmarku CG w języku C++ z OpenMP}}{68}{lstlisting.7.11}%
+\contentsline {lstlisting}{\numberline {7.12}{\ignorespaces Implementacja benchmarku IS w języku C++ z OpenMP}}{71}{lstlisting.7.12}%
 \contentsline {lstlisting}{\numberline {7.13}{\ignorespaces Implementacja TBB - struktura kodu}}{71}{lstlisting.7.13}%
 \contentsline {lstlisting}{\numberline {7.14}{\ignorespaces Implementacja TBB - równoległość}}{72}{lstlisting.7.14}%
 \contentsline {lstlisting}{\numberline {7.15}{\ignorespaces Implementacja nowoczesnego C++ - struktura kodu}}{73}{lstlisting.7.15}%
