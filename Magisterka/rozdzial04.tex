@@ -102,7 +102,7 @@ fn main() {
 }
 \end{lstlisting}
 \subsubsection{Niebezpieczny Rust (Unsafe Rust)}
-Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpieczeństwa pamięci, realizowany poprzez model własności \eng{ownership}, pożyczania \eng{borrowing} oraz statyczną kontrolę mutowalności. Niemniej jednak, w niektórych przypadkach – szczególnie przy niskopoziomowych operacjach systemowych, interoperacyjności z językiem C lub zaawansowanej optymalizacji – konieczne staje się tymczasowe zawieszenie niektórych mechanizmów ochronnych. W tym celu Rust oferuje specjalny blok językowy: unsafe. \\
+Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpieczeństwa pamięci, realizowany poprzez model własności \eng{ownership}, pożyczania \eng{borrowing} oraz statyczną kontrolę mutowalności. Niemniej jednak, w niektórych przypadkach - szczególnie przy niskopoziomowych operacjach systemowych, interoperacyjności z językiem C lub zaawansowanej optymalizacji - konieczne staje się tymczasowe zawieszenie niektórych mechanizmów ochronnych. W tym celu Rust oferuje specjalny blok językowy: unsafe. \\
 Deklaracja unsafe nie oznacza, że kod z założenia jest błędny lub niewłaściwy. Oznacza jedynie, że kompilator przestaje gwarantować bezpieczeństwo pamięciowe i odpowiedzialność za poprawność działania spoczywa w pełni na programiście. Z poziomu unsafe można wykonać następujące operacje \cite{UnsafeRust} :
 \begin{itemize}
 \item dereferencję wskaźników surowych \eng{raw pointers},

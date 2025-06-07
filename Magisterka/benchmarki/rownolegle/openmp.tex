@@ -27,15 +27,15 @@ int main(int argc, char **argv){
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Globalny stan – wszystkie dane przechowywane są jako zmienne globalne, co upraszcza współdzielenie zasobów pomiędzy wątkami.
+    \item Globalny stan - wszystkie dane przechowywane są jako zmienne globalne, co upraszcza współdzielenie zasobów pomiędzy wątkami.
     
-    \item Styl proceduralny – funkcje operują bezpośrednio na globalnych strukturach danych, zgodnie z tradycyjnym podejściem programowania proceduralnego.
+    \item Styl proceduralny - funkcje operują bezpośrednio na globalnych strukturach danych, zgodnie z tradycyjnym podejściem programowania proceduralnego.
     
-    \item Minimalna enkapsulacja – brak hermetyzacji danych i logiki prowadzi do luźnej struktury kodu oraz ograniczonej kontroli nad jego modyfikacjami.
+    \item Minimalna enkapsulacja - brak hermetyzacji danych i logiki prowadzi do luźnej struktury kodu oraz ograniczonej kontroli nad jego modyfikacjami.
     
-    \item Kompatybilność wsteczna – zachowanie zgodności z kodem Fortran ułatwia migrację i integrację z istniejącymi systemami HPC.
+    \item Kompatybilność wsteczna - zachowanie zgodności z kodem Fortran ułatwia migrację i integrację z istniejącymi systemami HPC.
     
-    \item Warunkowa alokacja – możliwość wyboru pomiędzy alokacją statyczną a dynamiczną umożliwia dostosowanie strategii zarządzania pamięcią do charakterystyki platformy.
+    \item Warunkowa alokacja - możliwość wyboru pomiędzy alokacją statyczną a dynamiczną umożliwia dostosowanie strategii zarządzania pamięcią do charakterystyki platformy.
 \end{itemize}
   
 \subsection{Zarządzanie pamięcią}
@@ -65,15 +65,15 @@ int main(int argc, char **argv) {
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Ręczne zarządzanie pamięcią – eksplicytne wywołania \texttt{malloc} i \texttt{free} bez wsparcia automatyzacji, co zwiększa ryzyko błędów programistycznych.
+    \item Ręczne zarządzanie pamięcią - eksplicytne wywołania \texttt{malloc} i \texttt{free} bez wsparcia automatyzacji, co zwiększa ryzyko błędów programistycznych.
     
-    \item Brak sprawdzania błędów alokacji – operacje przydziału pamięci mogą zakończyć się niepowodzeniem, a ich wyniki często nie są weryfikowane.
+    \item Brak sprawdzania błędów alokacji - operacje przydziału pamięci mogą zakończyć się niepowodzeniem, a ich wyniki często nie są weryfikowane.
     
-    \item Wycieki pamięci – brak gwarancji, że zaalokowane zasoby zostaną zwolnione, co prowadzi do stopniowego wzrostu zużycia pamięci.
+    \item Wycieki pamięci - brak gwarancji, że zaalokowane zasoby zostaną zwolnione, co prowadzi do stopniowego wzrostu zużycia pamięci.
     
-    \item Niezdefiniowane zachowanie – możliwość błędów takich jak \textit{use-after-free} czy \textit{double-free}, które mogą skutkować niestabilnością programu lub lukami bezpieczeństwa.
+    \item Niezdefiniowane zachowanie - możliwość błędów takich jak \textit{use-after-free} czy \textit{double-free}, które mogą skutkować niestabilnością programu lub lukami bezpieczeństwa.
     
-    \item Przekroczenia bufora (buffer overflows) – brak automatycznego sprawdzania granic tablic sprzyja nadpisywaniu pamięci poza przydzielonym obszarem.
+    \item Przekroczenia bufora (buffer overflows) - brak automatycznego sprawdzania granic tablic sprzyja nadpisywaniu pamięci poza przydzielonym obszarem.
 \end{itemize}
   
 \subsection{Mechanizmy równoległości}
@@ -107,15 +107,15 @@ int main(int argc, char **argv) {
     }
 \end{lstlisting}
 \begin{itemize}
-    \item Oparte na dyrektywach – wykorzystanie konstrukcji \texttt{\#pragma} do deklaratywnego sterowania równoległością w kodzie źródłowym.
+    \item Oparte na dyrektywach - wykorzystanie konstrukcji \texttt{\#pragma} do deklaratywnego sterowania równoległością w kodzie źródłowym.
     
-    \item Ręczna synchronizacja – konieczność samodzielnego zarządzania sekcjami krytycznymi, barierami oraz mechanizmami ochrony danych współdzielonych.
+    \item Ręczna synchronizacja - konieczność samodzielnego zarządzania sekcjami krytycznymi, barierami oraz mechanizmami ochrony danych współdzielonych.
     
-    \item Jawne planowanie – programista ma bezpośrednią kontrolę nad strategiami podziału pracy, takimi jak \texttt{static}, \texttt{dynamic} czy \texttt{guided}.
+    \item Jawne planowanie - programista ma bezpośrednią kontrolę nad strategiami podziału pracy, takimi jak \texttt{static}, \texttt{dynamic} czy \texttt{guided}.
     
-    \item Model oparty na wątkach – równoległość realizowana przez bezpośrednie zarządzanie wątkami systemowymi, co wpływa na wydajność i kontrolę niskopoziomową.
+    \item Model oparty na wątkach - równoległość realizowana przez bezpośrednie zarządzanie wątkami systemowymi, co wpływa na wydajność i kontrolę niskopoziomową.
     
-    \item Dojrzały ekosystem – bogaty zbiór dyrektyw, opcji konfiguracyjnych i narzędzi wspierających optymalizację oraz profilowanie programów równoległych.
+    \item Dojrzały ekosystem - bogaty zbiór dyrektyw, opcji konfiguracyjnych i narzędzi wspierających optymalizację oraz profilowanie programów równoległych.
 \end{itemize}
   
 \subsection{Specyfika benchmarku EP}

@@ -72,7 +72,7 @@ wgpu: portable graphics library for {R}ust --- wgpu.rs.
 \bibitem{WhenIsParallelismFearlessandZeroCostwithRust?}
 J.~Abdi, G.~Posluns, G.~Zhang, B.~Wang, M.~C. Jeffrey.
 \newblock When is parallelism fearless and zero-cost with rust?
-\newblock {\em Proceedings of the 36th ACM Symposium on Parallelism in Algorithms and Architectures}, SPAA '24, strona 27–40, New York, NY, USA, 2024. Association for Computing Machinery.
+\newblock {\em Proceedings of the 36th ACM Symposium on Parallelism in Algorithms and Architectures}, SPAA '24, strony 27--40, New York, NY, USA, 2024. Association for Computing Machinery.
 
 \bibitem{LanguageComparison_1}
 S.~Ali,  S.~Qayyum.
@@ -261,7 +261,7 @@ A.~Pinho, L.~Couto, J.~Oliveira.
 \bibitem{FastFlow}
 L.~Rinaldi, M.~Torquati, M.~Danelutto.
 \newblock Enforcing reference capability in fastflow with rust.
-\newblock {\em Advances in Parallel Computing}, 36:396 – 405, 2020.
+\newblock {\em Advances in Parallel Computing}, 36:396 -- 405, 2020.
 \newblock Cited by: 0; All Open Access, Gold Open Access.
 
 \bibitem{FFTPerformance}
@@ -278,7 +278,7 @@ J.~Sible,  D.~Svoboda.
 \bibitem{PPL1_2}
 T.~Silva, J.~Bispo, T.~Carvalho.
 \newblock Foundations for a rust-like borrow checker for c.
-\newblock strona 155 – 165, 2024.
+\newblock strony 155 -- 165, 2024.
 \newblock Cited by: 0; All Open Access, Hybrid Gold Open Access.
 
 \bibitem{ZastosowanieWspolbieznosci}

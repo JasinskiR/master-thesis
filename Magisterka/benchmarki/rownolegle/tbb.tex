@@ -1,12 +1,12 @@
 \section{Implementacje w C++ (TBB)}
 \subsection{Struktura i organizacja kodu}
 Implementacje TBB zachowują proceduralną strukturę z minimalnymi modyfikacjami względem wersji OpenMP:
-\begin{lstlisting}[language=C++, caption={Implementacja TBB - struktura kodu}, label={lst:tbb-structure}]
-#include "tbb/parallel_for.h"
-#include "tbb/parallel_reduce.h"
-#include "tbb/blocked_range.h"
-#include "tbb/task_scheduler_init.h"
-#include "tbb/mutex.h"
+\begin{lstlisting}[language=C++, caption={Implementacja TBB - struktura kodu}, label={lst:TBB-structure}]
+#include "TBB/parallel_for.h"
+#include "TBB/parallel_reduce.h"
+#include "TBB/blocked_range.h"
+#include "TBB/task_scheduler_init.h"
+#include "TBB/mutex.h"
 
 // Identyczne globalne zmienne jak w wersji OpenMP
 #if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
@@ -26,20 +26,20 @@ int main(int argc, char **argv){
         num_workers = 1;
     }
     
-    tbb::task_scheduler_init init(num_workers);
+    TBB::task_scheduler_init init(num_workers);
     
     // Reszta kodu identyczna jak w wersji klasycznej
     algorithm_implementation();
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Minimalne zmiany strukturalne – zachowanie proceduralnego stylu programowania bez konieczności znaczącej przebudowy istniejącego kodu.
+    \item Minimalne zmiany strukturalne - zachowanie proceduralnego stylu programowania bez konieczności znaczącej przebudowy istniejącego kodu.
     
-    \item Jawna inicjalizacja planisty zadań – konieczność ręcznego utworzenia i konfiguracji obiektu planisty (\texttt{task\_scheduler\_init}) w celu zarządzania wątkami.
+    \item Jawna inicjalizacja planisty zadań - konieczność ręcznego utworzenia i konfiguracji obiektu planisty (\texttt{task\_scheduler\_init}) w celu zarządzania wątkami.
     
-    \item Równoległość oparta na funkcjach – zastąpienie dyrektyw kompilatora wywołaniami funkcji bibliotecznych, takich jak \texttt{parallel\_for} czy \texttt{parallel\_reduce}.
+    \item Równoległość oparta na funkcjach - zastąpienie dyrektyw kompilatora wywołaniami funkcji bibliotecznych, takich jak \texttt{parallel\_for} czy \texttt{parallel\_reduce}.
     
-    \item Te same problemy z zarządzaniem pamięcią – biblioteka nie wprowadza dodatkowych zabezpieczeń; nadal istnieje ryzyko błędów takich jak wycieki pamięci, przekroczenia bufora czy dostęp do już zwolnionej pamięci.
+    \item Te same problemy z zarządzaniem pamięcią - biblioteka nie wprowadza dodatkowych zabezpieczeń; nadal istnieje ryzyko błędów takich jak wycieki pamięci, przekroczenia bufora czy dostęp do już zwolnionej pamięci.
 \end{itemize}
   
 \subsection{Zarządzanie pamięcią}
@@ -47,14 +47,14 @@ TBB nie wprowadza ulepszeń w zarządzaniu pamięcią - wykorzystuje identyczny 
 
 \subsection{Mechanizmy równoległości}
 TBB zastępuje dyrektywy OpenMP funkcyjnym API z work-stealing scheduler:
-\begin{lstlisting}[language=C++, caption={Implementacja TBB - równoległość}, label={lst:tbb-parallelism}]
+\begin{lstlisting}[language=C++, caption={Implementacja TBB - równoległość}, label={lst:TBB-parallelism}]
 // Zastąpienie OpenMP reduction przez TBB parallel_reduce
 static void parallel_computation(/* parametry */) {
 // Parallel reduction z lambda expressions
-double result = tbb::parallel_reduce(
-    tbb::blocked_range<size_t>(0, problem_size), 
+double result = TBB::parallel_reduce(
+    TBB::blocked_range<size_t>(0, problem_size), 
     0.0, 
-    [&](const tbb::blocked_range<size_t>& r, double worker_sum){
+    [&](const TBB::blocked_range<size_t>& r, double worker_sum){
         for (size_t i = r.begin(); i != r.end(); i++) {
             worker_sum += compute_element(i);
         }
@@ -64,9 +64,9 @@ double result = tbb::parallel_reduce(
 );
 
 // Parallel for z blocked ranges
-tbb::parallel_for(
-    tbb::blocked_range<size_t>(0, iterations), 
-    [&](const tbb::blocked_range<size_t>& r){
+TBB::parallel_for(
+    TBB::blocked_range<size_t>(0, iterations), 
+    [&](const TBB::blocked_range<size_t>& r){
         for (size_t i = r.begin(); i != r.end(); i++) {
             process_iteration(i);
         }
@@ -75,15 +75,15 @@ tbb::parallel_for(
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Funkcyjny interfejs programowania – zastosowanie wyrażeń lambda i funkcji wyższego rzędu zamiast dyrektyw kompilatora, co sprzyja większej elastyczności kompozycyjnej.
+    \item Funkcyjny interfejs programowania - zastosowanie wyrażeń lambda i funkcji wyższego rzędu zamiast dyrektyw kompilatora, co sprzyja większej elastyczności kompozycyjnej.
     
-    \item Harmonogram z kradzieżą pracy \eng{work-stealing scheduler} – automatyczne równoważenie obciążenia pomiędzy wątkami poprzez dynamiczne przydzielanie zadań zależnie od dostępnych zasobów.
+    \item Harmonogram z kradzieżą pracy \eng{work-stealing scheduler} - automatyczne równoważenie obciążenia pomiędzy wątkami poprzez dynamiczne przydzielanie zadań zależnie od dostępnych zasobów.
     
-    \item Podziały blokowe – automatyczny podział przestrzeni danych na zakresy, co ułatwia równoległe przetwarzanie dużych kolekcji bez konieczności ręcznego zarządzania iteracjami.
+    \item Podziały blokowe - automatyczny podział przestrzeni danych na zakresy, co ułatwia równoległe przetwarzanie dużych kolekcji bez konieczności ręcznego zarządzania iteracjami.
     
-    \item Bezpieczeństwo typów – silniejsze mechanizmy typowania w porównaniu do OpenMP, co zmniejsza liczbę błędów w czasie kompilacji.
+    \item Bezpieczeństwo typów - silniejsze mechanizmy typowania w porównaniu do OpenMP, co zmniejsza liczbę błędów w czasie kompilacji.
     
-    \item Większy narzut składniowy – bardziej rozwlekła i złożona składnia niż w przypadku OpenMP, co może wpływać na czytelność i prostotę kodu.
+    \item Większy narzut składniowy - bardziej rozwlekła i złożona składnia niż w przypadku OpenMP, co może wpływać na czytelność i prostotę kodu.
 \end{itemize}
 
 \subsection{Specyfika poszczególnych benchmarków}

@@ -27,8 +27,8 @@ async fn main() {
 \end{lstlisting}
 W powyższym przykładzie listing \ref{tokio_example} tokio::spawn inicjuje współbieżne zadanie, które przetwarza połączenie TCP bez blokowania głównej pętli programu.
 
-\subsubsection{Crossbeam::channel – komunikacja między wątkami}
-Crossbeam to zestaw narzędzi wspierających programowanie współbieżne. Jednym z kluczowych komponentów tej biblioteki są kanały komunikacyjne \eng{channels}, implementowane w module crossbeam::channel. Stanowią one bezpieczny i efektywny sposób przesyłania wiadomości pomiędzy wątkami, umożliwiając implementację wzorca producent–konsument.
+\subsubsection{Crossbeam::channel - komunikacja między wątkami}
+Crossbeam to zestaw narzędzi wspierających programowanie współbieżne. Jednym z kluczowych komponentów tej biblioteki są kanały komunikacyjne \eng{channels}, implementowane w module crossbeam::channel. Stanowią one bezpieczny i efektywny sposób przesyłania wiadomości pomiędzy wątkami, umożliwiając implementację wzorca producent-konsument.
 
 \begin{lstlisting}[language=Rust, caption=Przykład użycia kanałów Crossbeam, label=crossbeam_channel_example]
 use crossbeam::channel;
@@ -210,11 +210,11 @@ No more messages!
 Chociaż współbieżność i asynchroniczność nie są tożsame, w Rust oba te podejścia są ze sobą ściśle powiązane. Rust implementuje asynchroniczność za pomocą konstrukcji takich jak async/await oraz bibliotek takich jak Tokio czy async-std. Podejście to pozwala na wykonywanie wielu operacji współbieżnie w ramach pojedynczego wątku, eliminując narzut związany z tworzeniem wielu wątków.
 Podstawowe elementy asynchroniczności to:
 \begin{itemize}
-    \item async / await – konstrukcje językowe umożliwiające deklaratywne definiowanie funkcji asynchronicznych i ich późniejsze wywoływanie bez blokowania wątku.
-    \item Future – futury, typ reprezentujący wartość, która będzie dostępna w przyszłości. Futures są wykonywane leniwie i wymagają uruchomienia w ramach runtime’u.
-    \item Tokio i async-std – najpopularniejsze asynchroniczne runtimes, implementujące własne planisty i pętle zdarzeń (event loops).
-    \item Asynchroniczne kanały (tokio::sync::mpsc, broadcast, oneshot) – umożliwiają komunikację bez blokowania wątków.
-    \item Asynchroniczne semafory (tokio::sync::Semaphore) – pozwalają ograniczyć liczbę jednocześnie wykonywanych zadań asynchronicznych bez blokowania wątku. Są często stosowane do kontroli równoczesnych operacji na zasobach zewnętrznych, takich jak dostęp do bazy danych lub API.
+    \item async / await - konstrukcje językowe umożliwiające deklaratywne definiowanie funkcji asynchronicznych i ich późniejsze wywoływanie bez blokowania wątku.
+    \item Future - futury, typ reprezentujący wartość, która będzie dostępna w przyszłości. Futures są wykonywane leniwie i wymagają uruchomienia w ramach runtime’u.
+    \item Tokio i async-std - najpopularniejsze asynchroniczne runtimes, implementujące własne planisty i pętle zdarzeń (event loops).
+    \item Asynchroniczne kanały (tokio::sync::mpsc, broadcast, oneshot) - umożliwiają komunikację bez blokowania wątków.
+    \item Asynchroniczne semafory (tokio::sync::Semaphore) - pozwalają ograniczyć liczbę jednocześnie wykonywanych zadań asynchronicznych bez blokowania wątku. Są często stosowane do kontroli równoczesnych operacji na zasobach zewnętrznych, takich jak dostęp do bazy danych lub API.
 \end{itemize}
 W standardowej bibliotece Rust nie ma semafora, ale tokio udostępnia asynchroniczny semafor (tokio::sync::Semaphore), który można również użyć w środowisku wielowątkowym z tokio::main.
 

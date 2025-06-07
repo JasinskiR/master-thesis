@@ -73,11 +73,11 @@ Proces selekcji, obejmujący kolejne etapy oceny tematycznej, lektury streszcze�
     \begin{tabular}{|c|p{11.5cm}|c|}
     \hline
     Etap & Opis & Liczba prac  \\ \hline 
-    1 & Prace wyjściowe (przejrzane – pierwsze 15 stron wyników) & 247 \\ \hline 
-    2 & Wstępna selekcja tematyczna – usunięcie prac niezwiązanych bezpośrednio z tematem badania & 97 \\ \hline 
-    3 & Lektura streszczeń – eliminacja pozycji bez wartości empirycznej lub porównawczej & 39 \\ \hline 
-    4 & Analiza pełnych treści – wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 12 \\ \hline 
-    5 & Prace kluczowe dla problemu badawczego – porównania/omówienie mechanizmów w Rust i C++ & 9 \\ \hline 
+    1 & Prace wyjściowe (przejrzane - pierwsze 15 stron wyników) & 247 \\ \hline 
+    2 & Wstępna selekcja tematyczna - usunięcie prac niezwiązanych bezpośrednio z tematem badania & 97 \\ \hline 
+    3 & Lektura streszczeń - eliminacja pozycji bez wartości empirycznej lub porównawczej & 39 \\ \hline 
+    4 & Analiza pełnych treści - wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 12 \\ \hline 
+    5 & Prace kluczowe dla problemu badawczego - porównania/omówienie mechanizmów w Rust i C++ & 9 \\ \hline 
     \end{tabular} 
 \end{table}
 
@@ -99,11 +99,11 @@ Podobnie jak w przypadku bazy Scopus, ze względu na dużą ilośc wyników zost
     \begin{tabular}{|c|p{11.5cm}|c|}
     \hline
     Etap & Opis & Liczba prac  \\ \hline 
-    1 & Prace wyjściowe (przejrzane – pierwsze 10 stron wyników) & 100 \\ \hline 
-    2 & Wstępna selekcja tematyczna – usunięcie prac niezwiązanych bezpośrednio z tematem badania & 37 \\ \hline 
-    3 & Lektura streszczeń – eliminacja pozycji bez wartości empirycznej lub porównawczej & 9 \\ \hline 
-    4 & Analiza pełnych treści – wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 8 \\ \hline 
-    5 & Prace kluczowe dla problemu badawczego – porównania/omówienie mechanizmów w Rust i C++ & 4 \\ \hline 
+    1 & Prace wyjściowe (przejrzane - pierwsze 10 stron wyników) & 100 \\ \hline 
+    2 & Wstępna selekcja tematyczna - usunięcie prac niezwiązanych bezpośrednio z tematem badania & 37 \\ \hline 
+    3 & Lektura streszczeń - eliminacja pozycji bez wartości empirycznej lub porównawczej & 9 \\ \hline 
+    4 & Analiza pełnych treści - wybór prac zawierających konkretne porównania, benchmarki lub studia przypadków & 8 \\ \hline 
+    5 & Prace kluczowe dla problemu badawczego - porównania/omówienie mechanizmów w Rust i C++ & 4 \\ \hline 
     \end{tabular} 
 \end{table}
 \footnotetext{Liczba wyników dla poszczególnych zapytań może się różnić w zależności od daty (wyszukiwanie przeprowadzono w okresie marzec-kwiecień 2025).}
@@ -160,7 +160,7 @@ W pracy akademickiej Brandefelta i Heymana \cite{heyman2020comparison} dokonano 
 
 Kolejne istotne opracowanie przedstawiono w publikacji Martinsa et al. \cite{martins2025npbrustnasparallelbenchmarks}, gdzie zaprezentowano implementację zestawu NAS (NASA Advanced Supercomputing) Parallel Benchmarks (NPB) \cite{nasaParallelBenchmarks} w języku Rust. Zestaw NPB stanowi uznany w środowisku naukowym standard do oceny wydajności systemów równoległych. W badaniach wykazano, że Rust osiąga porównywalną, a miejscami wyższą wydajność względem C++ i Fortrana (w wersjach OpenMP i sekwencyjnych), co wskazuje na jego rosnący potencjał w dziedzinie wysokowydajnych obliczeń (HPC - High-Performance Computing). Jednocześnie zwrócono uwagę na trudności implementacyjne, związane z restrykcyjnym modelem bezpieczeństwa języka Rust, które jednak mogą być złagodzone poprzez zastosowanie odpowiednich bibliotek (np. Rayon).
 
-Równolegle, w pracy Besozziego \cite{Besozzi} zaprezentowano bibliotekę Parallelo Parallel Library (PPL) – autorskie rozwiązanie do strukturalnego programowania równoległego w języku Rust. Biblioteka ta opiera się na wzorcach programowania równoległego takich jak skeletons i design patterns, oferując wysokopoziomowe abstrakcje ułatwiające implementację złożonych aplikacji równoległych. Przeprowadzone testy wykazały, że PPL dorównuje lub przewyższa popularne biblioteki takie jak Rayon, jednocześnie zachowując zgodność z idiomami języka Rust i zasadą fearless concurrency. Zastosowanie takich abstrakcji sprzyja zwiększeniu czytelności i poprawności kodu, co może mieć szczególne znaczenie w kontekście projektów systemowych.
+Równolegle, w pracy Besozziego \cite{Besozzi} zaprezentowano bibliotekę Parallelo Parallel Library (PPL) - autorskie rozwiązanie do strukturalnego programowania równoległego w języku Rust. Biblioteka ta opiera się na wzorcach programowania równoległego takich jak skeletons i design patterns, oferując wysokopoziomowe abstrakcje ułatwiające implementację złożonych aplikacji równoległych. Przeprowadzone testy wykazały, że PPL dorównuje lub przewyższa popularne biblioteki takie jak Rayon, jednocześnie zachowując zgodność z idiomami języka Rust i zasadą fearless concurrency. Zastosowanie takich abstrakcji sprzyja zwiększeniu czytelności i poprawności kodu, co może mieć szczególne znaczenie w kontekście projektów systemowych.
 
 Można również znaleźć pracę, która przedstawia wykorzystanie biblioteki odpowiedzialnej za współbieżność FastFlow przez oba języki Rust oraz C++ \cite{FastFlow}. Pokazuje ona, że język Rust jest dobrą alternatywą dla języka C++ w kontekście współbieżności.
 

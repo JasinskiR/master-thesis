@@ -111,13 +111,13 @@ fn process_chunk(chunk: &mut [f64]) -> f64 {
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Harmonogram z kradzieżą pracy \eng{work-stealing scheduler} – automatyczne równoważenie obciążenia pomiędzy wątkami poprzez dynamiczne przydzielanie zadań.
+    \item Harmonogram z kradzieżą pracy \eng{work-stealing scheduler} - automatyczne równoważenie obciążenia pomiędzy wątkami poprzez dynamiczne przydzielanie zadań.
     
-    \item Równoległość danych – naturalne ukierunkowanie na przetwarzanie kolekcji danych w sposób równoległy.
+    \item Równoległość danych - naturalne ukierunkowanie na przetwarzanie kolekcji danych w sposób równoległy.
     
-    \item Bezpieczeństwo w czasie kompilacji – brak warunków wyścigu  gwarantowany przez mechanizm pożyczania.
+    \item Bezpieczeństwo w czasie kompilacji - brak warunków wyścigu  gwarantowany przez mechanizm pożyczania.
     
-    \item Ergonomiczne API – intuicyjne przekształcenie kodu sekwencyjnego na równoległy bez znacznego zwiększania złożoności.
+    \item Ergonomiczne API - intuicyjne przekształcenie kodu sekwencyjnego na równoległy bez znacznego zwiększania złożoności.
     
     \item Jednolita abstrakcja: ten sam wzorzec we wszystkich benchmarkach NPB
   \end{itemize}
@@ -422,10 +422,10 @@ fn main() {
 }
 \end{lstlisting}
 \begin{itemize}
-    \item Losowy dostęp do pamięci – nieprzewidywalny wzorzec odwołań do pamięci, który utrudnia efektywne wykorzystanie pamięci podręcznej procesora.
-    
-    \item Nierównomierne obciążenie – niejednorodne rozłożenie kluczy pomiędzy kubełki (buckets), prowadzące do nieefektywnego wykorzystania zasobów obliczeniowych.
-    
-    \item Narzut synchronizacji – konieczność stosowania operacji atomowych podczas równoczesnej aktualizacji kubełków, co może obniżać wydajność.
-  \end{itemize}
+    \item Mieszana architektura: \textbf{EP} i \textbf{CG} są proceduralne, natomiast \textbf{IS} posiada strukturę obiektową.
+    \item Enkapsulacja stanu: Złożone struktury danych są definiowane jako \texttt{struct} z odpowiadającą im implementacją w \texttt{impl}.
+    \item Zarządzanie własnością: Użycie \texttt{\&mut self} pozwala na bezpieczną modyfikację stanu bez naruszenia reguł współbieżności.
+    \item Bezpieczeństwo wątków: Gwarantowane automatycznie przez system typów i mechanizm pożyczania.
+\end{itemize}
+
   

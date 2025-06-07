@@ -47,7 +47,7 @@ void consumer() {
     buffer.pop(); // usuń dane z kolejki
 }
 \end{lstlisting}
-Powyższy przykład listing \ref{condition_variable_example} implementuje prosty scenariusz producent–konsument. Producent wstawia dane do kolejki i powiadamia wątek oczekujący. Konsument blokuje się, dopóki kolejka nie będzie zawierać danych. Zmienna warunkowa eliminuje konieczność aktywnego sprawdzania warunku (busy waiting), co poprawia efektywność systemu.
+Powyższy przykład listing \ref{condition_variable_example} implementuje prosty scenariusz producent-konsument. Producent wstawia dane do kolejki i powiadamia wątek oczekujący. Konsument blokuje się, dopóki kolejka nie będzie zawierać danych. Zmienna warunkowa eliminuje konieczność aktywnego sprawdzania warunku (busy waiting), co poprawia efektywność systemu.
 
 
 \subsection{Synchronizacja}
@@ -79,8 +79,8 @@ W tym przykładzie - listing \ref{scoped_lock_example} dwa wątki próbują jedn
 \subsubsection{std::latch oraz std::barrier (C++20)}
 Mechanizmy std::latch oraz std::barrier wprowadzone w standardzie C++20 służą do synchronizacji wielu wątków w określonym punkcie programu:
 \begin{itemize}
-    \item std::latch – jednorazowy licznik synchronizacyjny, który pozwala wątkom oczekującym na rozpoczęcie działania, aż inne wątki zakończą przygotowanie.
-    \item std::barrier – wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu „cyklu bariery”.
+    \item std::latch - jednorazowy licznik synchronizacyjny, który pozwala wątkom oczekującym na rozpoczęcie działania, aż inne wątki zakończą przygotowanie.
+    \item std::barrier - wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu „cyklu bariery”.
 \end{itemize}
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::latch oraz std::barrier}, label={latch_barrier_example}]
 #include <iostream>
@@ -187,11 +187,11 @@ int main() {
 \end{lstlisting}
 W powyższym przykładzie listing \ref{packaged_task_example} funkcja compute została opakowana w packaged\_task, a następnie uruchomiona w osobnym wątku z argumentem 21. Wynik trafia do future, który umożliwia jego odbiór w wątku głównym. przetwarzanie zadań.
 
-\subsubsection{C++23 – std::task i std::execution}
+\subsubsection{C++23 - std::task i std::execution}
 Standard C++23 (najnowszy w chwili tworzenia niniejszej pracy) wprowadza nowe pojęcia:
 \begin{itemize}
-    \item std::task – reprezentuje zadanie, które można uruchomić z użyciem określonego planisty wykonania.
-    \item std::execution – zestaw polityk (strategii) określających sposób wykonywania zadań, takich jak sekwencyjnie, współbieżnie, równolegle.
+    \item std::task - reprezentuje zadanie, które można uruchomić z użyciem określonego planisty wykonania.
+    \item std::execution - zestaw polityk (strategii) określających sposób wykonywania zadań, takich jak sekwencyjnie, współbieżnie, równolegle.
 \end{itemize}
 
 Mechanizmy te są częścią trwającej transformacji C++ w kierunku deklaratywnego modelu programowania współbieżnego i równoległego. Mają one zostać wprowadzone wstępnie w wersji C++26 \cite{cpp26} Ponieważ wsparcie dla tych mechanizmów jest na etapie wdrażania, nie będą one szczegółowo omawiane w tej pracy. Warto jednak zauważyć, że ich celem jest uproszczenie i ujednolicenie podejścia do programowania współbieżnego, podobnie jak ma to miejsce w języku Rust.
