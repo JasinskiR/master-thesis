@@ -9,7 +9,12 @@
     \label{cg_porownanie_czasow_wykonania}
 \end{figure}
 
-Na rysunku \ref{cg_porownanie_czasow_wykonania} zaprezentowano zestawienie czasów wykonania benchmarku CG dla czterech klas problemu: S, W, A oraz B, przy użyciu czterech różnych implementacji równoległości: TBB, OpenMP w wersji oryginalnej w stylu języka Fortran (old\_omp), OpenMP w wersji nowszej (new\_omp) oraz implementacji w języku Rust. Dla każdej z klas przedstawiono zależność czasu wykonania od liczby wątków (od 1 do 8). Wartości zostały zaprezentowane w skali logarytmicznej.
+Na rysunku \ref{cg_porownanie_czasow_wykonania} zaprezentowano zestawienie czasów wykonania benchmarku CG dla czterech klas problemu: S, W, A oraz B, przy użyciu czterech różnych implementacji równoległości: TBB, OpenMP w wersji oryginalnej w stylu języka Fortran (old\_omp), OpenMP w wersji nowszej (new\_omp) oraz implementacji w języku Rust. Dla każdej z klas przedstawiono zależność czasu wykonania od liczby wątków (od 1 do 8). Wartości zostały zaprezentowane w skali logarytmicznej.\\
+Analiza czasów wykonania algorytmu CG ujawnia wyraźne różnice w wydajności poszczególnych implementacji, z dominującym problemem dotyczącym new\_omp. Najbardziej uderzającą obserwacją jest znacząco gorsza wydajność tej implementacji we wszystkich klasach problemu. Czasy wykonania new\_omp są wielokrotnie - nawet dziesięciokrotnie - dłuższe w porównaniu do pozostałych rozwiązań. Dysproporcja ta jest szczególnie wyraźna w klasach A i B, gdzie new\_omp operuje w zakresie sekund, podczas gdy inne implementacje osiągają czasy rzędu dziesiątych części sekundy. Może to wskazywać na fundamentalne niedociągnięcia nowej wersji OpenMP w kontekście testowanego algorytmu, potencjalnie wynikające z nieefektywnej dekompozycji zadań lub kosztownych mechanizmów synchronizacji.
+
+Pozostałe implementacje prezentują bardziej zbliżone wyniki, z pewnymi zauważalnymi różnicami. W klasie A, implementacja Rust wykazuje najlepsze czasy wykonania przy większej liczbie wątków (4-8), osiągając około 0,28-0,33 sekundy. W klasie B różnice są minimalne - wszystkie trzy implementacje (tbb, old\_omp, rust) osiągają porównywalne wartości rzędu 0,09-0,10 sekundy przy większej liczbie wątków. Warto jednak zauważyć istotną niestabilność czasów wykonania dla implementacji tbb przy 8 wątkach, co sygnalizuje duży rozrzut wyników. W mniejszych klasach problemowych - S i W - tbb często okazuje się najszybszą implementacją, zwłaszcza przy średnim poziomie równoległości (3-6 wątków).
+
+Analizując wzorce skalowania, wszystkie implementacje wykazują wzrost wydajności przy przejściu z 1 do 3-4 wątków. Powyżej tego progu obserwuje się tendencję do stabilizacji lub wręcz nieznacznego pogorszenia wydajności, co może być związane z narzutami na synchronizację oraz ograniczeniami sprzętowymi. Szczególnie pozytywnie wyróżnia się tu implementacja Rust w klasie A, która prezentuje najbardziej stabilny i przewidywalny wzorzec skalowania. W pozostałych klasach implementacja ta wykazuje większą nieregularność.
 
 \begin{figure}[H]
     \centering
@@ -17,29 +22,12 @@ Na rysunku \ref{cg_porownanie_czasow_wykonania} zaprezentowano zestawienie czas�
     \caption{Analiza zmienności czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_analiza_zmiennosci}
 \end{figure}
-Powyższy wykres - rysunek \ref{cg_analiza_zmiennosci} pudełkowy prezentuje współczynnik zmienności \eng{CV - coefficient of variation}, obliczony jako stosunek odchylenia standardowego do wartości średniej, w odniesieniu do czasu wykonania (lewy wykres) oraz uzyskiwanej wydajności (prawy wykres) dla różnych wersji implementacji benchmarku.
+Powyższy wykres - rysunek \ref{cg_analiza_zmiennosci} pudełkowy prezentuje współczynnik zmienności \eng{CV - coefficient of variation}, obliczony jako stosunek odchylenia standardowego do wartości średniej, w odniesieniu do czasu wykonania (lewy wykres) oraz uzyskiwanej wydajności (prawy wykres) dla różnych wersji implementacji benchmarku.\\
+Ogólnie rzecz biorąc, czasy wykonania cechują się niską zmiennością - mediana CV dla wszystkich implementacji mieści się w przedziale 0,05-0,10, co świadczy o dobrej powtarzalności wyników. Na tym tle wyróżnia się old\_omp, który osiąga najniższy poziom zmienności, sygnalizując wysoką stabilność działania. Z kolei tbb, mimo niskiej mediany, wykazuje wartości odstające, z ekstremalnymi przypadkami CV przekraczającymi 2,5.
 
-\subsubsection{Klasa A}
-Dla klasy A obserwuje się istotne skrócenie czasu wykonania w miarę zwiększania liczby wątków we wszystkich implementacjach. Najlepsze wyniki osiąga implementacja w języku Rust, która przy dwóch wątkach wykazuje już znaczną poprawę, a dalsze zwiększanie liczby wątków prowadzi do stopniowego, choć już mniej dynamicznego, spadku czasu wykonania. Implementacje oparte na TBB oraz new\_omp osiągają porównywalne wyniki, przy czym TBB zyskuje przewagę przy większej liczbie wątków. old\_omp charakteryzuje się najmniejszą efektywnością spośród rozważanych technologii
+Zmienność wartości MFLOPS jest wyraźnie wyższa niż czasów wykonania, co sugeruje, że mimo podobnych czasów działania, efektywność obliczeniowa może się znacznie wahać. Największe odchylenia obserwuje się ponownie dla implementacji tbb, gdzie wartości CV sięgają nawet 0,35. Rust wyróżnia się najbardziej konsekwentnym profilem zmienności, z wąskim zakresem rozrzutu wyników, co może wskazywać na dobrze zoptymalizowany model obliczeń wewnętrznych.
 
-\subsubsection{Klasa B}
-W przypadku klasy B, reprezentującej znacznie większy problem obliczeniowy, wszystkie implementacje wykazują duże korzyści z równoległości do około 4-5 wątków. Najlepsze rezultaty osiąga new\_omp oraz Rust, które utrzymują stabilny i niski czas wykonania dla większej liczby wątków. Implementacja TBB wykazuje niejednorodne zachowanie, a przy 8 wątkach dochodzi do gwałtownego wzrostu czasu wykonania i odchylenia standardowego, co może świadczyć o problemach z równoważeniem obciążenia \eng{load balancing}. old\_omp stabilizuje się przy wyższym poziomie czasów wykonania, ale nie wykazuje znaczącej degradacji.
-
-\subsubsection{Klasa S}
-Dla klasy S, reprezentującej mały problem obliczeniowy, dominująca jest implementacja w języku Rust, osiągająca najniższe czasy wykonania dla niemal wszystkich liczby wątków. Warto zauważyć, że dla tej klasy problemu korzyści ze zwiększania liczby wątków są ograniczone, a różnice pomiędzy implementacjami są bardziej subtelne. TBB oraz new\_omp oferują porównywalne wyniki, podczas gdy old\_omp utrzymuje wyższe wartości czasów, co sugeruje niższą efektywność dla małych problemów.
-
-\subsubsection{Klasa W}
-Dla klasy W obserwuje się podobny trend jak w klasie S, lecz z bardziej widoczną poprawą wydajności przy zwiększaniu liczby wątków. Rust oraz TBB osiągają najniższe czasy wykonania, z przewagą Rusta przy mniejszej liczbie wątków oraz TBB dla konfiguracji 6-8 wątków. old\_omp po raz kolejny okazuje się najmniej wydajnym rozwiązaniem. new\_omp wykazuje stabilne, ale umiarkowane czasy wykonania.
-
-\subsubsection{Współczynnik zmienności - czas wykonania}
-Na lewym wykresie - rysunek \ref{cg_analiza_zmiennosci} zaobserwować można, że implementacja tbb cechuje się najwyższą zmiennością czasu wykonania. Występują dla niej wartości odstające dochodzące nawet do CV > 2.5, co może wskazywać na niestabilność działania w wybranych konfiguracjach (np. liczba wątków lub klasa problemu). Mediana wartości CV dla tbb pozostaje jednak niska, co oznacza, że większość przypadków wykazuje umiarkowaną stabilność.
-
-Pozostałe implementacje (old\_omp, new\_omp, rust) charakteryzują się wyraźnie niższą zmiennością czasu wykonania. Dla old\_omp widocznych jest kilka wartości odstających, ale ogólny rozkład jest bardziej zwarty. new\_omp i rust prezentują podobny poziom zmienności, z medianami bliskimi zera i niewielką rozpiętością wartości, co potwierdza ich stabilność obliczeniową.
-
-\subsubsection{Współczynnik zmienności - MFLOPS}
-Na prawym wykresie - rysunek \ref{cg_analiza_zmiennosci} porównano zmienność względną wydajności mierzonej w MFLOPS. Również tutaj tbb wykazuje najwyższy rozrzut wyników, z wieloma obserwacjami odstającymi, choć mediana nadal pozostaje niska (około 0.03). Może to oznaczać, że w specyficznych warunkach (np. przy większym obciążeniu systemu) tbb jest podatne na spadki wydajności.
-
-W przypadku old\_omp, new\_omp i rust rozkłady CV są bardziej zwarte. rust oraz new\_omp mają bardzo zbliżone mediany (~0.03-0.04) i umiarkowaną zmienność, co wskazuje na przewidywalność osiąganej wydajności. old\_omp, mimo że często charakteryzował się niższą bezwzględną wydajnością (jak pokazano w poprzednich analizach), okazuje się względnie stabilny w kontekście MFLOPS.
+Z punktu widzenia poszczególnych klas problemowych, klasy A i B - reprezentujące większe zbiory danych - wykazują najczytelniejsze i najbardziej regularne wzorce skalowania. To właśnie w tych klasach ujawniają się największe bezwzględne różnice w czasach wykonania między implementacjami, a korzyści z równoległości są najbardziej wyraźne. W przeciwieństwie do nich, klasy S i W - charakteryzujące się mniejszymi rozmiarami danych - wykazują większą względną zmienność wyników i mniej przewidywalne zyski z równoległego przetwarzania. Nieregularne wzorce wydajności oraz większe odchylenia wskazują, że dla małych problemów korzyści z wielowątkowości są mniej oczywiste i bardziej zależne od szczegółów implementacyjnych.
 %------------------------------
 
 \begin{figure}[H]
@@ -50,25 +38,29 @@ W przypadku old\_omp, new\_omp i rust rozkłady CV są bardziej zwarte. rust ora
 \end{figure}
 Na wykresach na rysunku \ref{cg_porownanie_wydajnosci} zaprezentowano porównanie wydajności benchmarku CG mierzonej w MFLOPS (milionach operacji zmiennoprzecinkowych na sekundę). Wydajność została przedstawiona jako funkcja liczby wątków (1-8) dla czterech implementacji równoległych.
 
+\subsubsection{Analiza trendów wydajnościowych}
+Implementacja oparta na bibliotece Intel TBB konsekwentnie wykazuje najwyższą wydajność we wszystkich klasach problemów, osiągając szczytowe wartości MFLOPS (miliony operacji zmiennoprzecinkowych na sekundę) przy wykorzystaniu 3-6 wątków. Szczególnie widoczna jest jej przewaga w klasach A, B i W, gdzie osiąga wartości przekraczające 8000 MFLOPS.
+
+Implementacja OpenMP w starszej wersji (old\_omp) plasuje się na drugiej pozycji pod względem wydajności, osiągając wyniki o około 20-30\% niższe niż TBB. Wykazuje ona podobny charakter skalowania, jednak z mniejszą efektywnością przy większej liczbie wątków.
+
+Implementacja w języku Rust prezentuje umiarkowaną wydajność, osiągając wyniki zbliżone do old\_omp w niektórych konfiguracjach, jednak generalnie niższe. Warto zauważyć, że w klasie S wykazuje ona znaczący spadek wydajności powyżej 4 wątków.
+
+Implementacja OpenMP w nowszej wersji (new\_omp) osiąga konsekwentnie najniższe wyniki wydajności spośród wszystkich testowanych wariantów, z wartościami MFLOPS kilkukrotnie niższymi od lidera.
+
+\subsubsection{Charakterystyka skalowania}
+Większość implementacji osiąga szczytową wydajność przy wykorzystaniu 3-4 wątków, po czym następuje stabilizacja lub nawet spadek wydajności. Zjawisko to jest szczególnie wyraźne w klasie S, gdzie wszystkie implementacje wykazują znaczący spadek wydajności przy większej liczbie wątków, co sugeruje, że problemy tej klasy cechują się wysokim stosunkiem komunikacji do obliczeń.
+
+Klasy A i B wykazują podobne charakterystyki skalowania, z wyraźnym wzrostem wydajności do około 4 wątków i późniejszym wypłaszczeniem. Klasa W charakteryzuje się podobnym trendem, jednak z większymi fluktuacjami wydajności.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_heatmap_wydajnosci}
 \end{figure}
-Powyższa mapa cieplna - rysunek \ref{cg_heatmap_wydajnosci} przedstawia wydajność (w MFLOPS). Wydajność została przedstawiona w zależności od liczby użytych wątków. Odcienie koloru od żółtego do ciemnoczerwonego wskazują na wzrost wydajności.
+Mapa ciepła wydajności - rysunek \ref{cg_heatmap_wydajnosci} potwierdza powyższe obserwacje, dostarczając kompleksowego widoku na zachowanie wszystkich implementacji w funkcji klasy problemu i liczby wątków. Najwyższe wartości wydajności (reprezentowane cieplejszymi, czerwonymi odcieniami) koncentrują się w obszarze implementacji TBB dla klas A, B i W przy liczbie wątków 3-8. Zimniejsze obszary mapy (żółte i jasnożółte) odpowiadają konsekwentnie implementacji new\_omp dla wszystkich klas problemów.
 
-\subsubsection{Klasa A}
-W klasie A najwyższą wydajność osiąga implementacja tbb, która systematycznie poprawia wyniki aż do 8 wątków, gdzie osiąga wartość 8627 MFLOPS. old\_omp również wykazuje dobre skalowanie, osiągając 6600 MFLOPS przy 8 wątkach. rust oraz new\_omp wypadają wyraźnie słabiej — rust stabilizuje się w przedziale 4500-5300 MFLOPS, natomiast new\_omp osiąga wartość maksymalną około 1700 MFLOPS. Sugeruje to, że tbb oraz old\_omp są znacznie bardziej efektywne w przetwarzaniu większych danych w tej klasie.
-
-\subsubsection{Klasa B}
-Dla klasy B, która reprezentuje większy problem obliczeniowy niż klasa A, trendy są podobne. tbb ponownie osiąga najwyższą wydajność (8226 MFLOPS przy 6 wątkach), z niewielkim spadkiem po przekroczeniu tej liczby. old\_omp zachowuje się stabilnie i osiąga porównywalne wartości — do 7066 MFLOPS przy 8 wątkach. rust poprawia wydajność aż do 7 wątków (5759 MFLOPS), po czym następuje niewielki spadek. new\_omp, choć bardziej stabilny, pozostaje najmniej wydajny w tej klasie (maksymalnie 1663 MFLOPS).
-
-\subsubsection{Klasa S}
-W przypadku klasy S wyraźnie widoczne są ograniczenia skalowania. tbb i old\_omp osiągają szczytowe wartości przy 3-4 wątkach, po czym wydajność zaczyna spadać. tbb osiąga maksimum (4297 MFLOPS) przy 3 wątkach, natomiast old\_omp przy 2 wątkach (3103 MFLOPS), z wyraźnym trendem malejącym przy dalszym zwiększaniu liczby wątków. rust również notuje spadek po osiągnięciu maksimum (2509 MFLOPS), co może świadczyć o narzuceniu narzutu synchronizacji przy małym rozmiarze danych. new\_omp wypada najsłabiej - spadek wydajności przy większej liczbie wątków sugeruje ograniczoną użyteczność dla tej klasy problemu.
-
-\subsubsection{Klasa W}
-Dla klasy W, ponownie najwyższe wartości osiąga tbb, z maksimum 8704 MFLOPS przy 4 wątkach i wysoką stabilnością w dalszych konfiguracjach. old\_omp również prezentuje dobre wyniki, choć maksymalna wydajność (6224 MFLOPS) jest niższa niż w przypadku tbb. Rust osiąga przyzwoite wartości (~5300 MFLOPS przy 8 wątkach), a new\_omp pozostaje konsekwentnie najmniej wydajny (~1200 MFLOPS przy 8 wątkach).
+Zauważalny jest również gradient wydajności w przypadku klasy S, gdzie wszystkie implementacje wykazują wyraźny spadek wydajności wraz ze wzrostem liczby wątków powyżej wartości optymalnej (3-4), co manifestuje się przejściem od cieplejszych do chłodniejszych odcieni w prawej części mapy ciepła.
 
 
 \begin{figure}[H]
@@ -79,13 +71,23 @@ Dla klasy W, ponownie najwyższe wartości osiąga tbb, z maksimum 8704 MFLOPS p
 \end{figure}
 Powyższy wykres - rysunek \ref{cg_analiza_skalowania} przedstawia skalowanie wydajności benchmarku CG. Skalowanie wyrażone zostało za pomocą współczynnika przyspieszenia względem wykonania jednowątkowego i odniesione do skalowania idealnego (liniowego).
 
-Analiza wykresów ujawnia wyraźne różnice w charakterystyce skalowalności pomiędzy implementacjami. W przypadku większych klas problemów (A, B, W) implementacje tbb oraz rust wykazują najbardziej efektywne skalowanie, osiągając współczynniki przyspieszenia przekraczające 3x przy 8 wątkach, z lokalnymi maksimami już przy 4-6 wątkach. Choć żaden z wariantów nie osiąga idealnego skalowania liniowego, to tbb zbliża się do tego poziomu najbliżej, szczególnie w klasach A i B.
+\subsubsection{Analiza porównawcza implementacji}
+Żadna z badanych implementacji nie osiąga idealnego skalowania liniowego, co wskazuje na istnienie inherentnych ograniczeń w równoległym wykonaniu algorytmu CG. Większość implementacji osiąga punkt maksymalnego przyspieszenia przy wykorzystaniu 3-4 wątków, po czym efektywność skalowania ulega wyraźnemu spłaszczeniu lub nawet spadkowi. Zjawisko to można przypisać rosnącym kosztom synchronizacji, kontencji pamięci podręcznej oraz ograniczeniom przepustowości pamięci.
 
-Implementacja old\_omp wykazuje umiarkowane skalowanie, a jej przyspieszenie rośnie wraz z liczbą wątków, jednak wolniej niż w przypadku tbb czy rust. Współczynniki przyspieszenia dla old\_omp są stabilne, ale znacznie oddalone od linii idealnej, co może wskazywać na ograniczenia w zarządzaniu wątkami i efektywności synchronizacji.
+Implementacja Intel TBB wykazuje generalnie najlepsze charakterystyki skalowania w większości klas problemów, szczególnie widoczne w klasach A, B i W. W optymalnym przypadku osiąga przyspieszenie rzędu 3,0-3,6x przy wykorzystaniu 4-5 wątków. Implementacja ta wykazuje najwyższą efektywność równoległą, co może świadczyć o skutecznych mechanizmach zarządzania zadaniami i minimalizacji narzutu synchronizacji.
 
-new\_omp prezentuje wyraźnie najniższe wartości przyspieszenia we wszystkich klasach problemu. Współczynnik dla tej implementacji często osiąga maksimum przy 2-4 wątkach, po czym jego wzrost ulega zahamowaniu lub wręcz obserwowany jest spadek. Taki przebieg może świadczyć o niskiej efektywności skalowania wynikającej z narzutu synchronizacji, nieefektywnej dekompozycji zadań lub nieadekwatnego wykorzystania zasobów systemowych w przypadku większej liczby wątków.
+Implementacja OpenMP w nowszej wersji prezentuje interesującą charakterystykę skalowania, osiągając w klasie problemu A najwyższe zaobserwowane przyspieszenie około 4,5x przy 8 wątkach. Wynik ten sugeruje, że nowa implementacja OpenMP może efektywniej wykorzystywać zasoby obliczeniowe w przypadku określonych wzorców dostępu do pamięci.
 
-Zwraca uwagę, że klasy problemu o większym rozmiarze (B i W) wykazują generalnie lepsze skalowanie niż klasy mniejsze (S), co jest zgodne z teoretycznym założeniem, że większy problem obliczeniowy lepiej amortyzuje koszty narzutów komunikacyjnych i synchronizacyjnych. W klasie S przyrost przyspieszenia jest niewielki lub wręcz ujemny dla niektórych implementacji, co wskazuje na zbyt małą ilość pracy do równomiernego rozproszenia pomiędzy rdzenie procesora.
+Starsza implementacja OpenMP wykazuje umiarkowane skalowanie w klasach A i B, jednak znacząco gorsze w klasie S, gdzie przyspieszenie pozostaje minimalne niezależnie od liczby wątków. Wskazuje to na potencjalne problemy w obsłudze problemów o wysokim stosunku komunikacji do obliczeń.
+
+Implementacja w języku Rust cechuje się początkowym wzrostem wydajności, który szybko ulega nasyceniu, a przy wyższej liczbie wątków często obserwuje się spadek przyspieszenia. Szczególnie widoczne jest to w klasie S, gdzie przy 7-8 wątkach współczynnik przyspieszenia spada poniżej 1,0, co oznacza degradację wydajności względem wykonania jednowątkowego.
+
+\subsubsection{Wpływ klasy problemu na skalowanie}
+Klasy problemów A i B wykazują zbliżone charakterystyki skalowania dla wszystkich badanych implementacji, co sugeruje podobne właściwości dostępu do pamięci i intensywności obliczeniowej.
+
+Klasa S charakteryzuje się zdecydowanie najgorszym skalowaniem spośród wszystkich badanych klas, z maksymalnym przyspieszeniem nieprzekraczającym 2x. Wynik ten wskazuje na wysokie koszty komunikacji w stosunku do wykonywanych obliczeń lub nieefektywne wykorzystanie lokalności danych.
+
+Klasa W prezentuje charakterystykę skalowania pośrednią między klasami A/B a klasą S, z maksymalnym przyspieszeniem w granicach 3x dla implementacji TBB.
 
 
 \subsection{Wyniki benchmarków - platforma x86\_64}
@@ -95,7 +97,15 @@ Zwraca uwagę, że klasy problemu o większym rozmiarze (B i W) wykazują genera
     \caption{Porównanie czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}
     \label{cg_porownanie_czasow_wykonania_x86_64}
 \end{figure}
+Na wykresach - rysunek \ref{cg_porownanie_czasow_wykonania_x86_64} porównujących czasy wykonania poszczególnych implementacji benchmarku CG (przedstawione w skali logarytmicznej) dla czterech klas problemów (A, B, S, W), zaobserwować można wyraźne różnice w wydajności poszczególnych implementacji oraz ich skalowaniu wraz ze wzrostem liczby wątków.
 
+Implementacja new\_omp konsekwentnie wykazuje najdłuższe czasy wykonania we wszystkich klasach problemów, z wartościami o rząd wielkości wyższymi niż pozostałe implementacje. Szczególnie widoczne jest to w klasach problemów A i B, gdzie różnica między implementacją new\_omp a pozostałymi jest najbardziej znacząca. Pomimo stosunkowo dobrej stabilności tej implementacji, jej niska wydajność czyni ją najmniej optymalnym wyborem spośród badanych wariantów.
+
+Implementacja TBB generalnie osiąga najkrótsze czasy wykonania, zwłaszcza przy wykorzystaniu większej liczby wątków (4-8). W przypadku klasy B dla 8 wątków, implementacja TBB osiąga czas wykonania rzędu 11 milisekund, co stanowi najlepszy wynik spośród wszystkich badanych konfiguracji.
+
+Implementacje Rust i starsza wersja OpenMP (old\_omp, kolor żółty) prezentują zbliżone charakterystyki czasów wykonania, często naprzemiennie zajmując drugą lub trzecią pozycję pod względem wydajności. W klasie problemu S można zaobserwować interesujące punkty przecięcia krzywych wydajności, gdzie implementacje zmieniają swoją relatywną efektywność w zależności od liczby wątków.
+
+Wszystkie implementacje wykazują poprawę wydajności wraz ze wzrostem liczby wątków, jednak skala tej poprawy jest zróżnicowana. Najlepsze skalowanie obserwowane jest dla implementacji TBB, która wykazuje największy spadek czasu wykonania przy przejściu od 1 do 4 wątków. Dla większości implementacji, korzyści wynikające z dodawania kolejnych wątków powyżej 4-6 stają się marginalne, co wskazuje na osiągnięcie punktu nasycenia skalowania.
 
 \begin{figure}[H]
     \centering
@@ -105,19 +115,11 @@ Zwraca uwagę, że klasy problemu o większym rozmiarze (B i W) wykazują genera
 \end{figure}
 Wykresy - rysunek \ref{cg_porownanie_czasow_wykonania_x86_64} przedstawiają czasy wykonania benchmarku CG dla czterech klas problemu (A, B, S, W) w zależności od liczby wątków, dla czterech implementacji równoległych: tbb, old\_omp, new\_omp i rust.
 
-Implementacje TBB oraz new\_omp wykazują istotne skrócenie czasu wykonania wraz ze wzrostem liczby wątków, zwłaszcza w przypadku klas A, B oraz W.
+Implementacja w języku Rust charakteryzuje się najwyższym współczynnikiem zmienności zarówno dla czasu wykonania, jak i dla wydajności MFLOPS. Mediana CV dla implementacji Rust jest znacząco wyższa niż dla pozostałych implementacji, co wskazuje na niższą przewidywalność wydajności tej implementacji. Rozstęp międzykwartylowy jest również największy dla implementacji Rust, co sugeruje większą dyspersję wyników pomiarów w porównaniu do innych wariantów.
 
-Z kolei old\_omp charakteryzuje się umiarkowaną poprawą czasu wykonania; jednak w konfiguracjach z większą liczbą wątków, szczególnie dla klasy B, obserwuje się wyraźne pogorszenie wyników. Może to wskazywać na istotny narzut związany z synchronizacją lub nieefektywny podział pracy między wątki.
+Implementacja oparta na Intel TBB oraz starsza wersja implementacji OpenMP (old\_omp) wykazują zbliżone charakterystyki zmienności, ze średnimi wartościami CV dla czasu wykonania oscylującymi wokół 0.05. Jednocześnie implementacja new\_omp prezentuje najniższy medianowy współczynnik zmienności dla czasu wykonania, co sugeruje jej wysoką stabilność pomimo niższej wydajności bezwzględnej.
 
-Implementacja w języku Rust, mimo że w niektórych przypadkach osiąga zadowalające rezultaty przy mniejszej liczbie wątków, traci tę przewagę w miarę zwiększania równoległości. Może to być konsekwencją ograniczeń w mechanizmach zarządzania wielowątkowością lub niedostosowanej strategii dekompozycji zadań.
-
-W przypadku klasy S, reprezentującej niewielki problem obliczeniowy, wszystkie analizowane implementacje osiągają bardzo krótkie czasy wykonania. Wzrost liczby wątków przynosi w tym przypadku jedynie marginalne korzyści, a w niektórych przypadkach prowadzi wręcz do spadku wydajności, co można tłumaczyć narzutem wynikającym z równoleglenia w stosunku do niewielkiej skali problemu.
-
-Z analizy rozkładu - rysunek \ref{cg_analiza_zmiennosci_x86_64} zmienności wynika, że implementacja new\_omp cechuje się najniższą zmiennością zarówno w zakresie czasu wykonania, jak i osiąganej wydajności (mierzonej w MFLOPS). Świadczy to o wysokim stopniu przewidywalności oraz deterministycznym charakterze działania tej wersji, mimo jej ogólnie niższej efektywności obliczeniowej.
-
-Implementacje TBB oraz old\_omp wykazują umiarkowaną zmienność wyników. W ich przypadku zaobserwowano pojedyncze wartości odstające, szczególnie w przypadku TBB, co może wskazywać na niekonsystentne zachowanie w określonych warunkach wykonawczych, takich jak zwiększone obciążenie systemu lub interferencje z innymi procesami.
-
-Z kolei implementacja w języku Rust, mimo że w wybranych przypadkach oferowała dobre rezultaty czasowe, charakteryzuje się najwyższą zmiennością spośród analizowanych rozwiązań. Wysoka wariancja obserwowana w różnych konfiguracjach eksperymentalnych może świadczyć o ograniczonej stabilności tej implementacji, bądź środowiska wykonawczego, w którym została uruchomiona.
+Interesującym aspektem jest obecność pojedynczych obserwacji odstających widocznych szczególnie dla implementacji new\_omp i old\_omp, które mogą wskazywać na sporadyczne zakłócenia spowodowane czynnikami zewnętrznymi lub specyficznymi przypadkami brzegowymi w algorytmie.
 
 \begin{figure}[H]
     \centering
@@ -127,21 +129,23 @@ Z kolei implementacja w języku Rust, mimo że w wybranych przypadkach oferował
 \end{figure}
 Na wykresach na rysunku \ref{cg_porownanie_wydajnosci_x86_64} zaprezentowano porównanie wydajności benchmarku CG mierzonej w MFLOPS (milionach operacji zmiennoprzecinkowych na sekundę). Wydajność została przedstawiona jako funkcja liczby wątków (1-8) dla czterech implementacji równoległych.
 
+Implementacja bazująca na bibliotece TBB, wykazuje najwyższą wydajność obliczeniową w klasach problemów A, B i W. Dla klasy A osiąga ona maksymalną wydajność przekraczającą 9400 MFLOPS przy wykorzystaniu 7-8 wątków, wykazując przy tym dobre właściwości skalowania wraz ze wzrostem liczby jednostek wykonawczych. Szczególnie godne uwagi jest stabilne zwiększanie wydajności nawet przy wysokiej liczbie wątków, co sugeruje efektywne zarządzanie zadaniami i minimalizację narzutów synchronizacji w tej implementacji.
+
+Implementacja wykorzystująca starszą wersję OpenMP (old\_omp), prezentuje zróżnicowane charakterystyki wydajnościowe w zależności od klasy problemu. Interesującym przypadkiem jest jej wyjątkowo dobra wydajność w klasie problemu S, gdzie osiąga najwyższe wartości spośród wszystkich badanych implementacji, przekraczając 3500 MFLOPS. Jednocześnie w klasach A i B wykazuje ona tendencję do osiągania maksimum wydajności przy 4-5 wątkach, po czym następuje spadek efektywności przy dalszym zwiększaniu liczby jednostek wykonawczych.
+
+Implementacja w języku Rust charakteryzuje się umiarkowaną wydajnością z wyraźnymi ograniczeniami skalowania przy większej liczbie wątków. W klasie problemu B osiąga ona konkurencyjne wyniki względem implementacji old\_omp przy 7-8 wątkach, jednak w pozostałych klasach pozostaje na niższym poziomie wydajności. W klasie S obserwowany jest nawet spadek wydajności powyżej 3 wątków, co wskazuje na potencjalne problemy z równoległą implementacją dla tego typu zadań.
+
+Implementacja wykorzystująca nowszą wersję OpenMP (new\_omp), konsekwentnie wykazuje najniższe wartości wydajności we wszystkich klasach problemów, rzadko przekraczając 1500 MFLOPS nawet przy maksymalnej liczbie wątków. Charakterystycznym elementem jest jednak stosunkowo stabilny, choć ograniczony wzrost wydajności wraz ze zwiększaniem liczby jednostek wykonawczych.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_heatmap_wydajnosci_x86_64}
 \end{figure}
-Powyższa mapa cieplna - rysunek \ref{cg_heatmap_wydajnosci_x86_64} przedstawia wydajność (w MFLOPS). Wydajność została przedstawiona w zależności od liczby użytych wątków. Odcienie koloru od żółtego do ciemnoczerwonego wskazują na wzrost wydajności.
+Mapa ciepła - rysunek \ref{cg_heatmap_wydajnosci_x86_64} wydajności benchmarku CG dostarcza komplementarnego widoku na zachowanie wszystkich implementacji. Intensywność koloru odpowiada wydajności obliczeniowej wyrażonej w MFLOPS, co pozwala na szybką identyfikację obszarów optymalnej wydajności. Najwyższe wartości (reprezentowane ciemnoczerwonymi odcieniami) koncentrują się w obszarze implementacji TBB dla klas A, B i W przy wyższej liczbie wątków. Szczególnie widoczna jest równomierna poprawa wydajności TBB dla klasy A wraz ze wzrostem liczby wątków.
 
-Implementacja tbb wyraźnie dominuje we wszystkich klasach problemu, wykazując największy przyrost wydajności wraz ze wzrostem liczby wątków. W klasie A osiąga wartość bliską 9500 MFLOPS przy 8 wątkach, a w klasie B niemal 7800 MFLOPS. Również w klasach W i S tbb prezentuje bardzo dobre rezultaty, konsekwentnie przewyższając pozostałe implementacje.
-
-old\_omp zajmuje drugą pozycję pod względem wydajności. Choć w klasach A i B nie osiąga wyników tbb, to w klasach W i S oferuje konkurencyjne rezultaty. W szczególności w klasie S przy mniejszej liczbie wątków (2-4) uzyskuje najwyższe wartości MFLOPS w porównaniu z pozostałymi implementacjami, co sugeruje jego efektywność dla mniejszych problemów obliczeniowych.
-
-Rust wykazuje umiarkowaną wydajność, która rośnie do pewnego momentu (najczęściej przy 5-6 wątkach), po czym następuje stabilizacja lub nawet lekki spadek.
-
-Najniższe wyniki uzyskuje new\_omp, którego krzywe wzrostu MFLOPS są płaskie i znacznie oddalone od pozostałych implementacji. Nawet przy większej liczbie wątków nie obserwuje się znaczącej poprawy wydajności.
+Mapa ciepła potwierdza również wyjątkową charakterystykę klasy S, gdzie najwyższe wartości osiągane są przez implementację old\_omp, a nie TBB jak w pozostałych klasach. Dodatkowo uwydatniony jest gradient wydajności dla implementacji rust i old\_omp w klasach A i W, gdzie wydajność najpierw rośnie, a następnie spada przy wyższych liczbach wątków. wydajności.
 
 \begin{figure}[H]
     \centering
@@ -150,14 +154,21 @@ Najniższe wyniki uzyskuje new\_omp, którego krzywe wzrostu MFLOPS są płaskie
     \label{cg_analiza_skalowania_x86_64}
 \end{figure}
 Powyższy wykres - rysunek \ref{cg_analiza_skalowania_x86_64} przedstawia skalowanie wydajności benchmarku CG. Skalowanie wyrażone zostało za pomocą współczynnika przyspieszenia względem wykonania jednowątkowego i odniesione do skalowania idealnego (liniowego).
+\subsubsection{Porównanie efektywności skalowania implementacji}
+Wśród badanych implementacji najlepsze właściwości skalowania wykazuje TBB, szczególnie w klasach A i B, gdzie osiąga przyspieszenie przekraczające 6x przy maksymalnej liczbie wątków. W klasie A zaobserwowano nawet zjawisko superliniowego przyspieszenia (powyżej 6x), co może wynikać z lepszej lokalności pamięci podręcznej.
 
-Implementacja TBB wykazuje najwyższy poziom skalowalności spośród wszystkich analizowanych rozwiązań. W klasach A, B oraz W osiąga przyspieszenie przekraczające 6x przy 8 wątkach, co stanowi wynik bliski idealnemu skalowaniu. Świadczy to o bardzo efektywnym wykorzystaniu dostępnych zasobów obliczeniowych w szerokim zakresie stopni równoległości.
+New\_omp prezentuje umiarkowane, ale stabilne skalowanie. W klasie B osiąga maksymalnie 4,7x przy 6 wątkach, a w innych klasach - niższe wartości. Jej charakterystyczną cechą jest brak gwałtownych spadków wydajności przy rosnącej liczbie wątków.
 
-Zaskakująco dobre wyniki skalowalności uzyskuje również new\_omp, zwłaszcza w klasach A i B, gdzie przy 8 wątkach odnotowano przyspieszenie rzędu 4.1x-4.8x. Pomimo niższej bezwzględnej wydajności (MFLOPS), obserwowalne skalowanie wskazuje na skuteczne rozproszenie obciążenia obliczeniowego w przypadku zadań o średniej i dużej skali.
+Rust wykazuje silne zróżnicowanie: w klasach A i B uzyskuje do 3,5x przy 8 wątkach, ale w klasie S dochodzi do degradacji - przyspieszenie spada poniżej 1.0, co świadczy o poważnych problemach z równoległością przy małych problemach.
 
-Implementacja old\_omp charakteryzuje się umiarkowanym wzrostem wydajności, który stosunkowo wcześnie ulega spowolnieniu. W klasach A i B efektywność skalowania zaczyna wyraźnie maleć po osiągnięciu 4-6 wątków, natomiast w klasie W wzrost wydajności powyżej 4 wątków jest marginalny.
+Old\_omp wypada najsłabiej. Dla większości klas przyspieszenie przestaje rosnąć po 3-4 wątkach. W klasie A przy 8 wątkach osiąga tylko 2,5x, co sugeruje nieefektywność synchronizacji.
 
-Najsłabsze właściwości skalowalne prezentuje implementacja w języku Rust, szczególnie w klasach S i W. Już przy 4-6 wątkach obserwowana jest stagnacja, a nawet spadek współczynnika przyspieszenia.
+\subsubsection{Wpływ klasy problemu}
+Najlepsze skalowanie występuje w klasach A i B, gdzie implementacja TBB osiąga przyspieszenia ponad 6x. Klasy te są najbardziej podatne na równoległość.
+
+Klasa S wypada najgorzej - żadna implementacja nie przekracza 3x przyspieszenia, co sugeruje ograniczenia wynikające z wysokiego stosunku komunikacji do obliczeń.
+
+Klasa W wykazuje umiarkowane skalowanie, do ok. 3,5x, przy czym do 3-4 wątków wydajność implementacji jest podobna, po czym zaczynają się różnić.
 %------------------------------
 %------------------------------
 \subsection{Wyniki profilowania wydajności - platforma ARM64}
@@ -229,7 +240,7 @@ Na ostatnim wykresie - rysunek \ref{cg_analiza_wzgledem_old_omp} (prawy dolny r�
     \label{cg_kompromisy_pamiec_bledy}
 \end{figure}
 
-W celu całościowej oceny efektywności pamięciowej badanych implementacji, opracowano wykresy - rysunek \ref{cg_kompromisy_pamiec_bledy} typu "bubble chart”, które ukazują kompromisy między dwiema kluczowymi metrykami: zużyciem pamięci oraz liczbą błędów stron. Wykresy te wzbogacono o trzeci wymiar - liczbę odzyskanych stron pamięci, która została zakodowana poprzez rozmiar bąbla. Wszystkie wartości przedstawiono w postaci bezwzględnej, przy czym oś Y jest skalowana logarytmicznie w celu lepszego rozróżnienia niewielkich wartości.
+W celu całościowej oceny efektywności pamięciowej badanych implementacji, opracowano wykresy bąbelkowe - rysunek \ref{cg_kompromisy_pamiec_bledy}, które ukazują kompromisy między dwiema kluczowymi metrykami: zużyciem pamięci oraz liczbą błędów stron. Wykresy te wzbogacono o trzeci wymiar - liczbę odzyskanych stron pamięci, która została zakodowana poprzez rozmiar bąbla. Wszystkie wartości przedstawiono w postaci bezwzględnej, przy czym oś Y jest skalowana logarytmicznie w celu lepszego rozróżnienia niewielkich wartości.
 
 Każdy z czterech wykresów odpowiada innej klasie obciążenia pamięciowego (S, W, A, B), przy czym wspólnym celem ich analizy jest uchwycenie relacji pomiędzy wzrostem zużycia pamięci a pogorszeniem lub poprawą stabilności działania (mierzonej błędami stron) oraz intensywnością operacji odzyskiwania stron.
 
