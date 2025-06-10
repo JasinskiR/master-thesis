@@ -151,92 +151,196 @@ Porównując mechanizmy współbieżności w językach Rust i C++, można zauwa�
 
 \subsubsection{Rust - kanały typowane}
 Implementacja Rust wykorzystuje kanały z różnymi semantykami komunikacji (\texttt{broadcast}):
-\begin{lstlisting}[language=Rust, caption={Producent-Konsument w Rust z broadcast channels}, label={lst:rust_producer_consumer}]
-async fn async_producer_consumer_benchmark(
-num_producers: usize,
-num_consumers: usize,
-items_per_producer: usize,
-metrics: Arc<AsyncMetrics>
-) {
-let (tx, _) = broadcast::channel(1000);
-let mut consumer_handles = vec![];
-for i in 0..num_consumers {
-    let mut rx = tx.subscribe();
-    let metrics_clone = Arc::clone(&metrics);
+\begin{lstlisting}[language=Rust, caption={Producent-Konsument w Rust z mpsc channels}, label={lst:rust_producer_consumer}]
+fn producer_consumer_channel_benchmark(num_producers: usize, num_consumers: usize, items_per_producer: usize) {
+    let metrics = Arc::new(ConcurrencyMetrics::new());
+    let (tx, rx) = mpsc::channel();
+    let rx = Arc::new(Mutex::new(rx));
+    let producers_done = Arc::new(AtomicBool::new(false));
     
-    let handle = tokio::spawn(async move {
-        let mut count = 0;
-        while let Ok(_item) = rx.recv().await {
-            count += 1;
-            sleep(Duration::from_micros(10)).await;
-            metrics_clone.record_async_operation(Duration::from_micros(10));
-        }
-        count
-    });
-    consumer_handles.push(handle);
-}
-
-for i in 0..num_producers {
-    let tx = tx.clone();
-    tokio::spawn(async move {
-        for j in 0..items_per_producer {
-            let item = format!("Producer-{}-Item-{}", i, j);
-            if tx.send(item).is_err() { break; }
-        }
-    });
-}
-
-drop(tx);
-for handle in consumer_handles {
-    handle.await.unwrap();
-}
+    // Producenci
+    for i in 0..num_producers {
+        let tx = tx.clone();
+        let metrics_clone = Arc::clone(&metrics);
+        
+        let handle = thread::spawn(move || {
+            for j in 0..items_per_producer {
+                let start_send = Instant::now();
+                if tx.send(format!("Producer-{}-Item-{}", i, j)).is_ok() {
+                    metrics_clone.increment_produced();
+                    metrics_clone.record_channel_operation(start_send.elapsed());
+                }
+                
+                if j % 100 == 0 {
+                    thread::sleep(Duration::from_micros(1));
+                }
+            }
+            println!("Rust Producer {} finished", i);
+        });
+        producer_handles.push(handle);
+    }
+    
+    // Konsumenci
+    for i in 0..num_consumers {
+        let rx = Arc::clone(&rx);
+        let metrics_clone = Arc::clone(&metrics);
+        let producers_done_clone = Arc::clone(&producers_done);
+        
+        let handle = thread::spawn(move || {
+            let mut local_consumed = 0;
+            loop {
+                let start_recv = Instant::now();
+                let received = {
+                    if let Ok(rx_guard) = rx.try_lock() {
+                        match rx_guard.try_recv() {
+                            Ok(_item) => {
+                                metrics_clone.record_channel_operation(start_recv.elapsed());
+                                metrics_clone.increment_consumed();
+                                local_consumed += 1;
+                                true
+                            }
+                            Err(mpsc::TryRecvError::Empty) => {
+                                if producers_done_clone.load(Ordering::Relaxed) {
+                                    break;
+                                }
+                                false
+                            }
+                            Err(mpsc::TryRecvError::Disconnected) => break,
+                        }
+                    } else {
+                        false
+                    }
+                };
+                
+                if !received {
+                    thread::sleep(Duration::from_micros(10));
+                }
+            }
+            println!("Rust Consumer {} finished, consumed {} items", i, local_consumed);
+        });
+        consumer_handles.push(handle);
+    }
+    
+    drop(tx);
+    for handle in producer_handles {
+        handle.join().unwrap();
+    }
+    
+    producers_done.store(true, Ordering::Relaxed);
+    for handle in consumer_handles {
+        handle.join().unwrap();
+    }
 }
 \end{lstlisting}
 
 \subsubsection{C++ - ręczna synchronizacja}
 Wersja C++ opiera się na ręcznym zarządzaniu współbieżnością z użyciem mutexów i zmiennych warunkowych:
-\begin{lstlisting}[language=C++, caption={Producent-Konsument w C++ z ThreadSafeQueue}, label={lst:cpp_producer_consumer}]
+\begin{lstlisting}[language=C++, caption={Producent-Konsument w C++ z Channel}, label={lst:cpp_producer_consumer}]
 template<typename T>
-class ThreadSafeQueue {
+class Channel {
 private:
-std::queue<T> queue_;
-mutable std::mutex mutex_;
-std::condition_variable condition_;
-bool finished_;
+    std::queue<T> queue_;
+    mutable std::mutex mutex_;
+    std::condition_variable condition_;
+    bool closed_ = false;
+
 public:
-void push(T item) {
-std::lock_guardstd::mutex lock(mutex_);
-queue_.push(item);
-condition_.notify_one();
-}
-bool wait_and_pop(T& item, std::chrono::milliseconds timeout) {
-    std::unique_lock<std::mutex> lock(mutex_);
-    if (condition_.wait_for(lock, timeout, 
-        [this] { return !queue_.empty() || finished_; })) {
-        if (!queue_.empty()) {
-            item = queue_.front();
-            queue_.pop();
-            return true;
+    void send(T item) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (!closed_) {
+            queue_.push(std::move(item));
+            condition_.notify_one();
         }
     }
-    return false;
-}
-};
-void producer_consumer_benchmark() {
-ThreadSafeQueuestd::string queue;
-std::vectorstd::thread threads;
-for (size_t i = 0; i < num_producers; ++i) {
-    threads.emplace_back([&queue, i]() {
-        for (size_t j = 0; j < items_per_producer; ++j) {
-            queue.push("Producer-" + std::to_string(i) + "-Item-" + std::to_string(j));
-        }
-    });
-}
 
-for (auto& thread : threads) {
-    thread.join();
-}
-queue.finish();
+    bool try_recv(T& item) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (queue_.empty()) {
+            if (closed_) return false;
+            return false;
+        }
+        item = std::move(queue_.front());
+        queue_.pop();
+        return true;
+    }
+
+    bool recv(T& item) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        condition_.wait(lock, [this]() { return !queue_.empty() || closed_; });
+        
+        if (queue_.empty() && closed_) return false;
+        
+        item = std::move(queue_.front());
+        queue_.pop();
+        return true;
+    }
+
+    void close() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        closed_ = true;
+        condition_.notify_all();
+    }
+};
+
+void enhanced_producer_consumer_channel_benchmark(std::size_t num_producers, std::size_t num_consumers, std::size_t items_per_producer) {
+    auto metrics = std::make_shared<EnhancedConcurrencyMetrics>();
+    Channel<std::string> channel;
+    std::atomic<bool> producers_done{false};
+    
+    std::vector<std::thread> producers;
+    std::vector<std::thread> consumers;
+    
+    // Producenci
+    for (std::size_t i = 0; i < num_producers; ++i) {
+        producers.emplace_back([i, items_per_producer, &channel, metrics]() {
+            for (std::size_t j = 0; j < items_per_producer; ++j) {
+                auto start_send = std::chrono::steady_clock::now();
+                std::string item = "Producer-" + std::to_string(i) + "-Item-" + std::to_string(j);
+                channel.send(item);
+                metrics->increment_produced();
+                auto end_send = std::chrono::steady_clock::now();
+                metrics->record_channel_operation(std::chrono::duration_cast<std::chrono::nanoseconds>(end_send - start_send));
+                
+                if (j % 100 == 0) {
+                    std::this_thread::sleep_for(std::chrono::microseconds(1));
+                }
+            }
+            std::cout << "C++ Enhanced Producer " << i << " finished\n";
+        });
+    }
+    
+    // Konsumenci
+    for (std::size_t i = 0; i < num_consumers; ++i) {
+        consumers.emplace_back([i, &channel, &producers_done, metrics]() {
+            std::string item;
+            std::size_t local_consumed = 0;
+            
+            while (true) {
+                auto start_recv = std::chrono::steady_clock::now();
+                bool received = channel.try_recv(item);
+                
+                if (received) {
+                    auto end_recv = std::chrono::steady_clock::now();
+                    metrics->record_channel_operation(std::chrono::duration_cast<std::chrono::nanoseconds>(end_recv - start_recv));
+                    metrics->increment_consumed();
+                    local_consumed++;
+                } else {
+                    if (producers_done.load() && channel.empty()) {
+                        break;
+                    }
+                    std::this_thread::sleep_for(std::chrono::microseconds(10));
+                }
+            }
+            std::cout << "C++ Enhanced Consumer " << i << " finished, consumed " << local_consumed << " items\n";
+        });
+    }
+    
+    for (auto& t : producers) t.join();
+    producers_done.store(true);
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    
+    for (auto& t : consumers) t.join();
 }
 \end{lstlisting}
 
@@ -244,51 +348,86 @@ queue.finish();
 
 \subsubsection{Rust - wejście/wyjście sterowane zdarzeniami}
 Implementacja Rust wykorzystuje nieblokujące I/O:
-\begin{lstlisting}[language=Rust, caption={Echo Serwer w Rust z tokio::select!}, label={lst:rust_echo_server}]
+\begin{lstlisting}[language=Rust, caption={Echo Serwer w Rust z Tokio}, label={lst:rust_echo_server}]
 async fn run_echo_server(
-addr: &str,
-max_connections: usize,
-shutdown_rx: &mut broadcast::Receiver<()>
+    addr: &str, 
+    max_connections: usize,
+    shutdown_rx: &mut broadcast::Receiver<()>
 ) -> Arc<EchoServerMetrics> {
-let listener = TcpListener::bind(addr).await.expect("Failed to bind");
-let metrics = Arc::new(EchoServerMetrics::new());
-let semaphore = Arc::new(Semaphore::new(max_connections));
-loop {
-    tokio::select! {
-        accept_result = listener.accept() => {
-            match accept_result {
-                Ok((stream, addr)) => {
-                    if let Ok(permit) = semaphore.clone().try_acquire_owned() {
-                        let metrics_clone = Arc::clone(&metrics);
-                        tokio::spawn(async move {
-                            handle_echo_client(stream, addr, metrics_clone).await;
-                            drop(permit);
-                        });
+    println!("Starting echo server on {}", addr);
+    
+    let listener = TcpListener::bind(addr).await.expect("Failed to bind");
+    let metrics = Arc::new(EchoServerMetrics::new());
+    let semaphore = Arc::new(Semaphore::new(max_connections));
+    
+    println!("Echo server listening on {} (max {} connections)", addr, max_connections);
+    
+    loop {
+        tokio::select! {
+            // Handle new connections
+            accept_result = listener.accept() => {
+                match accept_result {
+                    Ok((stream, addr)) => {
+                        if let Ok(permit) = semaphore.clone().try_acquire_owned() {
+                            let metrics_clone = Arc::clone(&metrics);
+                            tokio::spawn(async move {
+                                handle_echo_client(stream, addr, metrics_clone).await;
+                                drop(permit);
+                            });
+                        } else {
+                            println!("Connection rejected: max capacity reached");
+                            drop(stream);
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to accept connection: {}", e);
                     }
                 }
             }
-        }
-        
-        _ = shutdown_rx.recv() => {
-            break;
+            
+            // Handle shutdown signal
+            _ = shutdown_rx.recv() => {
+                println!("Echo server shutting down...");
+                break;
+            }
         }
     }
+    
+    metrics
 }
 
-metrics
-}
-async fn handle_echo_client(mut stream: TcpStream, addr: SocketAddr,
-metrics: Arc<EchoServerMetrics>) {
-let mut buffer = [0; 1024];
-loop {
-    match timeout(Duration::from_secs(30), stream.read(&mut buffer)).await {
-        Ok(Ok(0)) => break,
-        Ok(Ok(n)) => {
-            if stream.write_all(&buffer[0..n]).await.is_err() { break; }
+async fn handle_echo_client(
+    mut stream: TcpStream, 
+    addr: SocketAddr, 
+    metrics: Arc<EchoServerMetrics>
+) {
+    let connection_start = Instant::now();
+    let conn_id = metrics.connection_started();
+    let mut buffer = [0; 1024];
+    let mut total_bytes = 0u64;
+    let mut message_count = 0;
+    
+    println!("Client connected: {} (ID: {})", addr, conn_id);
+    
+    loop {
+        match timeout(Duration::from_secs(30), stream.read(&mut buffer)).await {
+            Ok(Ok(0)) => break, // Connection closed
+            Ok(Ok(n)) => {
+                // Echo the data back
+                if stream.write_all(&buffer[0..n]).await.is_err() {
+                    break;
+                }
+                total_bytes += (n * 2) as u64; // Read + write
+                message_count += 1;
+            }
+            Ok(Err(_)) | Err(_) => break, // Error or timeout
         }
-        _ => break,
     }
-}
+    
+    let duration = connection_start.elapsed();
+    metrics.connection_ended(duration, message_count, total_bytes);
+    println!("Client disconnected: {} (ID: {}, {}ms, {} messages, {} bytes)", 
+             addr, conn_id, duration.as_millis(), message_count, total_bytes);
 }
 \end{lstlisting}
 
@@ -297,44 +436,201 @@ Wersja C++ tworzy osobny wątek dla każdego klienta:
 \begin{lstlisting}[language=C++, caption={Echo Serwer w C++ z jednym wątkiem na połączenie}, label={lst:cpp_echo_server}]
 class EchoServer {
 private:
-int server_socket;
-std::atomic<bool> running{true};
-std::shared_ptr<EchoServerMetrics> metrics;
-std::atomic<size_t> current_connections{0};
-size_t max_connections;
+    int server_socket;
+    std::atomic<bool> running{true};
+    std::shared_ptr<EchoServerMetrics> metrics;
+    size_t max_connections;
+    std::atomic<size_t> current_connections{0};
+
 public:
-void run() {
-while (running.load(std::memory_order_relaxed)) {
-sockaddr_in client_addr{};
-socklen_t addr_len = sizeof(client_addr);
-        int client_socket = accept(server_socket, (sockaddr*)&client_addr, &addr_len);
-        if (client_socket < 0) continue;
+    EchoServer(const std::string& address, int port, size_t max_conn) 
+        : max_connections(max_conn), metrics(std::make_shared<EchoServerMetrics>()) {
         
-        if (current_connections.load() >= max_connections) {
-            close(client_socket);
-            continue;
+        server_socket = socket(AF_INET, SOCK_STREAM, 0);
+        if (server_socket < 0) {
+            throw std::runtime_error("Failed to create socket");
         }
         
-        std::thread(&EchoServer::handle_client, this, client_socket, 
-                   get_client_address(client_addr)).detach();
-    }
-}
-
-void handle_client(int client_socket, const std::string& client_addr) {
-    current_connections.fetch_add(1);
-    char buffer[1024];
-    
-    while (running.load(std::memory_order_relaxed)) {
-        ssize_t bytes_read = recv(client_socket, buffer, sizeof(buffer), 0);
-        if (bytes_read <= 0) break;
+        int opt = 1;
+        setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
         
-        ssize_t bytes_sent = send(client_socket, buffer, bytes_read, 0);
-        if (bytes_sent <= 0) break;
+        sockaddr_in server_addr{};
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_port = htons(port);
+        inet_pton(AF_INET, address.c_str(), &server_addr.sin_addr);
+        
+        if (bind(server_socket, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+            throw std::runtime_error("Failed to bind socket");
+        }
+        
+        if (listen(server_socket, SOMAXCONN) < 0) {
+            throw std::runtime_error("Failed to listen on socket");
+        }
     }
     
-    current_connections.fetch_sub(1);
-    close(client_socket);
-}
+    void run() {
+        std::cout << "Echo server listening (max " << max_connections << " connections)\n";
+        
+        while (running.load(std::memory_order_relaxed)) {
+            sockaddr_in client_addr{};
+            socklen_t addr_len = sizeof(client_addr);
+            
+            int client_socket = accept(server_socket, (sockaddr*)&client_addr, &addr_len);
+            if (client_socket < 0) {
+                if (running.load(std::memory_order_relaxed)) {
+                    std::cerr << "Failed to accept connection\n";
+                }
+                continue;
+            }
+            
+            if (current_connections.load(std::memory_order_relaxed) >= max_connections) {
+                std::cout << "Connection rejected: max capacity reached\n";
+                close(client_socket);
+                continue;
+            }
+            
+            char client_ip[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, INET_ADDRSTRLEN);
+            std::string client_address = std::string(client_ip) + ":" + std::to_string(ntohs(client_addr.sin_port));
+            
+            std::thread(&EchoServer::handle_client, this, client_socket, client_address).detach();
+        }
+    }
+    
+    void handle_client(int client_socket, const std::string& client_addr) {
+        auto connection_start = steady_clock::now();
+        auto conn_id = metrics->connection_started();
+        current_connections.fetch_add(1, std::memory_order_relaxed);
+        
+        char buffer[1024];
+        uint64_t total_bytes = 0;
+        size_t message_count = 0;
+        
+        std::cout << "Client connected: " << client_addr << " (ID: " << conn_id << ")\n";
+        
+        while (running.load(std::memory_order_relaxed)) {
+            ssize_t bytes_read = recv(client_socket, buffer, sizeof(buffer), 0);
+            if (bytes_read <= 0) break;
+            
+            ssize_t bytes_sent = send(client_socket, buffer, bytes_read, 0);
+            if (bytes_sent <= 0) break;
+            
+            total_bytes += bytes_read + bytes_sent;
+            message_count++;
+        }
+        
+        auto duration = duration_cast<microseconds>(steady_clock::now() - connection_start);
+        metrics->connection_ended(duration, message_count, total_bytes);
+        current_connections.fetch_sub(1, std::memory_order_relaxed);
+        
+        std::cout << "Client disconnected: " << client_addr 
+                  << " (ID: " << conn_id 
+                  << ", " << duration_cast<milliseconds>(duration).count() << "ms"
+                  << ", " << message_count << " messages"
+                  << ", " << total_bytes << " bytes)\n";
+        
+        close(client_socket);
+    }
+};
+\end{lstlisting}
+
+\subsubsection{C++ - wersja asynchroniczna z epoll/kqueue}
+C++ oferuje także asynchroniczną implementację używającą epoll (Linux) lub kqueue (macOS):
+\begin{lstlisting}[language=C++, caption={Async Echo Serwer w C++ z event loop}, label={lst:cpp_async_echo_server}]
+class AsyncEchoServer {
+private:
+    int server_socket;
+    std::atomic<bool> running{true};
+    std::shared_ptr<EchoServerMetrics> metrics;
+    size_t max_connections;
+    std::atomic<size_t> current_connections{0};
+    
+#ifdef __APPLE__
+    int kqueue_fd;
+#else
+    int epoll_fd;
+#endif
+
+public:
+    void run_async() {
+        std::cout << "Async Echo server listening (max " << max_connections << " connections)\n";
+        
+        while (running.load(std::memory_order_relaxed)) {
+            std::vector<int> clients_to_remove;
+            
+#ifdef __APPLE__
+            struct kevent events[64];
+            struct timespec timeout = {0, 1000000}; // 1ms
+            int nev = kevent(kqueue_fd, nullptr, 0, events, 64, &timeout);
+            
+            for (int i = 0; i < nev; ++i) {
+                if ((int)events[i].ident == server_socket) {
+                    // New connection
+                    sockaddr_in client_addr{};
+                    socklen_t addr_len = sizeof(client_addr);
+                    
+                    int client_socket = accept(server_socket, (sockaddr*)&client_addr, &addr_len);
+                    if (client_socket >= 0) {
+                        if (current_connections.load(std::memory_order_relaxed) >= max_connections) {
+                            std::cout << "Async connection rejected: max capacity reached\n";
+                            close(client_socket);
+                            continue;
+                        }
+                        
+                        // Set non-blocking
+                        int flags = fcntl(client_socket, F_GETFL, 0);
+                        fcntl(client_socket, F_SETFL, flags | O_NONBLOCK);
+                        
+                        // Add to kqueue
+                        struct kevent ev;
+                        EV_SET(&ev, client_socket, EVFILT_READ, EV_ADD, 0, 0, nullptr);
+                        kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
+                        
+                        // Track connection
+                        auto conn_id = metrics->connection_started();
+                        current_connections.fetch_add(1, std::memory_order_relaxed);
+                    }
+                }
+            }
+#else
+            struct epoll_event events[64];
+            int nfds = epoll_wait(epoll_fd, events, 64, 1); // 1ms timeout
+            
+            for (int i = 0; i < nfds; ++i) {
+                if (events[i].data.fd == server_socket) {
+                    // Handle new connection similar to kqueue version
+                } else {
+                    // Handle client data
+                    int client_socket = events[i].data.fd;
+                    
+                    if (!handle_client_data(client_socket)) {
+                        epoll_ctl(epoll_fd, EPOLL_CTL_DEL, client_socket, nullptr);
+                        disconnect_client(client_socket);
+                        clients_to_remove.push_back(client_socket);
+                    }
+                }
+            }
+#endif
+        }
+    }
+    
+    bool handle_client_data(int client_socket) {
+        char buffer[1024];
+        ssize_t bytes_read = recv(client_socket, buffer, sizeof(buffer), 0);
+        
+        if (bytes_read > 0) {
+            ssize_t bytes_sent = send(client_socket, buffer, bytes_read, 0);
+            if (bytes_sent > 0) {
+                return true; // Continue processing
+            } else {
+                return false; // Send failed, disconnect
+            }
+        } else if (bytes_read == 0 || (bytes_read < 0 && errno != EAGAIN && errno != EWOULDBLOCK)) {
+            // Connection closed or error
+            return false;
+        }
+        return true; // EAGAIN/EWOULDBLOCK, continue processing
+    }
 };
 \end{lstlisting}
 
