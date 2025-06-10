@@ -185,8 +185,8 @@ Rysunek \ref{ep_kompromisy_pamiec_bledy} przedstawia kompromisy\eng{trade-offs} 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{analiza/images/parallel/ep/x86/chart_03_heatmap.png}
-    \caption{}
-    \label{}
+    \caption{Znormalizowana mapa metryk pamięciowych}
+    \label{ep_znormalizowana_mapa_metryk}
 \end{figure}
 \subsubsection{Analiza zużycia i zarządzania pamięcią}
 W analizie zużycia pamięci zauważalne są istotne różnice pomiędzy implementacjami. Największe zużycie pamięci systemowej wykazuje implementacja new\_omp, osiągając w każdej klasie problemu wartość rzędu 13,4-13,6 MB. Szczególnie stabilny poziom zużycia tej implementacji widoczny jest w klasach B, S i W, gdzie wartość oscyluje wokół 13,5 MB.
@@ -203,12 +203,12 @@ Wszystkie implementacje odnotowują zbliżoną liczbę odzyskanych stron, w zakr
 Z kolei liczba błędów strony dla wszystkich implementacji wynosi zero we wszystkich klasach problemu. Taki wynik jest bardzo korzystny i świadczy o tym, że pamięć podręczna oraz fizyczna były wystarczająco pojemne, aby uniknąć konieczności odwoływania się do pamięci wymiany. Oznacza to wysoką efektywność zarządzania pamięcią operacyjną w czasie działania benchmarku.
 
 \subsubsection{Zależności pomiędzy metrykami pamięciowymi}
-Wykres korelacyjny przedstawiający relację pomiędzy liczbą zwolnień stron a zużyciem pamięci ujawnia dodatkowe zależności. Punkty na wykresie grupują się wyraźnie według implementacji, co potwierdza, że charakterystyka pamięciowa jest silnie zależna od konkretnej wersji kodu, a nie od rozmiaru instancji problemu. Implementacja rust tworzy odrębny klaster w lewej dolnej części wykresu, co potwierdza jej niskie zużycie pamięci przy niewielkiej liczbie operacji odzyskiwania stron. Z kolei new\_omp formuje zbiór punktów w prawej górnej części wykresu, co jednoznacznie wskazuje na wyższe zużycie pamięci i większą liczbę zwolnień stron.
+Wykres korelacyjny - rysunek \ref{ep_porownanie_zuzycia_pamieci_x86_64} przedstawiający relację pomiędzy liczbą zwolnień stron a zużyciem pamięci ujawnia dodatkowe zależności. Punkty na wykresie grupują się wyraźnie według implementacji, co potwierdza, że charakterystyka pamięciowa jest silnie zależna od konkretnej wersji kodu, a nie od rozmiaru instancji problemu. Implementacja rust tworzy odrębny klaster w lewej dolnej części wykresu, co potwierdza jej niskie zużycie pamięci przy niewielkiej liczbie operacji odzyskiwania stron. Z kolei new\_omp formuje zbiór punktów w prawej górnej części wykresu, co jednoznacznie wskazuje na wyższe zużycie pamięci i większą liczbę zwolnień stron.
 
 Brak silnej liniowej korelacji między tymi dwiema metrykami w obrębie każdej implementacji sugeruje, że są to względnie niezależne aspekty zarządzania pamięcią - niskie zużycie pamięci niekoniecznie musi iść w parze z mniejszą liczbą odzyskanych stron.
 
 \subsubsection{Znormalizowana mapa metryk pamięciowych}
-Mapa ciepła prezentująca znormalizowane wartości metryk pamięciowych uwidacznia ogólną spójność wyników oraz subtelne różnice pomiędzy implementacjami. Wartości odnoszące się do błędów strony nie są przedstawione, ponieważ wszystkie implementacje uzyskały w tym zakresie wartość zero.
+Mapa ciepła - rysunek \ref{ep_znormalizowana_mapa_metryk} prezentująca znormalizowane wartości metryk pamięciowych uwidacznia ogólną spójność wyników oraz subtelne różnice pomiędzy implementacjami. Wartości odnoszące się do błędów strony nie są przedstawione, ponieważ wszystkie implementacje uzyskały w tym zakresie wartość zero.
 
 \subsubsection{Nota wyjaśniająca}
 Ze względu na brak błędów stron nie zamieszczono pozostałych wykresów, które byłyby oparte na tej metryce. Wykresy te nie miałyby sensu, ponieważ brak błędów stron oznacza, że wszystkie operacje pamięciowe były realizowane w ramach dostępnej pamięci fizycznej bez konieczności angażowania mechanizmów swapowania lub przenoszenia stron z dysku.

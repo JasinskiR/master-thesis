@@ -51,6 +51,11 @@
 \contentsline {lstlisting}{\numberline {7.16}{\ignorespaces Implementacja nowoczesnego C++ - zarządzanie pamięcią}}{75}{lstlisting.7.16}%
 \contentsline {lstlisting}{\numberline {7.17}{\ignorespaces Implementacja nowoczesnego C++ - równoległość}}{76}{lstlisting.7.17}%
 \addvspace {3pt}
+\contentsline {lstlisting}{\numberline {8.1}{\ignorespaces Producent-Konsument w Rust z broadcast channels}}{81}{lstlisting.8.1}%
+\contentsline {lstlisting}{\numberline {8.2}{\ignorespaces Producent-Konsument w C++ z ThreadSafeQueue}}{82}{lstlisting.8.2}%
+\contentsline {lstlisting}{\numberline {8.3}{\ignorespaces Echo Serwer w Rust z tokio::select!}}{83}{lstlisting.8.3}%
+\contentsline {lstlisting}{\numberline {8.4}{\ignorespaces Echo Serwer w C++ z jednym wątkiem na połączenie}}{84}{lstlisting.8.4}%
+\addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}
 \addvspace {3pt}

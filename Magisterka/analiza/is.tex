@@ -137,9 +137,9 @@ Klasy problemowe różnią się nie tylko poziomem bezwzględnej wydajności, le
     \centering
     \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
-    \label{is_heatmap_wydajnosci_x86}
+    \label{is_heatmap_bench_wydajnosci_x86}
 \end{figure}
-Mapa ciepła - rysunek \ref{is_heatmap_wydajnosci_x86} stanowi syntetyczne podsumowanie analizowanych danych. Najwyższe wartości wydajności skupiają się wokół implementacji tbb, szczególnie w klasie W i przy większej liczbie wątków. Z kolei implementacja Rust pozostaje na jednolitym, niskim poziomie niezależnie od klasy problemu czy liczby wątków. Klasa S wyraźnie odstaje od pozostałych pod względem niskiej wydajności, a dla większości implementacji najwyższe wartości osiągane są w zakresie 6-8 wątków, co potwierdza wnioski płynące z analizy skalowania.
+Mapa ciepła - rysunek \ref{is_heatmap_bench_wydajnosci_x86} stanowi syntetyczne podsumowanie analizowanych danych. Najwyższe wartości wydajności skupiają się wokół implementacji tbb, szczególnie w klasie W i przy większej liczbie wątków. Z kolei implementacja Rust pozostaje na jednolitym, niskim poziomie niezależnie od klasy problemu czy liczby wątków. Klasa S wyraźnie odstaje od pozostałych pod względem niskiej wydajności, a dla większości implementacji najwyższe wartości osiągane są w zakresie 6-8 wątków, co potwierdza wnioski płynące z analizy skalowania.
 
 \begin{figure}[H]
     \centering
@@ -215,7 +215,7 @@ Wykres korelacyjny między liczbą zwolnień stron a zużyciem pamięci wskazuje
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/chart_03_heatmap.png}
-    \caption{}
+    \caption{Znormalizowana mapa ciepła metryk wydajności}
     \label{is_heatmap_wydajnosci_x86}
 \end{figure}
 Znormalizowana mapa ciepła metryk wydajności - rysunek \ref{is_heatmap_wydajnosci_x86} potwierdza powyższe obserwacje, ukazując proporcjonalne różnice między klasami problemu i implementacjami. Wzorzec ten nie tylko podkreśla wpływ rozmiaru problemu na charakterystyki pamięciowe, ale również zwraca uwagę na unikalne właściwości implementacji Rust, której strategia zarządzania pamięcią istotnie różni się od pozostałych rozwiązań.
