@@ -689,7 +689,7 @@ Implementacja C++ opiera się na modelu 1:1, gdzie każde połączenie obsługiw
 
 \subsubsection{Komunikacja i synchronizacja}
 
-W implementacji Rust komunikacja realizowana jest przez \texttt{mpsc::channel()} w konfiguracji \texttt{Arc<Mutex<Receiver<T>>>} dla wielu odbiorców. Kanał zapewnia bezpieczeństwo typów i automatyczne sprzątanie przy zamknięciu wszystkich nadawców.
+W implementacji Rust komunikacja realizowana jest przez \texttt{mpsc::channel()} w konfiguracji \texttt{Arc<Mutex<Receiver<T> > >} dla wielu odbiorców. Kanał zapewnia bezpieczeństwo typów i automatyczne sprzątanie przy zamknięciu wszystkich nadawców.
 
 Implementacja C++ definiuje własną klasę \texttt{Channel<T>} opartą na \texttt{std::queue} z synchronizacją przez \texttt{std::mutex} i \texttt{std::condition\_variable}. Klasa implementuje metody \texttt{send()}, \texttt{try\_recv()} oraz \texttt{recv()} z semantyką blokującą, wymagając ręcznego zarządzania stanem zamknięcia kanału.
 
@@ -717,8 +717,7 @@ W C++ bezpieczeństwo współbieżności opiera się na odpowiedzialności progr
 \subsection{Wnioski}
 
 Analiza rzeczywistych implementacji ujawnia konkretne kompromisy między językami w kontekście programowania współbieżnego.
-
-\subsubsection{Rust z Tokio} charakteryzuje się:
+Rust z Tokio charakteryzuje się:
 \begin{itemize}
     \item Bezpieczeństwem w czasie kompilacji przez system własności i cechy \texttt{Send/Sync}
     \item Architekturą sterowaną zdarzeniami z efektywnym wykorzystaniem zasobów
@@ -727,7 +726,7 @@ Analiza rzeczywistych implementacji ujawnia konkretne kompromisy między języka
     \item Zależnością od \eng{external crates} dla podstawowej funkcjonalności
 \end{itemize}
 
-\subsubsection{C++ ze standardową biblioteką} oferuje:
+C++ ze standardową biblioteką oferuje:
 \begin{itemize}
     \item Bezpośrednią kontrolę nad zasobami systemowymi i układem pamięci
     \item Kompleksowe monitorowanie i profilowanie w czasie wykonania  

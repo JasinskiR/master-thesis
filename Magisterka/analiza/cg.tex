@@ -10,7 +10,7 @@
 \end{figure}
 
 Na rysunku \ref{cg_porownanie_czasow_wykonania} zaprezentowano zestawienie czasów wykonania benchmarku CG dla czterech klas problemu: S, W, A oraz B, przy użyciu czterech różnych implementacji równoległości: TBB, OpenMP w wersji oryginalnej w stylu języka Fortran (old\_omp), OpenMP w wersji nowszej (new\_omp) oraz implementacji w języku Rust. Dla każdej z klas przedstawiono zależność czasu wykonania od liczby wątków (od 1 do 8). Wartości zostały zaprezentowane w skali logarytmicznej.\\
-Analiza czasów wykonania algorytmu CG ujawnia wyraźne różnice w wydajności poszczególnych implementacji, z dominującym problemem dotyczącym new\_omp. Najbardziej uderzającą obserwacją jest znacząco gorsza wydajność tej implementacji we wszystkich klasach problemu. Czasy wykonania new\_omp są wielokrotnie - nawet dziesięciokrotnie - dłuższe w porównaniu do pozostałych rozwiązań. Dysproporcja ta jest szczególnie wyraźna w klasach A i B, gdzie new\_omp operuje w zakresie sekund, podczas gdy inne implementacje osiągają czasy rzędu dziesiątych części sekundy. Może to wskazywać na fundamentalne niedociągnięcia nowej wersji OpenMP w kontekście testowanego algorytmu, potencjalnie wynikające z nieefektywnej dekompozycji zadań lub kosztownych mechanizmów synchronizacji.
+Analiza czasów wykonania algorytmu CG ujawnia wyraźne różnice w wydajności poszczególnych implementacji, z dominującym problemem dotyczącym new\_omp. Najbardziej uderzającą obserwacją jest znacząco gorsza wydajność tej implementacji we wszystkich klasach problemu. Czasy wykonania new\_omp są wielokrotnie - nawet dziesięciokrotnie - dłuższe w porównaniu z pozostałymi rozwiązaniami. Dysproporcja ta jest szczególnie wyraźna w klasach A i B, gdzie new\_omp operuje w zakresie sekund, podczas gdy inne implementacje osiągają czasy rzędu dziesiątych części sekundy. Może to wskazywać na fundamentalne niedociągnięcia nowej wersji OpenMP w kontekście testowanego algorytmu, potencjalnie wynikające z nieefektywnej dekompozycji zadań lub kosztownych mechanizmów synchronizacji.
 
 Pozostałe implementacje prezentują bardziej zbliżone wyniki, z pewnymi zauważalnymi różnicami. W klasie A, implementacja Rust wykazuje najlepsze czasy wykonania przy większej liczbie wątków (4-8), osiągając około 0,28-0,33 sekundy. W klasie B różnice są minimalne - wszystkie trzy implementacje (tbb, old\_omp, rust) osiągają porównywalne wartości rzędu 0,09-0,10 sekundy przy większej liczbie wątków. Warto jednak zauważyć istotną niestabilność czasów wykonania dla implementacji tbb przy 8 wątkach, co sygnalizuje duży rozrzut wyników. W mniejszych klasach problemowych - S i W - tbb często okazuje się najszybszą implementacją, zwłaszcza przy średnim poziomie równoległości (3-6 wątków).
 
@@ -188,7 +188,7 @@ Na pierwszym wykresie - rysunek \ref{cg_porownanie_zuzycia_pamieci} (lewy górny
     \item Wersja rust generalnie charakteryzuje się najmniejszym lub jednym z najmniejszych zużyć pamięci w większości klas problemów.
 \end{itemize}
 
-\subsubsection{Liczba zwalniania stron pamięci (sztuki)}
+\subsubsection{Liczba zwalniania stron pamięci (w sztukach)}
 Drugi wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy górny róg) ilustruje liczbę zwalniania stron pamięci \eng{page reclaim}, czyli sytuacji, w których system operacyjny odzyskuje strony pamięci.
 \begin{itemize}
     \item Najwięcej zwalnianych stron pamięci występuje w klasie B dla wersji new\_omp (17067), co koresponduje z jej wysokim zużyciem pamięci.
@@ -197,7 +197,7 @@ Drugi wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy górny róg) i
     \item W klasach S i W różnice są mniej zauważalne, choć new\_omp nadal wykazuje wyższe wartości.
 \end{itemize}
 
-\subsubsection{Odwołania do nieobecnych stron (sztuki)}
+\subsubsection{Odwołania do nieobecnych stron (w sztukach)}
 
 Trzeci wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (lewy dolny róg) przedstawia odwołania do nieobecnych stronliczbę \eng{page fault} - czyli sytuacji, w których wymagany fragment pamięci nie znajduje się aktualnie w RAM-ie.
 \begin{itemize}
@@ -207,7 +207,7 @@ Trzeci wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (lewy dolny róg) pr
     \item Wyniki te sugerują bardzo efektywną gospodarkę pamięciową w wersji rust.
 \end{itemize}
 
-\subsubsection{Korelacja: Liczba zwalniania stron pamięci vs Zużycie pamięci}
+\subsubsection{Korelacja: Liczba zwalniania stron pamięci a Zużycie pamięci}
 Ostatni wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy dolny róg) ilustruje zależność pomiędzy liczbą zwolnionych stron pamięci a zużyciem pamięci.
 \begin{itemize}
     \item Widoczna jest silna dodatnia korelacja - im większe zużycie pamięci, tym większa liczba zwolnionych stron pamięci. Najwyraźniejszym punktem odniesienia jest wersja new\_omp dla klasy B, która dominuje pod względem obu metryk.
@@ -221,16 +221,16 @@ Ostatni wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy dolny róg) 
     \label{cg_analiza_wzgledem_old_omp}
 \end{figure}
 Na wykresie - rysunek \ref{cg_analiza_wzgledem_old_omp} szczegółowa analiza czterech wykresów przedstawiających względną wydajność trzech wersji implementacji (new\_omp, TBB, rust) względem wersji bazowej old\_omp. Analiza dotyczy zużycia pamięci, liczby zwolnionych stron pamięci, odwołań do nieobecncyh stron oraz skumulowanego wskaźnika efektywności.
-\subsubsection{Względne zużycie pamięci vs old\_omp}
+\subsubsection{Względne zużycie pamięci na tle old\_omp}
 Pierwszy wykres - rysunek \ref{cg_analiza_wzgledem_old_omp} (lewy górny róg) ukazuje procentową zmianę w zużyciu pamięci operacyjnej względem implementacji referencyjnej. Największy wzrost odnotowano dla new\_omp, gdzie zużycie pamięci wzrosło o 34,5\%, co przekłada się na dodatkowe 304 MB. Zmiany dla TBB i rust były marginalne i wyniosły odpowiednio 1,0\% (228 MB) oraz 2,2\% (231 MB), co sugeruje ich większą efektywność w kontekście gospodarowania pamięcią.
 
-\subsubsection{Względne odzyskiwanie stron pamięci vs old\_omp}
+\subsubsection{Względne odzyskiwanie stron pamięci na tle old\_omp}
 Drugi wykres - rysunek \ref{cg_analiza_wzgledem_old_omp} (prawy górny róg) przedstawia zmiany w liczbie odzyskanych stron pamięci. Implementacja new\_omp wykazała aż 40\% wzrost (21010 stron), co może świadczyć o intensywnym zarządzaniu pamięcią w trakcie wykonywania programu. Dla TBB i rust zmiany były minimalne (odpowiednio 0,5\% i 2,2\%), co może być interpretowane jako korzystny efekt optymalizacji dostępu do pamięci.
 
-\subsubsection{Względne błędy stron vs old\_omp}
+\subsubsection{Względne błędy stron na tle old\_omp}
 Na trzecim wykresie - rysunek \ref{cg_analiza_wzgledem_old_omp} (lewy dolny róg) obserwujemy względną liczbę błędów stron. new\_omp i TBB odnotowały wzrost liczby błędów stron odpowiednio o 31\% (38 sztuk) i 2\% (35 sztuk), co może wskazywać na mniej wydajne wykorzystanie pamięci w porównaniu z old\_omp. Z kolei rust jako jedyna implementacja odnotowała całkowitą eliminację błędów stron (-100\%, 0 sztuk), co potwierdza wyjątkowo skuteczną kontrolę pamięci operacyjnej - mechanizmy własności oraz pożyczania.
 
-\subsubsection{Łączny wskaźnik wydajności vs old\_omp}
+\subsubsection{Łączny wskaźnik wydajności na tle old\_omp}
 Na ostatnim wykresie - rysunek \ref{cg_analiza_wzgledem_old_omp} (prawy dolny róg) przedstawiono zagregowany wskaźnik wydajności, będący ważoną sumą trzech poprzednich metryk: 40\% udziału zużycia pamięci, 30\% udziału odzyskiwania stron oraz 30\% udziału błędów stron. Najwyższy wskaźnik (35,1\%) ponownie osiąga new\_omp, co oznacza wyraźnie wyższą konsumpcję zasobów w porównaniu do referencji. TBB wykazuje niewielki wzrost (6,8\%), co czyni go względnie neutralnym względem old\_omp. rust natomiast charakteryzuje się łącznym wskaźnikiem na poziomie -28,5\%, co czyni go najbardziej efektywną implementacją w ujęciu ogólnym.
 
 \begin{figure}[H]
@@ -260,15 +260,15 @@ Z wykresu - rysunek \ref{cg_porownanie_czasow_wykonania_x86_64} zużycia pamięc
 
 Zależność zużycia pamięci od klasy problemu jest zgodna z oczekiwaniami: większa klasa (większy problem obliczeniowy) wiąże się z wyższym zużyciem zasobów. Jednak istotna różnica dla new\_omp w klasie B sugeruje potencjalne niedoskonałości w zarządzaniu pamięcią lub większy narzut alokacyjny tej wersji.
 
-\subsubsection{Operacje Page Reclaim (sztuki)}
+\subsubsection{Operacje zwolnień stron (w sztukach)}
 Podobnie jak w przypadku zużycia pamięci, new\_omp generuje najwyższe liczby operacji zwolnień stron — w klasie B sięgają one ponad 64 tys. Operacje te wskazują na intensywną aktywność zarządzania pamięcią przez system operacyjny i mogą prowadzić do pogorszenia wydajności w warunkach ograniczonych zasobów. Pozostałe implementacje generują wyraźnie mniej takich operacji (ok. 47-50 tys. dla klasy B).
 
 W klasach A, S i W różnice między implementacjami są mniej znaczące. Warto jednak zwrócić uwagę, że rust we wszystkich klasach cechuje się stosunkowo niskim poziomem zwolnień, co może świadczyć o bardziej efektywnym wykorzystaniu pamięci przez alokator w środowisku Rust.
 
-\subsubsection{Page Faults (sztuki)}
+\subsubsection{Błędy stron (w sztukach)}
 Wszystkie implementacje, niezależnie od klasy problemu, wykazują zerowy poziom błędów stron. Taki wynik jest pozytywny i świadczy o prawidłowej alokacji oraz dostępie do pamięci bez potrzeby kosztownego przenoszenia stron pamięci z dysku do RAM-u. To również sugeruje, że żadne z testów nie spowodowały przeciążenia systemu w zakresie dostępnej pamięci fizycznej.
 
-\subsubsection{Korelacja: Liczba zwalniania stron pamięci vs Zużycie pamięci}
+\subsubsection{Korelacja: liczba zwalniania stron pamięci a zużycie pamięci}
 Wykres rozrzutu przedstawia silną dodatnią korelację pomiędzy liczbą operacji zwolnień stron a zużyciem pamięci. Punkty odpowiadające klasie B znajdują się wyraźnie w prawym górnym rogu wykresu, potwierdzając, że najbardziej zasobożerna klasa problemu generuje również najwięcej interakcji z systemowym menedżerem pamięci. Punkty dla klas A, S i W rozmieszczone są blisko siebie w lewym dolnym obszarze, co wskazuje na relatywnie stabilne i niskie zużycie pamięci.
 
 \subsubsection{Nota wyjaśniająca}
@@ -286,7 +286,7 @@ Na podstawie wykresów - rysunek \ref{cg_porownanie_platform_arm_vs_x86} uśredn
 
 Z kolei old\_omp i new\_omp wykazują mniejsze różnice pomiędzy platformami, jednak nadal na korzyść ARM (współczynnik przyspieszenia odpowiednio 1.20 i 1.13). Pokazuje to, że układy ARM, mimo mniejszej popularności w obliczeniach naukowych, mogą zapewniać porównywalną lub wyższą wydajność w zadaniach równoległych.
 \subsubsection{Wydajność względem klasy problemu}
-Dla wszystkich klas problemu platforma ARM uzyskuje wyższe wartości MFLOPS w porównaniu do x86, przy czym różnice te są szczególnie widoczne w klasach A i B — odpowiednio 4506 vs 3458 oraz 4227 vs 3272 MFLOPS. Mniejsze różnice występują w klasach S i W, co może być związane z ograniczoną skalowalnością w mniejszych problemach oraz różnicami w architekturze pamięci podręcznej.
+Dla wszystkich klas problemu platforma ARM uzyskuje wyższe wartości MFLOPS w porównaniu do x86, przy czym różnice te są szczególnie widoczne w klasach A i B — odpowiednio 4506 a 3458 oraz 4227 a 3272 MFLOPS. Mniejsze różnice występują w klasach S i W, co może być związane z ograniczoną skalowalnością w mniejszych problemach oraz różnicami w architekturze pamięci podręcznej.
 \subsubsection{Skalowanie według liczby wątków}
 Analiza wykresu skalowalności pokazuje, że ARM osiąga wyższe wartości MFLOPS w niemal każdej konfiguracji wątkowej. Dla 4 wątków uzyskuje wartość 4417 MFLOPS, przewyższając tym samym x86 (3179 MFLOPS). Mimo że przy wzroście liczby wątków następuje spłaszczenie wykresów dla obu platform, ARM utrzymuje przewagę aż do 8 wątków, co potwierdza dobre skalowanie procesora ARM w tej klasie obliczeń.
 
@@ -299,7 +299,7 @@ Analiza wykresu skalowalności pokazuje, że ARM osiąga wyższe wartości MFLOP
 \subsubsection{Rozkład wydajności i korelacja}
 Wykres pudełkowy obrazujące rozkład wydajności według implementacji pokazują większą zmienność wyników na platformie ARM, szczególnie dla tbb i old\_omp, co może świadczyć o bardziej dynamicznym zarządzaniu zasobami na poziomie systemowym (macOS). Mimo tej zmienności, wartości median są konsekwentnie wyższe dla ARM.
 
-Wykres korelacyjny MFLOPS ARM vs x86 ukazuje silną dodatnią korelację między wynikami na obu platformach, z większością punktów powyżej linii równej wydajności (y = x), co oznacza, że ARM zazwyczaj przewyższa x86 pod względem osiągów. W przypadku rust różnica jest szczególnie wyraźna.
+Wykres korelacyjny MFLOPS ARM a x86 ukazuje silną dodatnią korelację między wynikami na obu platformach, z większością punktów powyżej linii równej wydajności (y = x), co oznacza, że ARM zazwyczaj przewyższa x86 pod względem osiągów. W przypadku rust różnica jest szczególnie wyraźna.
 
 \subsubsection{Efektywność równoległości}
 Analiza efektywności równoległości (rozumianej jako stosunek osiągniętej wydajności do liczby wątków względem wydajności jednordzeniowej) wskazuje na wyraźnie wyższe wartości dla platformy x86 przy większej liczbie wątków. Podczas gdy ARM charakteryzuje się dobrą wydajnością bezwzględną, jego efektywność maleje szybciej wraz ze wzrostem liczby wątków, co może wynikać z wąskiego gardła na poziomie pamięci współdzielonej lub mniejszej liczby jednostek wykonawczych na wątek fizyczny.

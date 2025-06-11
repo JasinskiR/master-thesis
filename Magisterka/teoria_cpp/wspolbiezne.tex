@@ -160,7 +160,7 @@ int main() {
     return 0;
 }
 \end{lstlisting}    
-W listingu \ref{promise_example} wątek główny tworzy promise i pobiera powiązany z nim future. Wątek producer wykonuje obliczenie i przekazuje wynik przez promise. Funkcja result.get() wstrzymuje główny wątek do czasu dostępności wyniku.
+W listingu \ref{promise_example} wątek główny tworzy promesę i pobiera powiązaną z nią futurę. Wątek producenta wykonuje obliczenie i przekazuje wynik przez promesę. Funkcja \texttt{result.get()} wstrzymuje główny wątek do czasu dostępności wyniku.
 \subsubsection{std::packaged\_task}
 std::packaged\_task to obiekt otaczający dowolną wywoływalną funkcję (np. funkcję, lambda, std::bind), który integruje się z future. Pozwala to uruchomić zadanie w wątku i obserwować jego wynik.
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::packaged\_task}, label={packaged_task_example}]
@@ -185,7 +185,7 @@ int main() {
     return 0;
 }
 \end{lstlisting}
-W powyższym przykładzie listing \ref{packaged_task_example} funkcja compute została opakowana w packaged\_task, a następnie uruchomiona w osobnym wątku z argumentem 21. Wynik trafia do future, który umożliwia jego odbiór w wątku głównym. przetwarzanie zadań.
+W powyższym przykładzie listing \ref{packaged_task_example} funkcja \texttt{compute} została opakowana w \texttt{packaged\_task}, a następnie uruchomiona w osobnym wątku z argumentem 21. Wynik trafia do futury, który umożliwia jego odbiór w wątku głównym. przetwarzanie zadań.
 
 \subsubsection{C++23 - std::task i std::execution}
 Standard C++23 (najnowszy w chwili tworzenia niniejszej pracy) wprowadza nowe pojęcia:

@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{amdahl}
+{A}mdahl's law - {W}ikipedia --- en.wikipedia.org.
+\newblock \url{https://en.wikipedia.org/wiki/Amdahl%27s_law}.
+\newblock [Accessed 11-06-2025].
+
 \bibitem{wikipediaWikipedia}
 {C}++ - {W}ikipedia --- en.wikipedia.org.
 \newblock \url{https://en.wikipedia.org/wiki/C%2B%2B}.
@@ -38,7 +43,7 @@
 \bibitem{nasaParallelBenchmarks}
 {N}{A}{S} {P}arallel {B}enchmarks --- nas.nasa.gov.
 \newblock \url{https://www.nas.nasa.gov/software/npb.html}.
-\newblock [Accessed 17-04-2025].
+\newblock [Dostęp 17-04-2025].
 
 \bibitem{rustgpuRust}
 {R}ust {G}{P}{U} --- rust-gpu.github.io.
@@ -97,7 +102,7 @@ V.~Besozzi.
 G.~L. Bessa, L.~M. D.~S. Borela, J.~A. Soares.
 \newblock Npb-rust: Nas parallel benchmarks in rust.
 \newblock \url{https://github.com/glbessa/NPB-Rust}, 2025.
-\newblock Dostęp: 2025-05-18.
+\newblock [Dostęp: 2025-05-18].
 
 \bibitem{rustPolishNames}
 J.~Blandy, J.~Orendorff, L.~Tindall.
@@ -151,6 +156,11 @@ Z.~Fehervari.
 \newblock {R}ust vs {C}++: {M}odern {D}evelopers' {D}ilemma --- bluebirdinternational.com.
 \newblock \url{https://bluebirdinternational.com/rust-vs-c/}.
 \newblock [Dostęp 28-01-2025].
+
+\bibitem{flynn1}
+M.~J. Flynn.
+\newblock Some computer organizations and their effectiveness.
+\newblock {\em IEEE Transactions on Computers}, C-21(9):948--960, 1972.
 
 \bibitem{RustSafety1}
 K.~R. Fulton, A.~Chan, D.~Votipka, M.~Hicks, M.~L. Mazurek.
@@ -207,7 +217,7 @@ P.~Larsen.
 \bibitem{Lesiński}
 K.~Lesiński.
 \newblock Speed of rust vs c, 2019.
-\newblock Dostęp: 10-01-2025.
+\newblock [Dostęp: 10-01-2025].
 
 \bibitem{RustPerformance4}
 Y.~Lin, S.~M. Blackburn, A.~L. Hosking, M.~Norrish.

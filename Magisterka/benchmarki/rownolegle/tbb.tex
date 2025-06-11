@@ -39,7 +39,7 @@ int main(int argc, char **argv){
     
     \item Równoległość oparta na funkcjach - zastąpienie dyrektyw kompilatora wywołaniami funkcji bibliotecznych, takich jak \texttt{parallel\_for} czy \texttt{parallel\_reduce}.
     
-    \item Te same problemy z zarządzaniem pamięcią - biblioteka nie wprowadza dodatkowych zabezpieczeń; nadal istnieje ryzyko błędów takich jak wycieki pamięci, przekroczenia bufora czy dostęp do już zwolnionej pamięci.
+    \item Te same problemy z zarządzaniem pamięcią - biblioteka nie wprowadza dodatkowych zabezpieczeń; nadal istnieje ryzyko błędów takich jak wycieki pamięci, przepełnienie bufora czy dostęp do już zwolnionej pamięci.
 \end{itemize}
   
 \subsection{Zarządzanie pamięcią}
@@ -81,7 +81,7 @@ TBB::parallel_for(
     
     \item Podziały blokowe - automatyczny podział przestrzeni danych na zakresy, co ułatwia równoległe przetwarzanie dużych kolekcji bez konieczności ręcznego zarządzania iteracjami.
     
-    \item Bezpieczeństwo typów - silniejsze mechanizmy typowania w porównaniu do OpenMP, co zmniejsza liczbę błędów w czasie kompilacji.
+    \item Bezpieczeństwo typów - silniejsze mechanizmy typizacji w porównaniu do OpenMP, co zmniejsza liczbę błędów w czasie kompilacji.
     
     \item Większy narzut składniowy - bardziej rozwlekła i złożona składnia niż w przypadku OpenMP, co może wpływać na czytelność i prostotę kodu.
 \end{itemize}

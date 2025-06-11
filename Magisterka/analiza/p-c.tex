@@ -10,7 +10,7 @@
 \end{figure}
 
 \subsubsection{Wydajność komunikacji międzywątkowej}
-Wykres w lewym górnym rogu - rysunek\ref{analiza_benchmarku_producent_klient} przedstawia porównanie przepustowości mechanizmów komunikacji międzywątkowej, wyrażonej liczbą przetworzonych wiadomości na sekundę, dla implementacji w językach Rust i C++. Z analizy wykresów pudełkowych (ang. box plots) wynika, że implementacje w języku C++ charakteryzują się wyższą medianą wydajności w porównaniu do rozwiązań w języku Rust.
+Wykres w lewym górnym rogu - rysunek\ref{analiza_benchmarku_producent_klient} przedstawia porównanie przepustowości mechanizmów komunikacji międzywątkowej, wyrażonej liczbą przetworzonych wiadomości na sekundę, dla implementacji w językach Rust i C++. Z analizy wykresów pudełkowych wynika, że implementacje w języku C++ charakteryzują się wyższą medianą wydajności w porównaniu do rozwiązań w języku Rust.
 
 Dla implementacji wykorzystującej mechanizm kanału (oznaczony kolorem niebieskim) mediana przepustowości w języku C++ wynosi około 1 570 859 wiadomości na sekundę, podczas gdy analogiczna implementacja w języku Rust osiąga 1 239 598 wiadomości na sekundę, co oznacza przewagę C++ o około 27\%. Podobną zależność obserwujemy dla mechanizmu kolejki (oznaczonego kolorem pomarańczowym), gdzie C++ osiąga 1 662 717 wiadomości na sekundę wobec 1 180 992 dla języka Rust, co daje przewagę wynoszącą około 41\%.
 
@@ -24,7 +24,7 @@ Natomiast implementacje w języku Rust (oznaczone kolorem czerwonym) rozpoczynaj
 \subsubsection{Zużycie pamięci}
 Prawy górny wykres - rysunek\ref{analiza_benchmarku_producent_klient} przedstawia porównanie zużycia pamięci, mierzonego w megabajtach, dla badanych implementacji. W tym aspekcie język Rust wykazuje wyraźną przewagę, osiągając niższe mediany zużycia pamięci zarówno dla mechanizmu kanału (1,9 MB wobec 3,1 MB w C++), jak i mechanizmu kolejki (2,2 MB wobec 3,1 MB w C++).
 
-Ta różnica, wynosząca około 40\% dla mechanizmu kanału i 29\% dla mechanizmu kolejki, może być przypisana efektywnemu systemowi zarządzania pamięcią w języku Rust, bazującemu na analizie czasu życia (ang. lifetime analysis) i systemie własności (ang. ownership system), które eliminują konieczność stosowania kosztownych mechanizmów automatycznego odzyskiwania pamięci (ang. garbage collection) lub podatność na wycieki pamięci charakterystyczne dla ręcznego zarządzania pamięcią w C++.
+Ta różnica, wynosząca około 40\% dla mechanizmu kanału i 29\% dla mechanizmu kolejki, może być przypisana efektywnemu systemowi zarządzania pamięcią w języku Rust, bazującemu na analizie czasu życia i systemie własności, które eliminują konieczność stosowania kosztownych mechanizmów automatycznego odzyskiwania pamięci lub podatność na wycieki pamięci charakterystyczne dla ręcznego zarządzania pamięcią w C++.
 
 \subsubsection{ Rozkład czasów wykonania}
 Środkowy dolny histogram - rysunek\ref{analiza_benchmarku_producent_klient} prezentuje rozkład częstości czasów wykonania dla implementacji w językach Rust (kolor czerwony) i C++ (kolor niebieski). Analiza tego wykresu ujawnia fundamentalne różnice w charakterystykach wydajnościowych obu języków.
@@ -53,7 +53,7 @@ Warto również zauważyć, że w obu językach mechanizm kolejki wykazuje odmie
 \end{figure}
 
 \subsubsection{Wydajność komunikacji międzywątkowej}
-Wykres w lewym górnym rogu - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie przepustowości mechanizmów komunikacji międzywątkowej, wyrażonej liczbą wiadomości przetwarzanych na sekundę. Analiza wykresu pudełkowego (ang. box plot) wskazuje na znaczącą różnicę wydajności między implementacjami w językach C++ i Rust.
+Wykres w lewym górnym rogu - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie przepustowości mechanizmów komunikacji międzywątkowej, wyrażonej liczbą wiadomości przetwarzanych na sekundę. Analiza wykresu pudełkowego wskazuje na znaczącą różnicę wydajności między implementacjami w językach C++ i Rust.
 
 Implementacje w języku C++ osiągają znacząco wyższą przepustowość, z medianą na poziomie 772 264 wiadomości/s dla mechanizmu kanału (kolor niebieski) i 782 729 wiadomości/s dla mechanizmu kolejki (kolor pomarańczowy). W przeciwieństwie do tego, implementacje w języku Rust osiągają przepustowość rzędu 36 252 wiadomości/s dla mechanizmu kanału i 31 818 wiadomości/s dla mechanizmu kolejki.
 
@@ -70,7 +70,7 @@ Taka charakterystyka może wskazywać na odmienne podejścia do optymalizacji w 
 \subsubsection{Zużycie pamięci}
 Prawy górny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie zużycia pamięci dla analizowanych implementacji. W przeciwieństwie do wyników wydajnościowych, to język Rust wykazuje zdecydowaną przewagę pod względem efektywności wykorzystania zasobów pamięciowych. Zarówno implementacja wykorzystująca kanał, jak i implementacja wykorzystująca kolejkę w języku Rust wykazują zużycie pamięci na poziomie 1,9 MB.
 
-Dla porównania, obie implementacje w języku C++ charakteryzują się zużyciem pamięci na poziomie 16,8 MB, co stanowi prawie dziewięciokrotnie wyższe zapotrzebowanie na pamięć w porównaniu do rozwiązań w Rust. Ta różnica wynika prawdopodobnie z odmiennych podejść do zarządzania pamięcią: Rust wykorzystuje system własności (ang. ownership system) i analizę czasu życia obiektów (ang. lifetime analysis), co pozwala na bardziej efektywne zarządzanie zasobami pamięciowymi.
+Dla porównania, obie implementacje w języku C++ charakteryzują się zużyciem pamięci na poziomie 16,8 MB, co stanowi prawie dziewięciokrotnie wyższe zapotrzebowanie na pamięć w porównaniu do rozwiązań w Rust. Ta różnica wynika prawdopodobnie z odmiennych podejść do zarządzania pamięcią: Rust wykorzystuje system własności i analizę czasu życia obiektów, co pozwala na bardziej efektywne zarządzanie zasobami pamięciowymi.
 
 \subsubsection{Wydajność względem rozmiaru problemu}
 Lewy dolny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} ilustruje zależność wydajności od rozmiaru problemu, wyrażonego liczbą przetwarzanych elementów. Ponownie obserwujemy wyraźną przewagę wydajnościową implementacji C++ (niebieskie punkty) nad implementacjami Rust (czerwone punkty) w całym spektrum badanych rozmiarów problemu.

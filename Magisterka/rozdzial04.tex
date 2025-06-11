@@ -5,7 +5,7 @@ o czym rozdział
 Rozwój języka Rust oferuje szereg funkcji, które czynią go dobrym wyborem do programowania współbieżnego oraz równoległego. Kluczowymi elementami, które wyróżniają go na tle innych języków programowania są \cite{rustPolishNames}:
 \begin{enumerate}
     \item Własność \eng {ownership} i pożyczanie \eng {borrow}: Model własności języka Rust zapewnia, że dane są bezpiecznie współdzielone między wątkami bez ryzyka wyścigów danych \eng{races}.
-    \item Nieustraszona współbieżność \eng{Fearless Concurrency}: System typów Rusta wymusza reguły w czasie kompilacji, pozwalając programistom na pisanie współbieżnego kodu bez obawy o typowe pułapki.
+    \item Nieustraszona współbieżność \eng{fearless concurrency}: System typów Rusta wymusza reguły w czasie kompilacji, pozwalając programistom na pisanie współbieżnego kodu bez obawy o typowe pułapki.
     \item Inteligentne wskaźniki \eng{smart pointers}: Abstrakcje wspierające korzystanie oraz przesyłanie danych w programowaniu współbieżnym oraz równoległym.
 \end{enumerate}
 
@@ -49,15 +49,12 @@ Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez anal
 Autorzy \cite{WhenIsParallelismFearlessandZeroCostwithRust?}
 uważają, że nieustraszona współbieżność jest lepiej interpretowana jako spektrum, zilustrowane na \ref{fig:FearlessSpectrum} idealnie eliminując wszelkie obawy przed błędami współbieżności w czasie kompilacji (Fearless), ale jeśli nie jest to możliwe, utrzymując objawy błędów w czasie wykonywania blisko ich przyczyn (Comfortable) lub w inny sposób nie dając gwarancji odtworzenia przyczyny ani objawu (Scared).
 
-Przetłumaczono z DeepL.com (wersja darmowa)
-
-\subsection{Inteligentne wskaźniki \eng{Smart Pointers}}
+\subsection{Inteligentne wskaźniki \eng{smart pointers}}
 Inteligentne wskaźniki w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu, bez konieczności korzystania z automatycznego systemu zarządzania pamięcią. Ponadto, wskaźniki te są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane inteligentne wskaźniki w Rust: Box, Rc oraz Arc.
 
 \subsubsection{Box}
 \label{BOX}
-Własność Danych na Stercie
-Smart pointer Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
+Inteligentny wskaźnik Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
 Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji.
 
 \begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik Box, label=box_smart_pointer]
@@ -67,9 +64,9 @@ fn main() {
 }
 \end{lstlisting}
 
-\subsubsection{Rc: Wskaźnik z Liczeniem Referencji}
+\subsubsection{Rc: wskaźnik z liczeniem referencji}
 \label{RC}
-Smart pointer Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
+Inteligentny wskaźnik Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
 Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi.
 
 \begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik RC, label=rc_smart_pointer]
@@ -82,7 +79,7 @@ fn main() {
 }
 \end{lstlisting}
 
-\subsubsection{Arc: Atomowy Wskaźnik z Liczeniem Referencji}
+\subsubsection{Arc: atomowy wskaźnik z liczeniem referencji}
 \label{ARC}
 Dla programowania współbieżnego Rust oferuje Arc (Atomic Reference Counted), czyli wersję \textbf{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych.
 

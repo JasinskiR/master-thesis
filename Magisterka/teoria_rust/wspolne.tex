@@ -12,16 +12,16 @@ fn main() {
     handle.join().unwrap();
 }
 \end{lstlisting}
-W przedstawionym przykładzie listing \ref{thread_example} wykorzystano funkcję thread::spawn, która tworzy nowy wątek wykonawczy, umożliwiając równoległe przetwarzanie danych lub zadań. Ciało funkcji anonimowej przekazanej do spawn zawiera kod, który zostanie wykonany w kontekście nowo utworzonego wątku. Zmienna handle przechowuje uchwyt do tego wątku, umożliwiając synchronizację z jego wykonaniem.
-Wywołanie handle.join().unwrap() służy do zablokowania głównego wątku programu do momentu zakończenia pracy wątku potomnego. Metoda join zwraca wynik zakończenia wątku.
+W przedstawionym przykładzie listing \ref{thread_example} wykorzystano funkcję thread::spawn, która tworzy nowy wątek wykonawczy, umożliwiając równoległe przetwarzanie danych lub zadań. Ciało funkcji anonimowej przekazanej do spawn zawiera kod, który zostanie wykonany w kontekście nowo utworzonego wątku. Zmienna \texttt{handle} przechowuje uchwyt do tego wątku, umożliwiając synchronizację z jego wykonaniem.
+Wywołanie \texttt{handle.join().unwrap()} służy do zablokowania głównego wątku programu do momentu zakończenia pracy wątku potomnego. Metoda \texttt{join} zwraca wynik zakończenia wątku.
 
 Tworzenie dużej liczby wątków może być kosztowne zarówno pod względem zasobów systemowych, jak i czasu inicjalizacji. W związku z tym, Rust oferuje mechanizmy pul wątków \eng{thread pools}, które umożliwiają wielokrotne wykorzystywanie wcześniej zainicjalizowanych wątków do realizacji wielu zadań.
 
-Popularnym rozwiązaniem wspierającym pule wątków jest biblioteka rayon, która automatyzuje proces zarządzania wątkami w kontekście równoległego przetwarzania danych. Jednakże, również inne biblioteki, takie jak tokio (dla asynchroniczności) czy async-std, implementują własne menedżery wątków, umożliwiające bardziej zaawansowane zarządzanie zadaniami.
+Popularnym rozwiązaniem wspierającym pule wątków jest biblioteka Rayon, która automatyzuje proces zarządzania wątkami w kontekście równoległego przetwarzania danych. Jednakże, również inne biblioteki, takie jak Tokio (dla asynchroniczności) czy async-std, implementują własne menedżery wątków, umożliwiające bardziej zaawansowane zarządzanie zadaniami.
 
 W celu maksymalizacji wykorzystania zasobów obliczeniowych, wiele implementacji pul wątków w Rust stosuje strategię kradzieży zadań \eng{work stealing}. Mechanizm ten polega na dynamicznym równoważeniu obciążenia przez umożliwienie wątkom pobierania zadań z kolejek innych wątków, gdy ich własne kolejki są puste. Zwiększa to ogólną wydajność i skraca czas przetwarzania zadań.
 
-Strategia ta znajduje zastosowanie m.in. w implementacji puli wątków biblioteki rayon, co czyni ją wysoce wydajną w przypadku zadań o nieregularnym czasie wykonania lub zróżnicowanym poziomie złożoności.
+Strategia ta znajduje zastosowanie m.in. w implementacji puli wątków biblioteki Rayon, co czyni ją wysoce wydajną w przypadku zadań o nieregularnym czasie wykonania lub zróżnicowanym poziomie złożoności.
 
 \subsection{Synchronizacja dostępu (Mutex, RwLock)}
 Dla sytuacji wymagających współdzielenia pamięci Rust oferuje synchronizowane struktury, takie jak Mutex \eng{mutual exclusion} oraz RwLock. Umożliwiają one zarządzanie dostępem do danych w sposób bezpieczny, jednocześnie wymagając od programisty jawnego określenia momentów blokady i odblokowania zasobów.
@@ -51,7 +51,7 @@ fn main() {
     println!("Wartość końcowa: {}", *counter.lock().unwrap());
 }
 \end{lstlisting}
-Mutex<T> \eng{mutual exclusion}, czyli wzajemne wykluczanie, to mechanizm blokady umożliwiający bezpieczny dostęp do danych przez wiele wątków. W powyższym przykładzie dane typu i32 są opakowane w Mutex, a następnie udostępniane wielu wątkom za pomocą wskaźnika liczony atomowo Arc<T>. Każdy wątek dokonuje inkrementacji zmiennej wewnątrz sekcji krytycznej, co zapobiega wyścigom danych (ang. data races). Wywołanie lock().unwrap() blokuje wątek do czasu uzyskania wyłącznego dostępu do danych. Podejście to jest typowe w programowaniu zarówno współbieżnym (dla ochrony stanu globalnego), jak i równoległym (dla synchronizacji wyników obliczeń). 
+Mutex<T> \eng{mutual exclusion}, czyli wzajemne wykluczanie, to mechanizm blokady umożliwiający bezpieczny dostęp do danych przez wiele wątków. W powyższym przykładzie dane typu i32 są opakowane w Mutex, a następnie udostępniane wielu wątkom za pomocą wskaźnika liczony atomowo Arc<T>. Każdy wątek dokonuje inkrementacji zmiennej wewnątrz sekcji krytycznej, co zapobiega wyścigom danych. Wywołanie lock().unwrap() blokuje wątek do czasu uzyskania wyłącznego dostępu do danych. Podejście to jest typowe w programowaniu zarówno współbieżnym (dla ochrony stanu globalnego), jak i równoległym (dla synchronizacji wyników obliczeń). 
 
 \begin{lstlisting}[language=Rust, caption=Przykład użycia RwLock, label=rwlock_example]
 use std::sync::{Arc, RwLock};
@@ -81,7 +81,7 @@ fn main() {
 }
 \end{lstlisting}
 RwLock<T> \eng{read-write lock} czyli blokada odczytu-zapisu, umożliwia wielu wątkom jednoczesny odczyt danych przy zachowaniu wyłączności dla operacji zapisu. W przypadku często czytanych, rzadko modyfikowanych danych, takie rozwiązanie pozwala na lepszą wydajność niż klasyczny Mutex. Biblioteka standardowa Rust zapewnia gwarancje bezpieczeństwa pamięci, eliminując ryzyko naruszeń spójności danych nawet w środowiskach wielordzeniowych.  
-\subsection{Wartości atomowe (Atomic*)}
+\subsection{Wartości atomowe (Atomic)}
 
 Rust obsługuje także operacje na typach atomowych, które pozwalają na wykonywanie niepodzielnych operacji na współdzielonych zmiennych bez potrzeby stosowania bardziej zaawansowanych mechanizmów synchronizacji.
 
@@ -110,7 +110,7 @@ fn main() {
     println!("Wynik: {}", counter.load(Ordering::Relaxed));
 }
 \end{lstlisting}
-Typy Atomic* w Rust, takie jak AtomicUsize, AtomicBool, czy AtomicPtr, umożliwiają bezpieczne operacje na danych współdzielonych bez stosowania mechanizmów blokujących \eng{lock-free synchronization}. W przedstawionym przykładzie listing \ref{atomic_example}, funkcja fetch\_add wykonuje inkrementację wartości w sposób atomowy, zapewniając spójność danych nawet przy równoczesnym dostępie z wielu wątków. Choć Ordering::Relaxed zapewnia najmniejszy narzut, istnieją też silniejsze modele spójności pamięci (np. SeqCst, Acquire/Release), które mogą być konieczne przy bardziej złożonych zależnościach.
+Typy Atomic w Rust, takie jak AtomicUsize, AtomicBool, czy AtomicPtr, umożliwiają bezpieczne operacje na danych współdzielonych bez stosowania mechanizmów blokujących \eng{lock-free synchronization}. W przedstawionym przykładzie listing \ref{atomic_example}, funkcja fetch\_add wykonuje inkrementację wartości w sposób atomowy, zapewniając spójność danych nawet przy równoczesnym dostępie z wielu wątków. Choć Ordering::Relaxed zapewnia najmniejszy narzut, istnieją też silniejsze modele spójności pamięci (np. SeqCst, Acquire/Release), które mogą być konieczne przy bardziej złożonych zależnościach.
 
 \subsection{Bariery}
 Rust oferuje również podstawowe prymitywy synchronizacyjne, takie jak bariery, które umożliwiają synchronizację wątków w bardziej złożonych scenariuszach. Bariery pozwalają na zsynchronizowanie grupy wątków, które muszą osiągnąć określony punkt przed kontynuowaniem pracy, natomiast semafory kontrolują dostęp do ograniczonej liczby zasobów.

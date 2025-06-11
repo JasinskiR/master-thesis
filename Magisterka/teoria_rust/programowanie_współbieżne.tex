@@ -6,7 +6,7 @@ Centralnym elementem podejścia Rusta do współbieżności jest model własnoś
 
 \subsection{Biblioteki}
 \subsubsection{Tokio}
-Tokio to biblioteka służąca do obsługi zadań asynchronicznych (ang. asynchronous tasks) oraz wejścia-wyjścia bez blokad \eng{non-blocking I/O}. Wykorzystuje pętlę zdarzeń \eng{event loop}, dzięki której możliwe jest współbieżne przetwarzanie wielu zadań bez konieczności tworzenia oddzielnych wątków systemowych dla każdego z nich. Tokio wspiera zarówno jednowątkowy jak i wielowątkowy tryb działania, co pozwala na rozwój aplikacji zgodnie z potrzebami.
+Tokio to biblioteka służąca do obsługi zadań asynchronicznych oraz wejścia-wyjścia bez blokad \eng{non-blocking I/O}. Wykorzystuje pętlę zdarzeń \eng{event loop}, dzięki której możliwe jest współbieżne przetwarzanie wielu zadań bez konieczności tworzenia oddzielnych wątków systemowych dla każdego z nich. Tokio wspiera zarówno jednowątkowy jak i wielowątkowy tryb działania, co pozwala na rozwój aplikacji zgodnie z potrzebami.
 
 \begin{lstlisting}[language=Rust, caption=Przykład użycia Tokio, label=tokio_example]
 use tokio::net::TcpListener;
@@ -55,7 +55,7 @@ fn main() {
 \end{lstlisting}
 W tym przypadku listing \ref{crossbeam_channel_example} channel::unbounded() tworzy kanał bez ograniczenia pojemności \eng{ unbounded channel}, który może służyć do swobodnej komunikacji między wątkami.
 \subsubsection{Actix}
-Actix to framework do tworzenia współbieżnych aplikacji opartych na modelu aktorowym. W tym podejściu jednostką obliczeniową jest aktor, który posiada własny stan i komunikuje się z innymi aktorami wyłącznie za pomocą wiadomości. Takie podejście eliminuje potrzebę stosowania blokad.
+Actix to framework do tworzenia współbieżnych aplikacji opartych na modelu aktorowym. W tym podejściu jednostką obliczeniową jest aktor, który posiada własny stan i komunikuje się z innymi aktorami wyłącznie za pomocą komunikatów. Takie podejście eliminuje potrzebę stosowania blokad.
 \begin{lstlisting}[language=Rust, caption=Przykład użycia Actix, label=actix_example]
 use actix::prelude::*;
 
@@ -211,7 +211,7 @@ Chociaż współbieżność i asynchroniczność nie są tożsame, w Rust oba te
 Podstawowe elementy asynchroniczności to:
 \begin{itemize}
     \item async / await - konstrukcje językowe umożliwiające deklaratywne definiowanie funkcji asynchronicznych i ich późniejsze wywoływanie bez blokowania wątku.
-    \item Future - futury, typ reprezentujący wartość, która będzie dostępna w przyszłości. Futures są wykonywane leniwie i wymagają uruchomienia w ramach runtime’u.
+    \item Futura - abstrakcja reprezentująca wartość obliczaną asynchronicznie, której rezultat będzie dostępny w przyszłości. Obliczenia tego typu są inicjowane leniwie i wymagają uruchomienia w ramach środowiska wykonawczego.
     \item Tokio i async-std - najpopularniejsze asynchroniczne runtimes, implementujące własne planisty i pętle zdarzeń (event loops).
     \item Asynchroniczne kanały (tokio::sync::mpsc, broadcast, oneshot) - umożliwiają komunikację bez blokowania wątków.
     \item Asynchroniczne semafory (tokio::sync::Semaphore) - pozwalają ograniczyć liczbę jednocześnie wykonywanych zadań asynchronicznych bez blokowania wątku. Są często stosowane do kontroli równoczesnych operacji na zasobach zewnętrznych, takich jak dostęp do bazy danych lub API.
