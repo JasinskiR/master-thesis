@@ -1,6 +1,6 @@
 \section{Implementacje w C++ (OpenMP)}
 \subsection{Struktura i organizacja kodu}
-Implementacje C++ z OpenMP następują klasyczny wzorzec proceduralny wywodzący się z oryginalnych implementacji w Fortranie:
+Implementacje C++ z OpenMP następują klasyczny wzorzec proceduralny wywodzący się z~oryginalnych implementacji w Fortranie:
 
 % \begin{lstlisting}[language=Rust, caption={Implementacja benchmarku CG w języku Rust}, label={lst:cg_rust}]
 % \begin{lstlisting}[language=Rust, caption={Struktura kodu benchmarków w języku Rust}, label={lst:rust_structure}]
@@ -55,7 +55,7 @@ static double (*x)=(double*)malloc(sizeof(double)*(NA+2));
 
 int main(int argc, char **argv) {
     // Brak sprawdzania błędów alokacji
-    // Brak eksplicytnego zwalniania pamięci
+    // Brak jawnego zwalniania pamięci
     // Potencjalne wycieki pamięci przy wcześniejszym wyjściu
     
     // Warunkowe zwalnianie (jeśli w ogóle)
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     
     \item Wycieki pamięci - brak gwarancji, że zaalokowane zasoby zostaną zwolnione, co prowadzi do stopniowego wzrostu zużycia pamięci.
     
-    \item Niezdefiniowane zachowanie - możliwość błędów takich jak \textit{use-after-free} czy \textit{double-free}, które mogą skutkować niestabilnością programu lub lukami bezpieczeństwa.
+    \item Niezdefiniowane zachowanie - możliwość wystąpienia błędów, takich jak użycie pamięci po jej zwolnieniu czy podwójne zwolnienie pamięci, które mogą prowadzić do niestabilności programu, naruszenia integralności danych lub poważnych luk w bezpieczeństwie.
     
     \item Przepełnienie bufora (buffer overflows) - brak automatycznego sprawdzania granic tablic sprzyja nadpisywaniu pamięci poza przydzielonym obszarem.
 \end{itemize}

@@ -1,5 +1,5 @@
 \chapter{Wybrane mechanizmy w języku Rust}
-o czym rozdział
+Niniejszy rozdział koncentruje się na analizie wybranych mechanizmów oferowanych przez język programowania Rust w kontekście współbieżności i równoległości. Omówione zostaną fundamentalne koncepcje, które stanowią o unikalności tego języka. Rozdział zawiera również analizę mechanizmów synchronizacyjnych oraz komunikacji międzywątkowej. Zawarte przykłady kodu ilustrują praktyczne zastosowania omawianych koncepcji i stanowią punkt odniesienia dla dalszych rozważań porównawczych.
 \section{Podejście do współbieżności i równoległości}
 
 Rozwój języka Rust oferuje szereg funkcji, które czynią go dobrym wyborem do programowania współbieżnego oraz równoległego. Kluczowymi elementami, które wyróżniają go na tle innych języków programowania są \cite{rustPolishNames}:
@@ -32,7 +32,7 @@ fn main() {
     // let s3 = &mut s1; // Error
 }
 \end{lstlisting}
-W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \textit{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \textit{s1} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \textit{s2} (domyślnie)
+W powyższym listingu \ref{borrow_example} zaprezentowano element dotyczący użycia pożyczki w języku Rust. Błąd, oznaczony jako \texttt{Error} wynika z faktu, iż nie jest możliwe pożyczenie obiektu \texttt{s1} jako mutowalnego, ponieważ jest on jednocześnie pożyczany jako niemutowalny do obiektu \texttt{s2} (domyślnie).
 
 
 \subsection{Nieustraszona współbieżność}
@@ -42,12 +42,12 @@ Rust wymusza bezpieczeństwo współbieżności w czasie kompilacji poprzez anal
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{images/FearlesRustExplain.png}
+    \includegraphics[width=0.6\linewidth]{images/FearlesRustExplain.png}
     \caption{Spektrum nieustraszonej współbieżności \cite{WhenIsParallelismFearlessandZeroCostwithRust?}}
     \label{fig:FearlessSpectrum}
 \end{figure}
 Autorzy \cite{WhenIsParallelismFearlessandZeroCostwithRust?}
-uważają, że nieustraszona współbieżność jest lepiej interpretowana jako spektrum, zilustrowane na \ref{fig:FearlessSpectrum} idealnie eliminując wszelkie obawy przed błędami współbieżności w czasie kompilacji (Fearless), ale jeśli nie jest to możliwe, utrzymując objawy błędów w czasie wykonywania blisko ich przyczyn (Comfortable) lub w inny sposób nie dając gwarancji odtworzenia przyczyny ani objawu (Scared).
+uważają, że nieustraszona współbieżność jest lepiej interpretowana jako spektrum, zilustrowane na \ref{fig:FearlessSpectrum} idealnie eliminując wszelkie obawy przed błędami współbieżności w~czasie kompilacji (\texttt{Fearless}), ale jeśli nie jest to możliwe, utrzymując objawy błędów w~czasie wykonywania blisko ich przyczyn (\texttt{Comfortable}) lub w inny sposób nie dając gwarancji odtworzenia przyczyny ani objawu (\texttt{Scared}).
 
 \subsection{Inteligentne wskaźniki \eng{smart pointers}}
 Inteligentne wskaźniki w języku Rust stanowią zaawansowane abstrakcje, które poszerzają funkcjonalność tradycyjnych wskaźników poprzez wbudowane automatyczne zarządzanie pamięcią oraz semantykę własności. Stanowią one kluczowy element gwarantujący bezpieczeństwo pamięci w Rust, umożliwiając pisanie bezpiecznego oraz odpornego na błędy kodu, bez konieczności korzystania z automatycznego systemu zarządzania pamięcią. Ponadto, wskaźniki te są wykorzystywane zarówno w programowaniu współbieżnym, jak i równoległym, wspierając kontrolowaną oraz bezpieczną wymianę danych. Poniżej omówione zostaną trzy najczęściej używane inteligentne wskaźniki w Rust: Box, Rc oraz Arc.
@@ -55,7 +55,7 @@ Inteligentne wskaźniki w języku Rust stanowią zaawansowane abstrakcje, które
 \subsubsection{Box}
 \label{BOX}
 Inteligentny wskaźnik Box służy do alokacji pamięci na stercie, oferując prosty i efektywny sposób zarządzania własnością dużych struktur danych lub typów rekurencyjnych. Przenosząc dane na stertę, Box redukuje wykorzystanie stosu, co czyni go idealnym rozwiązaniem w sytuacjach, gdy rozmiar danych może się zmieniać lub nie jest znany w czasie kompilacji.\\
-Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji.
+Wykorzystuje się go do przechowywania dużych struktur danych, obsługi typów rekurencyjnych, których rozmiar nie może być określony w czasie kompilacji \cite{TheRustProgrammingLanguage}.
 
 \begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik Box, label=box_smart_pointer]
 fn main() {
@@ -66,8 +66,8 @@ fn main() {
 
 \subsubsection{Rc: wskaźnik z liczeniem referencji}
 \label{RC}
-Inteligentny wskaźnik Rc (Reference Counted) umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i powinien być używany tylko w przypadkach programów jednowątkowych.\\
-Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi.
+Inteligentny wskaźnik Rc - reference counted, umożliwia współdzielenie własności danych przez wiele części programu. Automatycznie śledzi liczbę referencji do danych i usuwa je dopiero wtedy, gdy ostatnia referencja zostanie usunięta. Rc nie jest jednak bezpieczny dla wątków i~powinien być używany tylko w przypadkach programów jednowątkowych.\\
+Najczęściej wykorzystywany podczas współdzielenia danych pomiędzy różnymi częściami programu w środowiskach jednowątkowych, implementacji struktur danych, takich jak grafy czy drzewa z węzłami współdzielonymi \cite{TheRustProgrammingLanguage}.
 
 \begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik RC, label=rc_smart_pointer]
 use std::rc::Rc;
@@ -81,7 +81,7 @@ fn main() {
 
 \subsubsection{Arc: atomowy wskaźnik z liczeniem referencji}
 \label{ARC}
-Dla programowania współbieżnego Rust oferuje Arc (Atomic Reference Counted), czyli wersję \textbf{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych.
+Dla programowania współbieżnego Rust oferuje Arc - atomic reference counted, czyli wersję \texttt{Rc}, która jest bezpieczna dla wątków. Wykorzystuje operacje atomowe do bezpiecznego współdzielenia danych pomiędzy wątkami, gwarantując poprawne aktualizacje liczników referencji bez ryzyka wyścigów danych \cite{TheRustProgrammingLanguage}.
 
 \begin{lstlisting}[language=Rust, caption=Inteligentny wskaźnik Arc, label=arc_smart_pointer]
 use std::sync::Arc;
@@ -99,16 +99,17 @@ fn main() {
 }
 \end{lstlisting}
 \subsubsection{Niebezpieczny Rust (Unsafe Rust)}
-Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpieczeństwa pamięci, realizowany poprzez model własności \eng{ownership}, pożyczania \eng{borrowing} oraz statyczną kontrolę mutowalności. Niemniej jednak, w niektórych przypadkach - szczególnie przy niskopoziomowych operacjach systemowych, interoperacyjności z językiem C lub zaawansowanej optymalizacji - konieczne staje się tymczasowe zawieszenie niektórych mechanizmów ochronnych. W tym celu Rust oferuje specjalny blok językowy: unsafe. \\
-Deklaracja unsafe nie oznacza, że kod z założenia jest błędny lub niewłaściwy. Oznacza jedynie, że kompilator przestaje gwarantować bezpieczeństwo pamięciowe i odpowiedzialność za poprawność działania spoczywa w pełni na programiście. Z poziomu unsafe można wykonać następujące operacje \cite{UnsafeRust} :
+Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpieczeństwa pamięci, realizowany poprzez model własności \eng{ownership}, pożyczania \eng{borrowing} oraz statyczną kontrolę mutowalności. Niemniej jednak, w niektórych przypadkach - szczególnie przy niskopoziomowych operacjach systemowych, interoperacyjności z językiem C lub zaawansowanej optymalizacji - konieczne staje się tymczasowe zawieszenie niektórych mechanizmów ochronnych. W tym celu Rust oferuje specjalny blok językowy: \texttt{unsafe}.
+
+Deklaracja \texttt{unsafe} nie oznacza, że kod z założenia jest błędny lub niewłaściwy. Oznacza jedynie, że kompilator przestaje gwarantować bezpieczeństwo pamięciowe i odpowiedzialność za poprawność działania spoczywa w pełni na programiście. Z poziomu \texttt{unsafe} można wykonać następujące operacje \cite{UnsafeRust,TheRustProgrammingLanguage} :
 \begin{itemize}
 \item dereferencję wskaźników surowych \eng{raw pointers},
-\item wywołanie funkcji lub interfejsów oznaczonych jako unsafe (np. z FFI - \eng{Foreign Function Interface}, czyli interfejs do wywoływania funkcji z innych języków, np. C),
+\item wywołanie funkcji lub interfejsów oznaczonych jako \texttt{unsafe} (np. z FFI - \eng{Foreign Function Interface}, czyli interfejs do wywoływania funkcji z innych języków, np. C),
 \item dostęp do zmiennych statycznych o niesynchronizowanym dostępie,
 \item implementację niektórych cech \eng{traits} systemowych w sposób potencjalnie niebezpieczny,
 \item bezpośrednią manipulację pamięcią (alokacja, kopiowanie, itd.).
 \end{itemize} 
-Poniższy przykład demonstruje dereferencję wskaźnika surowego (*const T, *mut T), która wymaga bloku unsafe:
+Poniższy przykład demonstruje dereferencję wskaźnika surowego (\texttt{*const T, *mut T}), która wymaga bloku \texttt{unsafe}:
 \begin{lstlisting}[language=Rust, caption=Przykład użycia unsafe Rust, label=unsafe_rust_example]
 fn main() {
     let x: i32 = 42;
@@ -119,9 +120,9 @@ fn main() {
     }
 }
 \end{lstlisting}
-W powyższym kodzie listing \ref{unsafe_rust_example} wskaźnik ptr jest wskaźnikiem surowym \eng{raw pointer}, który nie posiada gwarancji poprawności, jakie zapewniają referencje bezpośrednie (\&T, \&mut T). Aby móc odczytać wartość spod tego wskaźnika, konieczne jest oznaczenie operacji jako unsafe.
+W powyższym kodzie listing \ref{unsafe_rust_example} wskaźnik ptr jest wskaźnikiem surowym \eng{raw pointer}, który nie posiada gwarancji poprawności, jakie zapewniają referencje bezpośrednie \mbox{(\texttt{\&T, \&mut T})}. Aby móc odczytać wartość spod tego wskaźnika, konieczne jest oznaczenie operacji jako \texttt{unsafe}.
 
-Warto jednak podkreślić, że Rust promuje zasadę minimalnego zaufania \eng{principle of minimal trust}, dlatego zaleca się ograniczanie użycia unsafe do niezbędnych sekcji oraz hermetyzowanie ich w bezpiecznych abstrakcjach (np. typach własnych, modułach lub API) \cite{UnsafeRust}.
+Warto jednak podkreślić, że Rust promuje zasadę minimalnego zaufania \eng{principle of minimal trust}, dlatego zaleca się ograniczanie użycia \texttt{unsafe} do niezbędnych sekcji oraz hermetyzowanie ich w bezpiecznych abstrakcjach (np. typach własnych, modułach lub API) \cite{UnsafeRust}.
 \input{teoria_rust/programowanie_współbieżne}
 \input{teoria_rust/programowanie_równoległe}
 \input{teoria_rust/wspolne.tex}

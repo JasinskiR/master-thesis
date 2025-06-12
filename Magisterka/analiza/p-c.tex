@@ -14,7 +14,7 @@ Wykres w lewym górnym rogu - rysunek\ref{analiza_benchmarku_producent_klient} p
 
 Dla implementacji wykorzystującej mechanizm kanału (oznaczony kolorem niebieskim) mediana przepustowości w języku C++ wynosi około 1 570 859 wiadomości na sekundę, podczas gdy analogiczna implementacja w języku Rust osiąga 1 239 598 wiadomości na sekundę, co oznacza przewagę C++ o około 27\%. Podobną zależność obserwujemy dla mechanizmu kolejki (oznaczonego kolorem pomarańczowym), gdzie C++ osiąga 1 662 717 wiadomości na sekundę wobec 1 180 992 dla języka Rust, co daje przewagę wynoszącą około 41\%.
 
-Warto zauważyć, że w przypadku języka C++ implementacja kolejki wykazuje wyższą wydajność niż implementacja kanału, natomiast w języku Rust zależność jest odwrotna. Może to wskazywać na różnice w optymalizacji tych mechanizmów w obu językach.
+Warto zauważyć, że w przypadku języka C++ implementacja kolejki wykazuje wyższą wydajność niż implementacja kanału, natomiast w języku Rust zależność jest odwrotna. Może to wskazywać na różnice w~ optymalizacji tych mechanizmów w obu językach.
 
 \subsubsection{Skalowanie względem liczby wątków}
 Środkowy górny wykres - rysunek\ref{analiza_benchmarku_producent_klient} ilustruje zależność wydajności od liczby wykorzystywanych wątków. Implementacje w językach Rust i C++ charakteryzują się diametralnie odmiennym wzorcem skalowania. Implementacje C++ (oznaczone kolorem niebieskim) utrzymują względnie stabilną wydajność niezależnie od liczby wątków, z niewielką tendencją wzrostową dla 7-8 wątków w przypadku mechanizmu kolejki.
@@ -22,14 +22,14 @@ Warto zauważyć, że w przypadku języka C++ implementacja kolejki wykazuje wy�
 Natomiast implementacje w języku Rust (oznaczone kolorem czerwonym) rozpoczynają od znacząco niższej wydajności przy 1-2 wątkach, ale wykazują gwałtowny wzrost przepustowości przy zwiększaniu liczby wątków do 4, osiągając wartości zbliżone do implementacji w C++. Ta charakterystyka skalowania sugeruje, że implementacje w języku Rust są zoptymalizowane pod kątem efektywnego wykorzystania równoległości, podczas gdy implementacje w C++ oferują bardziej przewidywalną wydajność niezależną od stopnia paralelizmu.
 
 \subsubsection{Zużycie pamięci}
-Prawy górny wykres - rysunek\ref{analiza_benchmarku_producent_klient} przedstawia porównanie zużycia pamięci, mierzonego w megabajtach, dla badanych implementacji. W tym aspekcie język Rust wykazuje wyraźną przewagę, osiągając niższe mediany zużycia pamięci zarówno dla mechanizmu kanału (1,9 MB wobec 3,1 MB w C++), jak i mechanizmu kolejki (2,2 MB wobec 3,1 MB w C++).
+Prawy górny wykres - rysunek\ref{analiza_benchmarku_producent_klient} przedstawia porównanie zużycia pamięci, mierzonego w~megabajtach, dla badanych implementacji. W tym aspekcie język Rust wykazuje wyraźną przewagę, osiągając niższe mediany zużycia pamięci zarówno dla mechanizmu kanału (1,9 MB wobec 3,1 MB w C++), jak i mechanizmu kolejki (2,2 MB wobec 3,1 MB w C++).
 
 Ta różnica, wynosząca około 40\% dla mechanizmu kanału i 29\% dla mechanizmu kolejki, może być przypisana efektywnemu systemowi zarządzania pamięcią w języku Rust, bazującemu na analizie czasu życia i systemie własności, które eliminują konieczność stosowania kosztownych mechanizmów automatycznego odzyskiwania pamięci lub podatność na wycieki pamięci charakterystyczne dla ręcznego zarządzania pamięcią w C++.
 
 \subsubsection{ Rozkład czasów wykonania}
 Środkowy dolny histogram - rysunek\ref{analiza_benchmarku_producent_klient} prezentuje rozkład częstości czasów wykonania dla implementacji w językach Rust (kolor czerwony) i C++ (kolor niebieski). Analiza tego wykresu ujawnia fundamentalne różnice w charakterystykach wydajnościowych obu języków.
 
-Implementacje w języku Rust charakteryzują się bimodalnym rozkładem czasów wykonania, z dominującym szczytem przy około 5 ms oraz mniejszymi skupiskami w okolicach 15-20 ms i 40-45 ms. Taka dystrybucja może świadczyć o różnych strategiach optymalizacji w zależności od specyfiki zadania lub wpływie dodatkowych mechanizmów zarządzania pamięcią.
+Implementacje w języku Rust charakteryzują się bimodalnym rozkładem czasów wykonania, z dominującym szczytem przy około 5 ms oraz mniejszymi skupiskami w okolicach 15-20 ms i~40-45 ms. Taka dystrybucja może świadczyć o różnych strategiach optymalizacji w zależności od specyfiki zadania lub wpływie dodatkowych mechanizmów zarządzania pamięcią.
 
 W przeciwieństwie do tego, czasy wykonania dla implementacji C++ koncentrują się głównie w przedziale 20-25 ms, z mniejszą wariancją, co wskazuje na bardziej przewidywalną wydajność, potencjalnie kosztem utraconych możliwości optymalizacji w określonych scenariuszach.
 
@@ -55,7 +55,7 @@ Warto również zauważyć, że w obu językach mechanizm kolejki wykazuje odmie
 \subsubsection{Wydajność komunikacji międzywątkowej}
 Wykres w lewym górnym rogu - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie przepustowości mechanizmów komunikacji międzywątkowej, wyrażonej liczbą wiadomości przetwarzanych na sekundę. Analiza wykresu pudełkowego wskazuje na znaczącą różnicę wydajności między implementacjami w językach C++ i Rust.
 
-Implementacje w języku C++ osiągają znacząco wyższą przepustowość, z medianą na poziomie 772 264 wiadomości/s dla mechanizmu kanału (kolor niebieski) i 782 729 wiadomości/s dla mechanizmu kolejki (kolor pomarańczowy). W przeciwieństwie do tego, implementacje w języku Rust osiągają przepustowość rzędu 36 252 wiadomości/s dla mechanizmu kanału i 31 818 wiadomości/s dla mechanizmu kolejki.
+Implementacje w języku C++ osiągają znacząco wyższą przepustowość, z medianą na poziomie 772 264 wiadomości/s dla mechanizmu kanału (kolor niebieski) i 782 729 wiadomości/s dla mechanizmu kolejki (kolor pomarańczowy). W przeciwieństwie do tego, implementacje w~języku Rust osiągają przepustowość rzędu 36 252 wiadomości/s dla mechanizmu kanału i 31 818 wiadomości/s dla mechanizmu kolejki.
 
 Ta dysproporcja, wyrażająca się współczynnikiem około 21:1 na korzyść C++, wskazuje na fundamentalne różnice w wydajności bazowych mechanizmów komunikacji międzywątkowej w obu językach. Warto zauważyć, że rozrzut wartości (wysokość prostokątów) jest znacznie większy w przypadku implementacji Rust, co sugeruje mniej przewidywalną wydajność w porównaniu do bardziej stabilnych wyników w C++.
 
@@ -68,7 +68,7 @@ Taka charakterystyka może wskazywać na odmienne podejścia do optymalizacji w 
 
 
 \subsubsection{Zużycie pamięci}
-Prawy górny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie zużycia pamięci dla analizowanych implementacji. W przeciwieństwie do wyników wydajnościowych, to język Rust wykazuje zdecydowaną przewagę pod względem efektywności wykorzystania zasobów pamięciowych. Zarówno implementacja wykorzystująca kanał, jak i implementacja wykorzystująca kolejkę w języku Rust wykazują zużycie pamięci na poziomie 1,9 MB.
+Prawy górny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie zużycia pamięci dla analizowanych implementacji. W przeciwieństwie do wyników wydajnościowych, to język Rust wykazuje zdecydowaną przewagę pod względem efektywności wykorzystania zasobów pamięciowych. Zarówno implementacja wykorzystująca kanał, jak i implementacja wykorzystująca kolejkę w~języku Rust wykazują zużycie pamięci na poziomie 1,9 MB.
 
 Dla porównania, obie implementacje w języku C++ charakteryzują się zużyciem pamięci na poziomie 16,8 MB, co stanowi prawie dziewięciokrotnie wyższe zapotrzebowanie na pamięć w porównaniu do rozwiązań w Rust. Ta różnica wynika prawdopodobnie z odmiennych podejść do zarządzania pamięcią: Rust wykorzystuje system własności i analizę czasu życia obiektów, co pozwala na bardziej efektywne zarządzanie zasobami pamięciowymi.
 
@@ -92,7 +92,7 @@ Ta dystrybucja punktów ilustruje fundamentalny kompromis między wydajnością 
 \subsubsection{Podsumowanie}
 Przeprowadzona analiza porównawcza mechanizmów współbieżności w językach Rust i C++ ujawnia fundamentalnie odmienne charakterystyki wydajnościowe. Implementacje w języku C++ oferują znacząco wyższą przepustowość komunikacji międzywątkowej, która utrzymuje się na stabilnym poziomie niezależnie od liczby wątków czy rozmiaru problemu. Z kolei implementacje w języku Rust, mimo niższej bezwzględnej przepustowości, charakteryzują się znacznie niższym zużyciem pamięci oraz lepszymi właściwościami skalowania wraz ze wzrostem liczby wątków.
 
-Szczególnie interesująca jest obserwacja, że pomimo niższej przepustowości, implementacje Rust osiągają krótsze czasy wykonania, co może wskazywać na niższe opóźnienia w przetwarzaniu pojedynczych operacji, nawet jeśli łączna liczba operacji na sekundę jest niższa niż w przypadku C++.
+Szczególnie interesująca jest obserwacja, że pomimo niższej przepustowości, implementacje Rust osiągają krótsze czasy wykonania, co może wskazywać na niższe opóźnienia w przetwarzaniu pojedynczych operacji, nawet jeśli łączna liczba operacji na sekundę jest niższa niż w~przypadku C++.
 
 \subsection{Porównanie pomiędzy platformami}
 \begin{figure}[H]
@@ -105,7 +105,7 @@ Szczególnie interesująca jest obserwacja, że pomimo niższej przepustowości,
 Na wykresie (a) - rysunek \ref{rysunek_1_porownanie_wydajnosci} przedstawiono porównanie przepustowości mechanizmów komunikacji międzywątkowej dla architektur x86 i ARM, z rozróżnieniem na mechanizm kanału (kolor zielony) i kolejki (kolor niebieski). Analiza danych wskazuje na diametralną różnicę wydajnościową między badanymi architekturami:
 \begin{itemize}
     \item W przypadku architektury x86, mechanizmy komunikacji osiągają mediany przepustowości na poziomie 1 390 888 wiadomości/s (kanał) i 1 369 009 wiadomości/s (kolejka).
-    \item Dla architektury ARM, wartości te wynoszą odpowiednio 404 258 wiadomości/s (kanał) i 407 274 wiadomości/s (kolejka).
+    \item Dla architektury ARM, wartości te wynoszą odpowiednio 404 258 wiadomości/s (kanał) i~\mbox{407 274} wiadomości/s (kolejka).
 \end{itemize}
 
 Można zaobserwować zatem, że architektura x86 zapewnia około 3,4-krotnie wyższą przepustowość w porównaniu do architektury ARM, niezależnie od zastosowanego mechanizmu komunikacji. Warto zauważyć, że w obrębie tej samej architektury wybór między mechanizmem kanału a kolejki ma marginalne znaczenie dla osiąganej wydajności.
@@ -156,9 +156,9 @@ Kluczowe obserwacje:
 \subsubsection{Rozkład zużycia pamięci według języka i architektury}
 Wykres (a) - rysunek \ref{rysunek_3_zuzycie_pamieci} przedstawia porównanie szczytowego zużycia pamięci dla implementacji mechanizmów współbieżności w językach Rust (kolor zielony) i C++ (kolor niebieski) na architekturach x86 i ARM. Z analizy danych wynika, że:
 \begin{itemize}
-    \item Architektura x86 charakteryzuje się mniejszym zużyciem pamięci (mediana około 2 MB) w porównaniu do architektury ARM (mediana około 2,2 MB).
+    \item Architektura x86 charakteryzuje się mniejszym zużyciem pamięci (mediana około 2 MB) w~porównaniu do architektury ARM (mediana około 2,2 MB).
     \item Implementacje na architekturze ARM wykazują większy rozrzut wartości zużycia pamięci, co widoczne jest w szerszym zakresie wykresu pudełkowego oraz obecności wartości odstających sięgających nawet 4 MB.
-    \item Różnice między językami programowania w kontekście zużycia pamięci są minimalnie, zarówno na architekturze ARM, jak i x86, co sugeruje, że to głównie architektura sprzętowa, a nie wybór języka programowania, determinuje profil pamięciowy aplikacji współbieżnych.
+    \item Różnice między językami programowania w kontekście zużycia pamięci są minimalnie, zarówno na architekturze ARM, jak i x86, co sugeruje, że to głównie architektura sprzętowa, a~nie wybór języka programowania, determinuje profil pamięciowy aplikacji współbieżnych.
 \end{itemize}
 
 \subsubsection{Zależność wydajności od zużycia pamięci}
@@ -182,7 +182,7 @@ Wykres (b) - rysunek \ref{rysunek_3_zuzycie_pamieci} ilustruje relację między 
 \subsubsection{Analiza rozkładów wydajności komunikacji}
 Wykres (a) - rysunek \ref{rysunek_4_analiza_statystyczna} przedstawia rozkład przepustowości komunikacji międzywątkowej dla architektur x86 (kolor niebieski) i ARM (kolor zielony). Obserwujemy wyraźne różnice w charakterystyce dystrybucji wydajności:
 \begin{itemize}
-    \item Architektura x86 charakteryzuje się bimodalnym rozkładem z dominującym skupiskiem w okolicach niższych wartości (0-100 tysięcy wiadomości/s) oraz mniejszym skupiskiem w przedziale 800-900 tysięcy wiadomości/s.
+    \item Architektura x86 charakteryzuje się bimodalnym rozkładem z dominującym skupiskiem w~okolicach niższych wartości (0-100 tysięcy wiadomości/s) oraz mniejszym skupiskiem w~przedziale 800-900 tysięcy wiadomości/s.
     \item W przeciwieństwie do tego, architektura ARM wykazuje bardziej rozproszony rozkład z przewagą wyższych wartości przepustowości, osiągających szczyt w okolicach 1400-1500 tysięcy wiadomości/s.
     \item Taka charakterystyka sugeruje, że architektura ARM nie tylko osiąga wyższą średnią przepustowość, ale również wykazuje bardziej przewidywalną wydajność w wyższym zakresie wartości.
 \end{itemize}
@@ -199,7 +199,7 @@ Wykres Q-Q (kwantyl-kwantyl) na panelu (b) - rysunek \ref{rysunek_4_analiza_stat
 Wykres (c) - rysunek \ref{rysunek_4_analiza_statystyczna} przedstawia porównanie średnich wartości trzech kluczowych metryk wydajnościowych wraz z 95\% przedziałami ufności:
 \begin{itemize}
     \item Wydajność komunikacji: Architektura ARM osiąga średnio około $10^5$ wiadomości/s, przewyższając znacząco architekturę x86, która osiąga około $10^4$ wiadomości/s. Wąskie przedziały ufności wskazują na wysoką precyzję tych estymacji.
-    \item Zużycie pamięci: Architektura x86 charakteryzuje się wyższym zużyciem pamięci (około 10 MB) w porównaniu do architektury ARM (około 3 MB), co może mieć istotne znaczenie w systemach o ograniczonych zasobach.
+    \item Zużycie pamięci: Architektura x86 charakteryzuje się wyższym zużyciem pamięci (około \mbox{10 MB}) w porównaniu do architektury ARM (około 3 MB), co może mieć istotne znaczenie w~systemach o ograniczonych zasobach.
     \item Czas wykonania: Obie architektury osiągają zbliżone czasy wykonania (około 0,02-0,03 sekundy), z nieznaczną przewagą architektury ARM.
 \end{itemize}
 

@@ -24,7 +24,7 @@ Następnie funkcja \texttt{map} pozwala na równoległe zastosowanie tej samej o
 
 Ostatni etap przetwarzania to \texttt{reduce}, który agreguje wyniki cząstkowe w jeden wynik końcowy. Funkcja ta działa również równolegle: najpierw sumowane są wartości lokalnie (w ramach każdego wątku roboczego), a dopiero potem następuje łączenie tych częściowych sum w jedną finalną wartość. Neutralny element funkcji redukującej to 0, co jest standardowym przypadkiem przy sumowaniu liczb całkowitych.
 
-Cały proces ilustruje typowy model MapReduce, w którym dane są:
+Cały proces ilustruje typowy model \texttt{MapReduce}, w którym dane są:
 \begin{itemize}
 \item dzielone na fragmenty \eng{split},
 \item transformowane \eng{map},

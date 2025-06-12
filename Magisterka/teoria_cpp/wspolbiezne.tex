@@ -2,8 +2,8 @@
 Współbieżność w języku C++ wspierana jest od standardu C++11, który wprowadził szereg struktur i mechanizmów umożliwiających tworzenie i synchronizację wątków. W kolejnych wersjach (C++14, C++17, C++20 i C++23) język został wzbogacony o kolejne narzędzia, zwiększające bezpieczeństwo, ekspresyjność i ergonomię programowania współbieżnego.
 
 \subsection{Biblioteki i przestrzeń standardowa}
-\subsubsection{std::thread oraz std::jthread}
-Standardowa biblioteka języka C++ zawiera podstawowe komponenty do obsługi wątków w module <thread>. Wraz z C++20 wprowadzono std::jthread, będący bezpieczniejszą alternatywą dla std::thread, ponieważ automatycznie dołącza wątek w destruktorze obiektu. Dzięki temu możliwe jest uniknięcie błędów takich jak niezakończony wątek  \eng{orphaned thread} lub przedwczesne zakończenie programu.
+\subsubsection{\texttt{std::thread} oraz \texttt{std::jthread}}
+Standardowa biblioteka języka C++ zawiera podstawowe komponenty do obsługi wątków w~module \texttt{<thread>}. Wraz z C++20 wprowadzono \texttt{std::jthread}, będący bezpieczniejszą alternatywą dla \texttt{std::thread}, ponieważ automatycznie dołącza wątek w destruktorze obiektu. Dzięki temu możliwe jest uniknięcie błędów takich jak niezakończony wątek  \eng{orphaned thread} lub przedwczesne zakończenie programu.
 
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::jthread}, label={jthread_example}]
 #include <iostream>
@@ -18,11 +18,11 @@ int main() {
     // brak konieczności wywoływania join() lub detach()
 }
 \end{lstlisting}    
-W przykładzie listing \ref{jthread_example} utworzono nowy wątek wątek z użyciem std::jthread, który uruchamia funkcję worker. Dzięki automatycznemu zarządzaniu zasobami przez std::jthread, nie ma potrzeby ręcznego wywoływania join(), co zmniejsza ryzyko błędów synchronizacji.
+W przykładzie listing \ref{jthread_example} utworzono nowy wątek wątek z użyciem \texttt{std::jthread}, który uruchamia funkcję worker. Dzięki automatycznemu zarządzaniu zasobami przez \texttt{std::jthread}, nie ma potrzeby ręcznego wywoływania \texttt{join()}, co zmniejsza ryzyko błędów synchronizacji.
 
 
 \subsection{Komunikacja między wątkami}
-C++ nie posiada wbudowanych kanałów \eng{channels} występujących w języku Rust, lecz umożliwia komunikację poprzez konstrukcje takie jak: kolejki, zmienne warunkowe (std::condition\_variable) oraz typy atomowe (std::atomic). Jednym z najczęstszych wzorców komunikacyjnych jest użycie kolejki chronionej mutexem oraz sygnalizowanej zmienną warunkową.
+C++ nie posiada wbudowanych kanałów \eng{channels} występujących w języku Rust, lecz umożliwia komunikację poprzez konstrukcje takie jak: kolejki, zmienne warunkowe \texttt{(std::condition\_variable)} oraz typy atomowe \texttt{(std::atomic)}. Jednym z najczęstszych wzorców komunikacyjnych jest użycie kolejki chronionej mutexem oraz sygnalizowanej zmienną warunkową.
 \begin{lstlisting}[language=C++, caption={Przykład komunikacji między wątkami}, label={condition_variable_example}]
 #include <iostream>
 #include <thread>
@@ -51,7 +51,7 @@ Powyższy przykład listing \ref{condition_variable_example} implementuje prosty
 
 
 \subsection{Synchronizacja}
-Synchronizacja w języku C++ opiera się głównie na mutexach (std::mutex) oraz ich odmianach. Od C++17 dostępny jest std::scoped\_lock, pozwalający na bezpieczne blokowanie wielu mutexów jednocześnie, a od C++20 wprowadzono bardziej zaawansowane konstrukty takie jak std::latch i std::barrier, które umożliwiają synchronizację wielu wątków na określonym etapie wykonania.
+Synchronizacja w języku C++ opiera się głównie na mutexach \texttt{(std::mutex)} oraz ich odmianach. Od C++17 dostępny jest \texttt{std::scoped\_lock}, pozwalający na bezpieczne blokowanie wielu mutexów jednocześnie, a od C++20 wprowadzono bardziej zaawansowane konstrukty takie jak \texttt{std::latch} i \texttt{std::barrier}, które umożliwiają synchronizację wielu wątków na określonym etapie wykonania.
 
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::scoped\_lock}, label={scoped_lock_example}]
 #include <iostream>
@@ -74,13 +74,13 @@ int main() {
     std::cout << "Counter: " << counter << std::endl;
 }
 \end{lstlisting}
-W tym przykładzie - listing \ref{scoped_lock_example} dwa wątki próbują jednocześnie zwiększyć wartość zmiennej counter. Aby zapobiec wyścigowi danych, dostęp do zasobu jest chroniony przez std::mutex. Użycie std::lock\_guard zapewnia, że blokada zostanie zwolniona automatycznie po wyjściu z zakresu funkcji.
+W tym przykładzie - listing \ref{scoped_lock_example} dwa wątki próbują jednocześnie zwiększyć wartość zmiennej counter. Aby zapobiec wyścigowi danych, dostęp do zasobu jest chroniony przez \texttt{std::mutex}. Użycie \texttt{std::lock\_guard} zapewnia, że blokada zostanie zwolniona automatycznie po wyjściu z zakresu funkcji.
 
-\subsubsection{std::latch oraz std::barrier (C++20)}
-Mechanizmy std::latch oraz std::barrier wprowadzone w standardzie C++20 służą do synchronizacji wielu wątków w określonym punkcie programu:
+\subsubsection{\texttt{std::latch} oraz \texttt{std::barrier} (C++20)}
+Mechanizmy \texttt{std::latch} oraz \texttt{std::barrier} wprowadzone w standardzie C++20 służą do synchronizacji wielu wątków w określonym punkcie programu:
 \begin{itemize}
-    \item std::latch - jednorazowy licznik synchronizacyjny, który pozwala wątkom oczekującym na rozpoczęcie działania, aż inne wątki zakończą przygotowanie.
-    \item std::barrier - wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu „cyklu bariery”.
+    \item \texttt{std::latch} - jednorazowy licznik synchronizacyjny, który pozwala wątkom oczekującym na rozpoczęcie działania, aż inne wątki zakończą przygotowanie.
+    \item \texttt{std::barrier} - wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu „cyklu bariery”.
 \end{itemize}
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::latch oraz std::barrier}, label={latch_barrier_example}]
 #include <iostream>
@@ -112,10 +112,10 @@ int main() {
         t.join();
 }
 \end{lstlisting}    
-W listingu \ref{latch_barrier_example} każdy wątek najpierw dochodzi do punktu synchronizacji std::latch, oczekując aż wszystkie inne wątki również zakończą fazę inicjalizacji. Następnie, w dwóch kolejnych iteracjach przetwarzania danych, zastosowany zostaje std::barrier, który gwarantuje, że wszystkie wątki ukończą daną iterację przed przejściem do kolejnej. Takie podejście zwiększa spójność przetwarzania i eliminuje potencjalne niespójności wynikające z wyścigów czasowych między wątkami.
+W listingu \ref{latch_barrier_example} każdy wątek najpierw dochodzi do punktu synchronizacji \texttt{std::latch}, oczekując aż wszystkie inne wątki również zakończą fazę inicjalizacji. Następnie, w dwóch kolejnych iteracjach przetwarzania danych, zastosowany zostaje \texttt{std::barrier}, który gwarantuje, że wszystkie wątki ukończą daną iterację przed przejściem do kolejnej. Takie podejście zwiększa spójność przetwarzania i eliminuje potencjalne niespójności wynikające z wyścigów czasowych między wątkami.
 
 \subsection{Asynchroniczność}
-Programowanie asynchroniczne w C++ możliwe jest dzięki konstrukcjom takim jak std::async, std::future i std::promise. std::async uruchamia funkcję w tle i umożliwia jej obserwację za pomocą obiektu future. Podejście to ułatwia uruchamianie zadań bez konieczności jawnego zarządzania wątkiem.
+Programowanie asynchroniczne w C++ możliwe jest dzięki konstrukcjom takim jak \texttt{std::async}, \texttt{std::future} i \texttt{std::promise}. \texttt{std::async} uruchamia funkcję w tle i umożliwia jej obserwację za pomocą obiektu \texttt{future}. Podejście to ułatwia uruchamianie zadań bez konieczności jawnego zarządzania wątkiem.
 
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::async}, label={async_example}]
     #include <iostream>
@@ -130,10 +130,10 @@ Programowanie asynchroniczne w C++ możliwe jest dzięki konstrukcjom takim jak 
         std::cout << "Result: " << result.get() << std::endl;
     }
 \end{lstlisting}
-W powyższym listingu \ref{async_example} funkcja compute() zostaje uruchomiona asynchronicznie. std::future pozwala na uzyskanie wyniku, gdy ten będzie dostępny. W ten sposób możemy kontynuować inne działania, a wynik odebrać w późniejszym czasie — co jest przydatne w aplikacjach wymagających wysokiej responsywności.
+W powyższym listingu \ref{async_example} funkcja \texttt{compute()} zostaje uruchomiona asynchronicznie. \texttt{std::future} pozwala na uzyskanie wyniku, gdy ten będzie dostępny. W ten sposób możemy kontynuować inne działania, a wynik odebrać w późniejszym czasie — co jest przydatne w~aplikacjach wymagających wysokiej responsywności.
 
 \subsubsection{std::promise}
-Obiekt std::promise (obietnica) w języku C++ umożliwia przekazywanie wartości z jednego wątku do drugiego. Stanowi uzupełnienie mechanizmu std::future, ponieważ pozwala manualnie ustawić wartość, którą future później odbierze. Dzięki temu rozdzielona zostaje produkcja i konsumpcja danych między wątkami, umożliwiając bardziej elastyczne projektowanie asynchronicznych przepływów sterowania.
+Obiekt \texttt{std::promise} (obietnica) w języku C++ umożliwia przekazywanie wartości z jednego wątku do drugiego. Stanowi uzupełnienie mechanizmu \texttt{std::future}, ponieważ pozwala manualnie ustawić wartość, którą futurę później odbierze. Dzięki temu rozdzielona zostaje produkcja i konsumpcja danych między wątkami, umożliwiając bardziej elastyczne projektowanie asynchronicznych przepływów sterowania.
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::promise}, label={promise_example}]
 #include <iostream>
 #include <thread>
@@ -162,7 +162,7 @@ int main() {
 \end{lstlisting}    
 W listingu \ref{promise_example} wątek główny tworzy promesę i pobiera powiązaną z nią futurę. Wątek producenta wykonuje obliczenie i przekazuje wynik przez promesę. Funkcja \texttt{result.get()} wstrzymuje główny wątek do czasu dostępności wyniku.
 \subsubsection{std::packaged\_task}
-std::packaged\_task to obiekt otaczający dowolną wywoływalną funkcję (np. funkcję, lambda, std::bind), który integruje się z future. Pozwala to uruchomić zadanie w wątku i obserwować jego wynik.
+\texttt{std::packaged\_task} to obiekt otaczający dowolną wywoływalną funkcję (np. funkcję, lambda, \texttt{std::bind}), który integruje się z future. Pozwala to uruchomić zadanie w wątku i obserwować jego wynik.
 \begin{lstlisting}[language=C++, caption={Przykład użycia std::packaged\_task}, label={packaged_task_example}]
 #include <iostream>
 #include <thread>
@@ -187,11 +187,11 @@ int main() {
 \end{lstlisting}
 W powyższym przykładzie listing \ref{packaged_task_example} funkcja \texttt{compute} została opakowana w \texttt{packaged\_task}, a następnie uruchomiona w osobnym wątku z argumentem 21. Wynik trafia do futury, który umożliwia jego odbiór w wątku głównym. przetwarzanie zadań.
 
-\subsubsection{C++23 - std::task i std::execution}
+\subsubsection{C++23 - \texttt{std::task} i \texttt{std::execution}}
 Standard C++23 (najnowszy w chwili tworzenia niniejszej pracy) wprowadza nowe pojęcia:
 \begin{itemize}
-    \item std::task - reprezentuje zadanie, które można uruchomić z użyciem określonego planisty wykonania.
-    \item std::execution - zestaw polityk (strategii) określających sposób wykonywania zadań, takich jak sekwencyjnie, współbieżnie, równolegle.
+    \item \texttt{std::task} - reprezentuje zadanie, które można uruchomić z użyciem określonego planisty wykonania.
+    \item \texttt{std::execution} - zestaw polityk (strategii) określających sposób wykonywania zadań, takich jak sekwencyjnie, współbieżnie, równolegle.
 \end{itemize}
 
-Mechanizmy te są częścią trwającej transformacji C++ w kierunku deklaratywnego modelu programowania współbieżnego i równoległego. Mają one zostać wprowadzone wstępnie w wersji C++26 \cite{cpp26} Ponieważ wsparcie dla tych mechanizmów jest na etapie wdrażania, nie będą one szczegółowo omawiane w tej pracy. Warto jednak zauważyć, że ich celem jest uproszczenie i ujednolicenie podejścia do programowania współbieżnego, podobnie jak ma to miejsce w języku Rust.
+Mechanizmy te są częścią trwającej transformacji C++ w kierunku deklaratywnego modelu programowania współbieżnego i równoległego. Mają one zostać wprowadzone wstępnie w wersji C++26 \cite{cpp26} Ponieważ wsparcie dla tych mechanizmów jest na etapie wdrażania, nie będą one szczegółowo omawiane w tej pracy. Warto jednak zauważyć, że ich celem jest uproszczenie i~ujednolicenie podejścia do programowania współbieżnego, podobnie jak ma to miejsce w~języku Rust.

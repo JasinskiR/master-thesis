@@ -89,7 +89,7 @@ TBB::parallel_for(
 \subsection{Specyfika poszczególnych benchmarków}
 TBB implementacje różnią się głównie sposobem wyrażenia równoległości, zachowując identyczną logikę algorytmów:
 \begin{itemize}
-    \item EP: Zastąpienie \#pragma omp for reduction przez parallel\_reduce z lambda
-    \item CG: Konwersja sparse matrix operations na parallel\_for z blocked\_range
-    \item IS: Implementacja bucket sort przez parallel\_for z mutex synchronization
+    \item EP: Zastąpienie \texttt{\#pragma omp} dla redukcji przez \texttt{parallel\_reduce} z lambda
+    \item CG: Konwersja operacji \texttt{sparse\_matrix} na \texttt{parallel\_for} z \texttt{blocked\_range}
+    \item IS: Implementacja sortowania kubełkowego przez \texttt{parallel\_for} z synchronizacją przez mutexy
 \end{itemize}

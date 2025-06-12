@@ -540,7 +540,7 @@ public:
 \end{lstlisting}
 
 \subsubsection{C++ - wersja asynchroniczna z epoll/kqueue}
-C++ oferuje także asynchroniczną implementację używającą epoll (Linux) lub kqueue (macOS):
+C++ oferuje także asynchroniczną implementację używającą \texttt{epoll} (Linux) lub \texttt{kqueue} \mbox{(macOS)}:
 \begin{lstlisting}[language=C++, caption={Async Echo Serwer w C++ z event loop}, label={lst:cpp_async_echo_server}]
 class AsyncEchoServer {
 private:
@@ -695,13 +695,13 @@ Implementacja C++ definiuje własną klasę \texttt{Channel<T>} opartą na \text
 
 \subsubsection{Obsługa I/O}
 
-Rust wykorzystuje \texttt{TcpListener::bind().await} z nieblokującymi operacjami wejścia/wyjścia. Makro \texttt{tokio::select!} umożliwia równoległe oczekiwanie na wiele zdarzeń (nowe połączenia, sygnał zamknięcia). Ograniczenia połączeń realizowane są przez \texttt{Semaphore::try\_acquire\_owned()}.
+Rust wykorzystuje \texttt{TcpListener::bind().await} z nieblokującymi operacjami \mbox{wejścia/wyjścia}. Makro \texttt{tokio::select!} umożliwia równoległe oczekiwanie na wiele zdarzeń (nowe połączenia, sygnał zamknięcia). Ograniczenia połączeń realizowane są przez \texttt{Semaphore::try\_acquire\_owned()}.
 
 C++ implementuje blokujące wejście/wyjście przez bezpośrednie wywołania systemowe: \texttt{socket()}, \texttt{bind()}, \texttt{listen()}, \texttt{accept()}. Każde połączenie obsługiwane jest w dedykowanym wątku z synchronicznymi operacjami \texttt{recv()}/\texttt{send()}. Wersja asynchroniczna wymaga ręcznego zarządzania stanem dla każdego deskryptora pliku.
 
 \subsection{Zarządzanie błędami i zasobami}
 
-Rust wymusza explicit error handling przez typy \texttt{Result<T, E>} i operator \texttt{?}. Automatyczne sprzątanie zasobów zapewniany jest przez cechę \texttt{Drop} - połączenia gniazd, alokacje pamięci oraz uchwyty wątków są automatycznie zwalniane.
+Rust wymusza jawną obsługę błędów przez typy \texttt{Result<T, E>} i operator \texttt{?}. Automatyczne sprzątanie zasobów zapewniany jest przez cechę \texttt{Drop} - połączenia gniazd, alokacje pamięci oraz uchwyty wątków są automatycznie zwalniane.
 
 C++ opiera się na wzorcu RAII z ręcznymi wywołaniami destruktorów. Sprzątanie gniazd wymaga explicite wywołań \texttt{close()}, a obsługa błędów realizowana jest przez rzucanie wyjątków lub sprawdzanie \texttt{errno}. Wycieki pamięci mogą wystąpić przy nieprawidłowym zarządzaniu cyklem życia objektów.
 
@@ -735,6 +735,6 @@ C++ ze standardową biblioteką oferuje:
     \item Ryzyko błędów w czasie wykonania wymagające ostrożnej synchronizacji
 \end{itemize}
 
-W praktyce wybór między językami zależy od priorytetów projektu: bezpieczeństwo vs kontrola, produktywność vs elastyczność, nowoczesność vs kompatybilność. Należy również uwzględnić kompetencje zespołu oraz wymagania środowiska docelowego.
+W praktyce wybór między językami zależy od priorytetów projektu: bezpieczeństwo a~kontrola, produktywność a elastyczność, nowoczesność a kompatybilność. Należy również uwzględnić kompetencje zespołu oraz wymagania środowiska docelowego.
 
 

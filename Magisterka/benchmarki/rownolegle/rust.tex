@@ -1,6 +1,6 @@
 \section{Implementacje w języku Rust}
 \subsection{Struktura i organizacja kodu}
-Implementacje w języku Rust charakteryzują się proceduralną strukturą podobną do implementacji C++, wykorzystującą globalne stałe i funkcje standalone. Wszystkie benchmarki (EP, CG, IS) następują jednolity wzorzec architektoniczny oparty na funkcji main():
+Implementacje w języku Rust charakteryzują się proceduralną strukturą podobną do implementacji C++, wykorzystującą globalne stałe i funkcje standalone. Wszystkie benchmarki (EP, CG, IS) następują jednolity wzorzec architektoniczny oparty na funkcji \texttt{main()}:
 
 \begin{lstlisting}[language=Rust, caption={Struktura kodu benchmarków w języku Rust}, label={lst:rust_structure}]
 pub struct NPBBenchmark {
@@ -37,16 +37,16 @@ fn verification_and_results() { /* ... */ }
 \end{lstlisting}
 Kluczowe cechy organizacji kodu Rust:
 \begin{itemize}
-    \item Proceduralna struktura: główna logika w funkcji main() podobnie jak w C++
-    \item Globalne stałe: parametry problemu definiowane jako const w czasie kompilacji
-    \item Standalone functions: logika algorytmu w oddzielnych funkcjach, nie metodach
-    \item Automatyczne zarządzanie pamięcią: Vec<T> zamiast malloc/free
-    \item Rayon integration: jednolite użycie biblioteki Rayon we wszystkich benchmarkach
+\item Struktura proceduralna - główna logika programu umieszczana jest w funkcji \texttt{main()}, analogicznie do języka C++.
+\item Globalne stałe - parametry problemu definiowane są jako stałe kompilacyjne (\texttt{const}).
+\item Funkcje niezależne - logika algorytmu implementowana jest w postaci oddzielnych funkcji, a nie metod związanych z obiektami.
+\item Automatyczne zarządzanie pamięcią - dynamiczne struktury danych (np. \texttt{Vec<T>}) zastępują ręczne zarządzanie pamięcią (np. \texttt{malloc}/\texttt{free}).
+\item Integracja z biblioteką Rayon - jednolite zastosowanie biblioteki Rayon we wszystkich benchmarkach w celu realizacji współbieżności.
 \end{itemize}
 
 
 \subsection{Zarządzanie pamięcią}
-Rust wykorzystuje system własności z automatycznym zarządzaniem pamięcią przez Vec<T>, eliminując ręczną alokację:
+Rust wykorzystuje system własności z automatycznym zarządzaniem pamięcią przez \texttt{Vec<T>}, eliminując ręczną alokację:
 \begin{lstlisting}[language=Rust, caption={Zarządzanie pamięcią w benchmarkach NPB w języku Rust}, label={lst:rust_memory_management}]
 impl NPBBenchmark {
 fn main() {
@@ -74,7 +74,7 @@ fn algorithm_core(data: &mut Vec<i32>, working: &mut Vec<f64>) {
 \end{lstlisting}
 Zalety modelu własności:
 \begin{itemize}
-    \item Automatyczna dealokacja: Vec<T> zwalnia pamięć automatycznie po wyjściu z zakresu
+    \item Automatyczna dealokacja: \texttt{Vec<T>} zwalnia pamięć automatycznie po wyjściu z zakresu
     \item Brak wycieków pamięci: gwarancja na poziomie kompilatora
     \item Abstrakcje bez narzutu kosztów: brak narzutu wydajnościowego
     \item Bezpieczeństwo wątków: mechanizm sprawdzania pożyczania eliminuje wyścigi danych

@@ -1,0 +1,84 @@
+\babel@toc {polish}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {polish}{}\relax 
+\addvspace {3pt}
+\addvspace {3pt}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Różnice między wykonywaniem zadań współbieżnie a równolegle \cite {bytebytegoEP108Design}}}{11}{figure.caption.2}%
+\addvspace {3pt}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Kroki kompilacji w języku Rust}}{21}{figure.caption.10}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Kroki kompilacji w języku C++}}{21}{figure.caption.10}%
+\addvspace {3pt}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Spektrum nieustraszonej współbieżności \cite {WhenIsParallelismFearlessandZeroCostwithRust?}}}{28}{figure.caption.17}%
+\addvspace {3pt}
+\addvspace {3pt}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Topologia procesora Apple M1 z widoczną architekturą big.LITTLE}}{58}{figure.caption.60}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Topologia procesora Intel Core Ultra 7 165H z widoczną architekturą heterogeniczną}}{59}{figure.caption.63}%
+\addvspace {3pt}
+\addvspace {3pt}
+\addvspace {3pt}
+\contentsline {figure}{\numberline {9.1}{\ignorespaces Porównanie czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{101}{figure.caption.86}%
+\contentsline {figure}{\numberline {9.2}{\ignorespaces Analiza zmienności czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{102}{figure.caption.87}%
+\contentsline {figure}{\numberline {9.3}{\ignorespaces Porównanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{103}{figure.caption.88}%
+\contentsline {figure}{\numberline {9.4}{\ignorespaces Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{104}{figure.caption.91}%
+\contentsline {figure}{\numberline {9.5}{\ignorespaces Analiza skalowania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{105}{figure.caption.92}%
+\contentsline {figure}{\numberline {9.6}{\ignorespaces Porównanie czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}}{106}{figure.caption.95}%
+\contentsline {figure}{\numberline {9.7}{\ignorespaces Analiza zmienności czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}}{107}{figure.caption.96}%
+\contentsline {figure}{\numberline {9.8}{\ignorespaces Porównanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{108}{figure.caption.97}%
+\contentsline {figure}{\numberline {9.9}{\ignorespaces Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{109}{figure.caption.98}%
+\contentsline {figure}{\numberline {9.10}{\ignorespaces Analiza skalowania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{110}{figure.caption.99}%
+\contentsline {figure}{\numberline {9.11}{\ignorespaces Profilowanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}}{111}{figure.caption.102}%
+\contentsline {figure}{\numberline {9.12}{\ignorespaces Analiza wydajności względem \texttt {old\_omp} (punkt odniesienia) z wartościami bezwzględnymi na platformie ARM64}}{113}{figure.caption.107}%
+\contentsline {figure}{\numberline {9.13}{\ignorespaces Kompromisy (ang.~\emph {trade-off}) pomiędzy zużyciem pamięci a błędami stron pamięci, z uwzględnieniem liczby odzyskanych stron jako trzeciej zmiennej reprezentowanej przez rozmiar bąbla na platformie ARM64}}{114}{figure.caption.112}%
+\contentsline {figure}{\numberline {9.14}{\ignorespaces Profilowanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}}{115}{figure.caption.113}%
+\contentsline {figure}{\numberline {9.15}{\ignorespaces Porównanie średniej wydajności benchmarku CG dla platform ARM64 i x86\_64}}{117}{figure.caption.120}%
+\contentsline {figure}{\numberline {9.16}{\ignorespaces Szczegółowa analiza wydajności benchmarku CG dla platform ARM64 i x86\_64}}{118}{figure.caption.123}%
+\contentsline {figure}{\numberline {9.17}{\ignorespaces Analiza istotności statystycznej benchmarku CG dla platform ARM64 i x86\_64}}{119}{figure.caption.126}%
+\contentsline {figure}{\numberline {9.18}{\ignorespaces Porównanie czasów wykonania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{120}{figure.caption.127}%
+\contentsline {figure}{\numberline {9.19}{\ignorespaces Analiza zmienności czasów wykonania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{121}{figure.caption.128}%
+\contentsline {figure}{\numberline {9.20}{\ignorespaces Porównanie wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{122}{figure.caption.131}%
+\contentsline {figure}{\numberline {9.21}{\ignorespaces Mapa ciepła wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{123}{figure.caption.132}%
+\contentsline {figure}{\numberline {9.22}{\ignorespaces Analiza skalowania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{124}{figure.caption.133}%
+\contentsline {figure}{\numberline {9.23}{\ignorespaces Porównanie czasów wykonania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{125}{figure.caption.134}%
+\contentsline {figure}{\numberline {9.24}{\ignorespaces Analiza zmienności czasów wykonania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{125}{figure.caption.135}%
+\contentsline {figure}{\numberline {9.25}{\ignorespaces Porównanie wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{126}{figure.caption.136}%
+\contentsline {figure}{\numberline {9.26}{\ignorespaces Mapa ciepła wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{127}{figure.caption.137}%
+\contentsline {figure}{\numberline {9.27}{\ignorespaces Analiza skalowania benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{128}{figure.caption.138}%
+\contentsline {figure}{\numberline {9.28}{\ignorespaces Profilowanie wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{129}{figure.caption.141}%
+\contentsline {figure}{\numberline {9.29}{\ignorespaces Analiza wydajności względem \texttt {old\_omp} (punkt odniesienia) z wartościami bezwzględnymi}}{130}{figure.caption.142}%
+\contentsline {figure}{\numberline {9.30}{\ignorespaces Kompromisy (ang.~\emph {trade-off}) pomiędzy zużyciem pamięci a błędami stron pamięci, z uwzględnieniem liczby odzyskanych stron jako trzeciej zmiennej reprezentowanej przez rozmiar bąbla}}{130}{figure.caption.143}%
+\contentsline {figure}{\numberline {9.31}{\ignorespaces Profilowanie wydajności benchmarku EP dla klas S, W, A, B względem liczby użytych wątków}}{131}{figure.caption.144}%
+\contentsline {figure}{\numberline {9.32}{\ignorespaces Znormalizowana mapa metryk pamięciowych}}{132}{figure.caption.145}%
+\contentsline {figure}{\numberline {9.33}{\ignorespaces Porównanie średniej wydajności benchmarku EP dla platform ARM64 i x86\_64}}{134}{figure.caption.151}%
+\contentsline {figure}{\numberline {9.34}{\ignorespaces Szczegółowa analiza wydajności benchmarku EP dla platform ARM64 i x86\_64}}{135}{figure.caption.155}%
+\contentsline {figure}{\numberline {9.35}{\ignorespaces Analiza istotności statystycznej benchmarku EP dla platform ARM64 i x86\_64}}{136}{figure.caption.156}%
+\contentsline {figure}{\numberline {9.36}{\ignorespaces Porównanie czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{137}{figure.caption.157}%
+\contentsline {figure}{\numberline {9.37}{\ignorespaces Analiza zmienności czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{138}{figure.caption.158}%
+\contentsline {figure}{\numberline {9.38}{\ignorespaces Porównanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{139}{figure.caption.161}%
+\contentsline {figure}{\numberline {9.39}{\ignorespaces Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{141}{figure.caption.162}%
+\contentsline {figure}{\numberline {9.40}{\ignorespaces Analiza skalowania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{142}{figure.caption.163}%
+\contentsline {figure}{\numberline {9.41}{\ignorespaces Porównanie czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{143}{figure.caption.164}%
+\contentsline {figure}{\numberline {9.42}{\ignorespaces Analiza zmienności czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{144}{figure.caption.165}%
+\contentsline {figure}{\numberline {9.43}{\ignorespaces Porównanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{145}{figure.caption.168}%
+\contentsline {figure}{\numberline {9.44}{\ignorespaces Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{146}{figure.caption.169}%
+\contentsline {figure}{\numberline {9.45}{\ignorespaces Analiza skalowania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{147}{figure.caption.170}%
+\contentsline {figure}{\numberline {9.46}{\ignorespaces Profilowanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{148}{figure.caption.171}%
+\contentsline {figure}{\numberline {9.47}{\ignorespaces Analiza wydajności względem \texttt {old\_omp} (punkt odniesienia) z wartościami bezwzględnymi}}{149}{figure.caption.173}%
+\contentsline {figure}{\numberline {9.48}{\ignorespaces Kompromisy (ang.~\emph {trade-off}) pomiędzy zużyciem pamięci a błędami stron pamięci, z uwzględnieniem liczby odzyskanych stron jako trzeciej zmiennej reprezentowanej przez rozmiar bąbla}}{150}{figure.caption.174}%
+\contentsline {figure}{\numberline {9.49}{\ignorespaces Profilowanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}}{151}{figure.caption.175}%
+\contentsline {figure}{\numberline {9.50}{\ignorespaces Znormalizowana mapa ciepła metryk wydajności}}{152}{figure.caption.176}%
+\contentsline {figure}{\numberline {9.51}{\ignorespaces Porównanie średniej wydajności benchmarku IS dla platform ARM64 i x86\_64}}{153}{figure.caption.177}%
+\contentsline {figure}{\numberline {9.52}{\ignorespaces Szczegółowa analiza wydajności benchmarku IS dla platform ARM64 i x86\_64}}{154}{figure.caption.180}%
+\contentsline {figure}{\numberline {9.53}{\ignorespaces Analiza istotności statystycznej benchmarku IS dla platform ARM64 i x86\_64}}{155}{figure.caption.181}%
+\addvspace {3pt}
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Analiza wyników benchmarku producent-klient}}{156}{figure.caption.182}%
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Analiza wyników benchmarku producent-klient}}{159}{figure.caption.189}%
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Porównanie wydajności komunikacji między architekturami ARM i x86}}{161}{figure.caption.197}%
+\contentsline {figure}{\numberline {10.4}{\ignorespaces Analiza skalowania względem liczby wątków}}{162}{figure.caption.200}%
+\contentsline {figure}{\numberline {10.5}{\ignorespaces Analiza zużycia pamięci}}{163}{figure.caption.203}%
+\contentsline {figure}{\numberline {10.6}{\ignorespaces Analiza statystyczna różnic między architekturami ARM i x86}}{164}{figure.caption.206}%
+\contentsline {figure}{\numberline {10.7}{\ignorespaces Analiza wyników benchmarku echo serwer}}{166}{figure.caption.211}%
+\contentsline {figure}{\numberline {10.8}{\ignorespaces Analiza wyników benchmarku echo serwer}}{169}{figure.caption.219}%
+\contentsline {figure}{\numberline {10.9}{\ignorespaces Porównanie wydajności sieciowej pomiędzy platformami ARM i x86\_64}}{171}{figure.caption.227}%
+\contentsline {figure}{\numberline {10.10}{\ignorespaces Analiza skalowania względem obciążenia sieciowego}}{173}{figure.caption.233}%
+\addvspace {3pt}
+\addvspace {3pt}
