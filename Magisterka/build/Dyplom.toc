@@ -116,7 +116,7 @@
 \contentsline {subsubsection}{Wsparcie wieloplatformowe}{55}{section*.55}%
 \contentsline {section}{\numberline {6.2}Programowanie równoległe}{55}{section.6.2}%
 \contentsline {subsection}{\numberline {6.2.1}Wydajność obliczeniowa}{55}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Wydajność sprzętowa (GFLOP/s)}{56}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.2}Wydajność sprzętowa (MFLOP/s)}{56}{subsection.6.2.2}%
 \contentsline {subsection}{\numberline {6.2.3}Zasoby systemowe}{56}{subsection.6.2.3}%
 \contentsline {subsection}{\numberline {6.2.4}Wybrane algorytmy do analizy}{56}{subsection.6.2.4}%
 \contentsline {subsubsection}{CG - Gradient sprzężony}{56}{section*.56}%
