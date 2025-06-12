@@ -22,7 +22,7 @@ Szczególnie istotną obserwacją był wpływ architektury na wzorce zarządzani
 
 Benchmark IS ujawnił najbardziej zróżnicowane charakterystyki wydajnościowe między implementacjami. Implementacja Rust wykazywała problemy ze skalowalnością, osiągając współczynnik przyspieszenia oscylujący wokół 1,0 niezależnie od liczby wątków. W przeciwieństwie do tego, Intel TBB demonstrował doskonałe skalowanie z~współczynnikiem przyspieszenia osiągającym 4,8x w~klasie W przy 6-8 wątkach.
 
-Architektura ARM ponownie wykazywała przewagę wydajnościową, osiągając średnio 2,26x wyższą wydajność niż x86\_64 dla implementacji TBB. Największe różnice były widoczne w~klasach A i B (4506 vs 3458 MFLOPS), co potwierdza efektywność architektury ARM w~zadaniach intensywnie wykorzystujących przepustowość pamięci.
+Architektura ARM ponownie wykazywała przewagę wydajnościową, osiągając średnio 2,26x wyższą wydajność niż x86\_64 dla implementacji TBB. Największe różnice były widoczne w~klasach A i B (4506 a 3458 MFLOPS), co potwierdza efektywność architektury ARM w~zadaniach intensywnie wykorzystujących przepustowość pamięci.
 
 \subsection{Analiza mechanizmów programowania współbieżnego}
 
@@ -88,7 +88,7 @@ Dla C++ zaleca się wykorzystanie kompilatora Clang zamiast GCC do kompilacji ko
 
 \subsection{Heterogeniczność środowisk testowych}
 
-Największym ograniczeniem przeprowadzonych badań była niemożność zapewnienia jednolitego środowiska testowego. Wykorzystanie różnych kompilatorów (Clang 14.0.3 na macOS a~GCC 11.4.0 na Linux), różnych systemów operacyjnych (macOS z jądrem Darwin vs Linux) oraz różnych implementacji bibliotek standardowych (\texttt{libc++} vs \texttt{libstdc++}) wprowadzało zmienne systemowe mogące wpływać na wyniki porównań.
+Największym ograniczeniem przeprowadzonych badań była niemożność zapewnienia jednolitego środowiska testowego. Wykorzystanie różnych kompilatorów (Clang 14.0.3 na macOS a~GCC 11.4.0 na Linux), różnych systemów operacyjnych (macOS z jądrem Darwin a Linux) oraz różnych implementacji bibliotek standardowych (\texttt{libc++} a \texttt{libstdc++}) wprowadzało zmienne systemowe mogące wpływać na wyniki porównań.
 
 \subsection{Ograniczenia narzędzi diagnostycznych}
 

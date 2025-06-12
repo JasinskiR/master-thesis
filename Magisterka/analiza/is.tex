@@ -118,7 +118,7 @@ Implementacje \texttt{tbb}, \texttt{old\_omp} i \texttt{new\_omp} prezentują zn
 \subsubsection{Stabilność MFLOPS}
 Pod względem zmienności MFLOPS najniższą medianę współczynnika zmienności (około 0,05) uzyskuje implementacja Rust, co oznacza, że pomimo dużych wahań czasów wykonania, osiągana wydajność obliczeniowa jest relatywnie stabilna.
 
-Z drugiej strony, najwyższą medianę zmienności MFLOPS (około 0,10) osiąga implementacja \texttt{new\_omp}, co wskazuje na znacznie większe wahania wydajności w czasie. Tbb i \texttt{old\_omp} plasują się w środku stawki, z wynikami na poziomie 0,06-0,07, przy czym \texttt{old\_omp} wykazuje więcej wartości odstających, co może świadczyć o większej podatności na lokalne anomalie wydajnościowe.
+Z drugiej strony, najwyższą medianę zmienności MFLOPS (około 0,10) osiąga implementacja \texttt{new\_omp}, co wskazuje na znacznie większe wahania wydajności w czasie. \texttt{tbb} i \texttt{old\_omp} plasują się w środku stawki, z wynikami na poziomie 0,06-0,07, przy czym \texttt{old\_omp} wykazuje więcej wartości odstających, co może świadczyć o większej podatności na lokalne anomalie wydajnościowe.
 
 
 \begin{figure}[H]
@@ -167,7 +167,7 @@ Wykresy w górnym rzędzie przedstawiają bezwzględne zużycie pamięci oraz li
     \item W zakresie błędów stron, \texttt{rust} jako jedyna implementacja nie generuje żadnych błędów stron (0 sztuk we wszystkich klasach), co potwierdza jej deterministyczne podejście do alokacji pamięci.
     \item Wersje \texttt{new\_omp} i \texttt{old\_omp} utrzymują stabilny poziom błędów (5 sztuk we wszystkich klasach), natomiast \texttt{tbb} wykazuje wyraźnie wyższy poziom błędów - od 7 do 10 sztuk.
 \end{itemize}
-W prawym dolnym wykresie zaprezentowano korelację między zużyciem pamięci a liczbą page reclaims. Wykres ujawnia wyraźną korelację dodatnią - implementacje i klasy, które zużywają więcej pamięci, zwalniają również więcej stron z pamięcią, co wynika z konieczności intensywniejszej obsługi zarządzania pamięcią operacyjną.
+W prawym dolnym wykresie zaprezentowano korelację między zużyciem pamięci a liczbą oddanych stron. Wykres ujawnia wyraźną korelację dodatnią - implementacje i klasy, które zużywają więcej pamięci, zwalniają również więcej stron z pamięcią, co wynika z konieczności intensywniejszej obsługi zarządzania pamięcią operacyjną.
 
 \begin{figure}[H]
     \centering
@@ -228,14 +228,14 @@ Znormalizowana mapa ciepła metryk wydajności - rysunek \ref{is_heatmap_wydajno
     \label{is_porownanie_wydajnosci_platformy}
 \end{figure}
 \subsubsection{Analiza średniej wydajności według implementacji}
-Górny lewy wykres drugiego zestawu - rysunek \ref{is_porownanie_wydajnosci_platformy} prezentuje średnią wydajność dla różnych implementacji algorytmów. We wszystkich badanych przypadkach (new\_cmp, old\_cmp, \texttt{rust}, \texttt{tbb}) architektura ARM macOS osiąga znacząco wyższe wartości MFLOPS niż architektura x86\_64 Linux. Szczególnie wyraźna przewaga ARM występuje w implementacjach old\_cmp (916 vs 484 MFLOPS) oraz \texttt{tbb} (906 vs 615 MFLOPS).
+Górny lewy wykres drugiego zestawu - rysunek \ref{is_porownanie_wydajnosci_platformy} prezentuje średnią wydajność dla różnych implementacji algorytmów. We wszystkich badanych przypadkach (new\_cmp, old\_cmp, \texttt{rust}, \texttt{tbb}) architektura ARM macOS osiąga znacząco wyższe wartości MFLOPS niż architektura x86\_64 Linux. Szczególnie wyraźna przewaga ARM występuje w implementacjach old\_cmp (916 a 484 MFLOPS) oraz \texttt{tbb} (906 a 615 MFLOPS).
 
 Współczynnik przyspieszenia widoczny w prawym górnym wykresie - \ref{is_porownanie_wydajnosci_platformy} potwierdza tę przewagę, wskazując że implementacja w języku Rust osiąga najwyższy współczynnik przyspieszenia (2,34x), a tuż za nią plasuje się implementacja \texttt{tbb} (2,26x). Wszystkie badane implementacje wykazują wartości współczynnika przyspieszenia powyżej 1,0, co potwierdza systematyczną przewagę wydajnościową platformy ARM.
 
 \subsubsection{Analiza wydajności według klasy problemu i skalowalności}
 Lewy dolny wykres drugiego zestawu - rysunek \ref{is_porownanie_wydajnosci_platformy} ilustruje, że przewaga wydajnościowa ARM macOS utrzymuje się konsekwentnie we wszystkich klasach problemów (A, B, C oraz W). Warto zauważyć, że różnica wydajnościowa jest proporcjonalna do złożoności problemu.
 
-Analiza skalowalności według liczby wątków (prawy dolny wykres) pokazuje, że obie platformy wykazują wzrost wydajności wraz ze zwiększaniem liczby wątków do około 4-5, po czym następuje stabilizacja lub lekki spadek. ARM macOS konsekwentnie utrzymuje wyższą bezwzględną wydajność, przy czym najwyższa wartość przypada na 4 wątki (913 MFLOPS dla ARM vs 518 MFLOPS dla x86\_64).
+Analiza skalowalności według liczby wątków (prawy dolny wykres) pokazuje, że obie platformy wykazują wzrost wydajności wraz ze zwiększaniem liczby wątków do około 4-5, po czym następuje stabilizacja lub lekki spadek. ARM macOS konsekwentnie utrzymuje wyższą bezwzględną wydajność, przy czym najwyższa wartość przypada na 4 wątki (913 MFLOPS dla ARM a 518 MFLOPS dla x86\_64).
 
 \begin{figure}[H]
     \centering
@@ -245,7 +245,7 @@ Analiza skalowalności według liczby wątków (prawy dolny wykres) pokazuje, ż
 \end{figure}
 Wykresy pudełkowe - rysunek \ref{is_szczegolowa_analiza_wydajnosci} potwierdzają, że mediana wydajności dla platformy ARM jest systematycznie wyższa niż dla x86\_64 we wszystkich implementacjach. Jednocześnie platforma ARM charakteryzuje się większym rozrzutem wyników, co sugeruje większą zmienność wydajności.
 
-Wykres korelacji wydajności ARM vs x86 z kodowaniem kolorystycznym różnych implementacji dodatkowo potwierdza, że większość punktów pomiarowych znajduje się powyżej linii równej wydajności, przy czym różne implementacje grupują się w odmiennych obszarach wydajnościowych.
+Wykres korelacji wydajności ARM a x86 z kodowaniem kolorystycznym różnych implementacji dodatkowo potwierdza, że większość punktów pomiarowych znajduje się powyżej linii równej wydajności, przy czym różne implementacje grupują się w odmiennych obszarach wydajnościowych.
 
 Analiza współczynnika przyspieszenia wskazuje, że implementacja Rust osiąga najwyższy medianowy współczynnik przyspieszenia (około 2,2x), natomiast implementacja \texttt{tbb} wykazuje największą zmienność, z niektórymi przypadkami osiągającymi wartości poniżej 1,0.
 

@@ -201,9 +201,9 @@ Drugi wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy górny róg) i
 
 Trzeci wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (lewy dolny róg) przedstawia odwołania do nieobecnych stronliczbę \eng{page fault} - czyli sytuacji, w których wymagany fragment pamięci nie znajduje się aktualnie w RAM-ie.
 \begin{itemize}
-    \item W klasie A \texttt{new\_omp} wykazuje najwyższą liczbę page faults (13), zaś \texttt{rust} nie generuje żadnych błędów.
+    \item W klasie A \texttt{new\_omp} wykazuje najwyższą liczbę błędnych stron (13), zaś \texttt{rust} nie generuje żadnych błędów.
     \item W klasie B najwięcej błędów generuje \texttt{tbb} (12), podczas gdy \texttt{rust} ponownie nie wykazuje żadnych.
-    \item W klasach S i W \texttt{rust} również nie generuje page faults, a inne wersje wykazują umiarkowane wartości (7-10).
+    \item W klasach S i W \texttt{rust} również nie generuje błędów stron, a inne wersje wykazują umiarkowane wartości (7-10).
     \item Wyniki te sugerują bardzo efektywną gospodarkę pamięciową w wersji \texttt{rust}.
 \end{itemize}
 

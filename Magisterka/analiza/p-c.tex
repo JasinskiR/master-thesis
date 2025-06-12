@@ -62,7 +62,7 @@ Ta dysproporcja, wyrażająca się współczynnikiem około 21:1 na korzyść C+
 \subsubsection{Skalowanie względem liczby wątków}
 Środkowy górny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} ilustruje zależność pomiędzy liczbą wykorzystywanych wątków a osiąganą przepustowością komunikacji. Różnice w charakterystyce skalowania między językami są uderzające. Implementacje w języku C++ (niebieskie linie) utrzymują stałą, wysoką wydajność na poziomie około $10^5$ wiadomości/s, praktycznie niezależnie od liczby wykorzystywanych wątków.
 
-W przeciwieństwie do tego, implementacje w języku Rust (czerwone linie) wykazują wyraźną zależność od liczby wątków. Rozpoczynając od wydajności rzędu $6\times10^3$ wiadomości/s przy jednym wątku, osiągają około $7\times10^4$ wiadomości/s przy ośmiu wątkach, co stanowi ponad dziesięciokrotną poprawę. Pomimo tego znaczącego wzrostu wydajności, nawet przy maksymalnej liczbie wątków implementacje Rust nie osiągają poziomu wydajności oferowanego przez C++.
+W przeciwieństwie do tego, implementacje w języku Rust (czerwone linie) wykazują wyraźną zależność od liczby wątków. Rozpoczynając od wydajności rzędu $6\times10^3$ wiadomości/s przy jednym wątku, osiągają około $7\times10^4$ wiadomości/s przy ośmiu wątkach, co stanowi ponad dziesięciokrotną poprawę. Pomimo to znaczącego wzrostu wydajności, nawet przy maksymalnej liczbie wątków implementacje Rust nie osiągają poziomu wydajności oferowanego przez C++.
 
 Taka charakterystyka może wskazywać na odmienne podejścia do optymalizacji w obu językach: C++ może być zoptymalizowany pod kątem maksymalnej przepustowości pojedynczego wątku, podczas gdy Rust może priorytetyzować efektywne wykorzystanie wielu rdzeni kosztem wydajności pojedynczego wątku.
 
