@@ -1,17 +1,15 @@
 \chapter{Podsumowanie}
-\label{chap:podsumowanie}
-W trakcie realizacji pracy udało się osiągnąć zrealizować wszystkie postawione cele, którym było stworzenie aplikacji umożliwiającej wizualizację zmian w populacji dla różnych wariantów algorytmu genetycznego. W ramach projektu udało się skutecznie zaimplementować interaktywne narzędzie, umożliwiające śledzenie dynamiki ewolucji populacji w czasie rzeczywistym.
-\\
-Wykonanie tego zadania nie obyło się jednak bez wyzwań implementacyjnych. Jednym z głównych problemów był wstępny brak używania konstruktora kopiującego, co wprowadziło nieścisłości podczas analizy wyników. Dodatkowo literatury, który reprezentowały selekcję rankingową znacząco się od siebie różniły, co wprowadzało pewne zamieszanie podczas interpretacji. Implementacja algorytmów genetycznych, różnych wariantów selekcji, krzyżowania i mutacji, wymagała skrupulatnego podejścia do detali oraz zoptymalizowania procesów obliczeniowych.
-\\
-Podczas pracy nad projektem jak i ich praktyczna implementacja pozwoliła na głębsze zrozumienie działania algorytmów genetycznych  oraz ich zastosowań w dziedzinie optymalizacji.
-\\
-Praca ta stanowiła również doskonałą okazję do rozwinięcia umiejętności programistycznych, szczególnie w obszarze tworzenia interfejsu graficznego i manipulacji danymi w czasie rzeczywistym.
-\\
-W kontekście dalszego rozwoju projektu sugeruje się rozważenie dodania nowych wariantów parametrów algorytmów genetycznych (selekcja, krzyżowanie, mutacja), tak aby użytkownik miał możliwość porównania ich efektywności.
-Jeżeli chodzi zaś o architekturę projektu, to można by wydzielić komponenty, aby umożliwić w przyszłości wymianę biblioteki odpowiedzialnej za interfejs użytkownika. Pozwoli to na implementację zaawansowanych funkcji wizualizacyjnych, które mogą ułatwić zrozumienie procesu ewolucji populacji
-\\
-Podsumowując, praca na projektem aplikacji pozwoliła na pogłębienie wiedzy z zakresu algorytmów ewolucyjnych oraz rozwinięcie umiejętności programistycznych w języku Java.\linebreak Praca ta stanowi dobrą podstawę do dalszych badań nad algorytmami genetycznymi i ich praktycznym zastosowaniem.
+W ramach niniejszej pracy magisterskiej zrealizowano porównawczą analizę mechanizmów programowania współbieżnego i równoległego w językach Rust i C++ na architekturach ARM64 (Apple Silicon M1) oraz x86\_64 (Intel). Zastosowana metodologia eksperymentalna, wykorzystująca zestawy testowe NAS Parallel Benchmarks oraz implementacje aplikacji współbieżnych, umożliwiła systematyczne porównanie wydajności bibliotek Rust Rayon, Intel TBB oraz OpenMP.
+
+Badania wykazały znaczącą przewagę architektury ARM64 nad x86\_64 we wszystkich scenariuszach testowych, ze współczynnikami przyspieszenia 1,55x-2,26x. Implementacja z~biblioteką Rayon osiągnęła najwyższą wydajność w obliczeniach trywialnie równoległych \mbox{(164 vs 109 MFLOPS)}, podczas gdy Intel TBB dominowała w zadaniach z intensywną komunikacją międzywątkową. Kluczowym odkryciem było wykazanie, że model bezpieczeństwa pamięci w Rust nie generuje istotnych narzutów wydajnościowych, a w niektórych przypadkach przyczynia się do lepszej efektywności. W aplikacjach sieciowych architektura ARM uzyskała przepustowość o rząd wielkości wyższą przy zmniejszonym zużyciu pamięci.
+
+Główne ograniczenia metodologiczne obejmowały heterogeniczność środowisk testowych (macOS vs Linux) oraz ograniczenia narzędzi diagnostycznych na platformie macOS, zwłaszcza w kontekście kontroli przypisań wątków do rdzeni. Dodatkowo, wybrane benchmarki NAS reprezentują problemy o regularnej strukturze obliczeniowej, co ogranicza generalizację wniosków do aplikacji o nieregularnych wzorcach dostępu do pamięci.
+
+Praca wypełnia istotną lukę badawczą, dostarczając kompleksowej analizy porównawczej mechanizmów programowania równoległego w kontekście nowoczesnych architektur sprzętowych. Wyniki potwierdzają porównywalną wydajność Rust względem C++, jednocześnie uwydatniając wpływ architektury na efektywność mechanizmów współbieżności.
+
+W kontekście dalszych badań sugeruje się ujednolicenie środowiska testowego poprzez wykorzystanie maszyn Apple z procesorami Intel i Apple Silicon, rozszerzenie zakresu na architektury heterogeniczne oraz eksplorację nowych paradygmatów programowania, w tym modelu aktorowego i mechanizmów C++20 \texttt{coroutines} w porównaniu z Rust \texttt{async/await}.
+
+Podsumowując, przeprowadzone badania pogłębiają wiedzę na temat charakterystyk wydajnościowych nowoczesnych języków programowania w obliczeniach równoległych oraz wskazują na rosnący potencjał architektury ARM64 w zastosowaniach wysokowydajnościowych. Praca stanowi solidną podstawę do dalszych badań nad optymalizacją mechanizmów współbieżności w systemach wymagających wysokiej wydajności i niezawodności.
 
 %\show\chapter
 %\show\section

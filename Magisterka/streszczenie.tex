@@ -1,30 +1,33 @@
 \pdfbookmark[0]{Streszczenie}{streszczenie.1}
 
-%\mbox{}\vspace{2cm} % mo¿na przesun¹æ, w zale¿noci od d³ugoci streszczenia
+%\mbox{}\vspace{2cm} % mo¿na przesun¹æ, w zale¿noci od d³ugoci streszczenia
 \begin{abstract}
-TEMPLATE
-Praca skupia się na projekcie i implementacji aplikacji wykorzystującej algorytmy genetyczne wraz z ich wizualizacją. Pierwsza część obejmuje teoretyczne podstawy tych algorytmów, porównując je do mechanizmów biologicznej genetyki. Omówiono schemat działania, historię oraz kluczowe elementy, takie jak osobnik, populacja, selekcja, krzyżowanie, mutacja i funkcja celu. Następnie przedstawiono założenia projektowe, obejmujące kodowanie osobnika, metody selekcji, operatory krzyżowania, opcje mutacji, funkcję celu, interfejs użytkownika, przykład użycia\linebreak i strukturę aplikacji. Zawierają one opis ich zasady działania.
+Praca skupia się na porównaniu mechanizmów programowania współbieżnego i równoległego w językach Rust i C++. Pierwsza część obejmuje teoretyczne podstawy oraz przegląd literatury, identyfikując luki badawcze w porównaniach tych języków na różnych architekturach sprzętowych.
 
-Implementacja aplikacji została opisana w kolejnym etapie, prezentując użyte technologie, wybrany język programowania wraz z interfejsem użytkownika i inne narzędzia. Szczegółowo omówiono implementację osobnika w kodowaniu binarnym, wybór wariantów operacji, metody selekcji, krzyżowania, mutacji, funkcji przystosowania oraz wygląd interfejsu użytkownika wraz z opisem.
+Kolejne rozdziały przedstawiają mechanizmy współbieżności, omawiając biblioteki Rust Rayon i Tokio oraz C++ OpenMP i Intel TBB. Metodologia badań obejmuje środowisko testowe na architekturach ARM64 (Apple Silicon M1) i x86\_64 (Intel) z różnymi kompilatorami i systemami operacyjnymi.
 
-Analiza wyników pracy obejmuje testy na danych testowych oraz porównanie różnych metod selekcji, krzyżowania i mutacji. Wnioski z porównań są przedstawione dla każdej badanej metody, dostarczając czytelnikowi kompleksowego spojrzenia na skuteczność poszczególnych elementów algorytmów genetycznych.
+Implementacja zawiera benchmarki NAS Parallel Benchmarks (CG, EP, IS) oraz aplikacje testowe (producent-konsument, echo-serwer) w obu językach. Analiza wyników obejmuje pomiary wydajności w MFLOPS, skalowanie względem liczby wątków oraz zużycie zasobów systemowych.
 
-Całość pracy zawiera podsumowanie, gdzie prezentowane są główne osiągnięcia oraz wnioski podczas pisania pracy. Praca dostarcza wartościowego spojrzenia na zastosowanie algorytmów genetycznych w projektowaniu aplikacji, a także oferuje praktyczne wskazówki dotyczące implementacji i optymalizacji tych algorytmów.
+Badania ujawniły systematyczną przewagę architektury ARM64 z współczynnikami przyspieszenia 1,55x-2,26x. Rust z Rayon osiągnął najwyższą wydajność w~obliczeniach równoległych, Intel TBB dominowała w zadaniach komunikacyjnych.
+
+Praca dostarcza pierwszego kompleksowego porównania tych języków na dwóch architekturach oraz praktycznych rekomendacji wyboru technologii.
 
 \end{abstract}
-
+\mykeywords{}
 
 {
 \selectlanguage{english}
 \begin{abstract}
-TEMPLATE
-The thesis focuses on the design and implementation of an application utilizing genetic algorithms along with their visualization. The first part covers the theoretical foundations of these algorithms, comparing them to the mechanisms of biological genetics. The operation scheme, history, and key elements such as individual, population, selection, crossover, mutation, and fitness function are discussed. The design assumptions are then presented, including individual encoding, selection methods, crossover operators, mutation options, the fitness function, user interface, usage example, and application structure. They contain a description of their principles of operation.
+The thesis focuses on comparing concurrent and parallel programming mechanisms in Rust and C++ languages. The first part covers theoretical foundations and literature review, identifying research gaps in comparisons across different hardware architectures.
 
-The application implementation is described in the next stage, presenting the technologies used, the chosen programming language along with the user interface, and other tools. The implementation of the individual in binary encoding, the selection of operation variants, selection methods, crossover, mutation, fitness function, and the appearance of the user interface are discussed in detail.
+Subsequent chapters present concurrency mechanisms, discussing Rust Rayon and Tokio libraries, and C++ OpenMP and Intel TBB. Research methodology encompasses testing environment on ARM64 (Apple Silicon M1) and x86\_64 (Intel) architectures with different compilers and operating systems.
 
-The results analysis includes tests on test data and a comparison of different selection, crossover, and mutation methods. Conclusions from the comparisons are presented for each investigated method, providing the reader with a comprehensive view of the effectiveness of individual elements of genetic algorithms.
+Implementation includes NAS Parallel Benchmarks (CG, EP, IS) and test applications (producer-consumer, echo-server) in both languages. Results analysis covers MFLOPS performance measurements, thread scaling, and system resource consumption.
 
-The entire thesis includes a conclusion where the main achievements and conclusions drawn during the writing process are presented. The paper provides \linebreak a valuable perspective on the application of genetic algorithms in application design and also offers practical guidance on the implementation and optimization of these algorithms.
+Research revealed systematic ARM64 superiority with speedup factors of~\mbox{1,55x-2,26x}. Rust with Rayon achieved highest performance in parallel computations, Intel TBB dominated communication-intensive tasks.
+
+The work provides the first comprehensive comparison of these languages across two architectures and practical technology selection recommendations.
+
 \end{abstract}
-
+\mykeywords{}
 }

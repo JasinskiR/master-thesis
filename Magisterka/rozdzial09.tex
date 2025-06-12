@@ -64,7 +64,7 @@ Klasa \texttt{std::jthread} została wprowadzona dopiero w standardzie C++20, kt
 
 \subsection{Dobór technologii w zależności od charakterystyki problemu}
 
-\subsubsection{Obliczenia typu \emph{embarrassingly parallel}}
+\subsubsection{Obliczenia typu trywialnie równoległego}
 
 Na podstawie wyników benchmarku EP, rekomenduje się Rust z biblioteką Rayon jako rozwiązanie główne ze względu na najwyższą osiągniętą wydajność (164 MFLOPS na ARM), bezpieczeństwo pamięci oraz abstrakcje bezkosztowe. Alternatywnie, dla istniejących baz kodu C++, zaleca się Intel TBB z uwagi na dobre skalowanie i dojrzałość rozwiązania.
 

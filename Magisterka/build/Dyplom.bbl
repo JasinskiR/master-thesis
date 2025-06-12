@@ -79,6 +79,12 @@ J.~Abdi, G.~Posluns, G.~Zhang, B.~Wang, M.~C. Jeffrey.
 \newblock When is parallelism fearless and zero-cost with rust?
 \newblock {\em Proceedings of the 36th ACM Symposium on Parallelism in Algorithms and Architectures}, SPAA '24, strony 27--40, New York, NY, USA, 2024. Association for Computing Machinery.
 
+\bibitem{Adefemi2025Parallelization}
+T.~Adefemi.
+\newblock What every computer scientist needs to know about parallelization.
+\newblock {\em arXiv preprint arXiv:2504.03647}, Luty 2025.
+\newblock preprint.
+
 \bibitem{LanguageComparison_1}
 S.~Ali,  S.~Qayyum.
 \newblock A pragmatic comparison of four different programming languages.
@@ -184,6 +190,12 @@ Y.~Gusakov.
 \newblock {C}++ {V}s. {R}ust: 6 {K}ey {D}ifferences — {Q}{I}{T} --- qit.software.
 \newblock \url{https://qit.software/c-vs-rust-6-key-differences/}.
 \newblock [Dostęp 28-01-2025].
+
+\bibitem{Hazarika2025RustVsCpp}
+P.~Hazarika,  R.~Budania.
+\newblock Rust vs c++: Performance, safety, and use cases compared.
+\newblock \url{https://www.codeporting.com/blog/rust_vs_cpp_performance_safety_and_use_cases_compared}, 2025.
+\newblock Accessed: 2025-06-12.
 
 \bibitem{heyman2020comparison}
 H.~Heyman,  L.~Brandefelt.
@@ -291,6 +303,23 @@ M.~P. Rooney,  S.~J. Matthews.
 \newblock Evaluating fft performance of the c and rust languages on raspberry pi platforms.
 \newblock {\em 2023 57th Annual Conference on Information Sciences and Systems (CISS)}, strony 1--6, 2023.
 
+\bibitem{Saligrama2019RustConcurrency}
+A.~Saligrama, A.~Shen, J.~Gjengset.
+\newblock A practical analysis of rust's concurrency story.
+\newblock {\em arXiv preprint arXiv:1904.12210}, Kwi. 2019.
+\newblock [Dostęp: 2025-06-12].
+
+\bibitem{Sesay2024Parallelism}
+I.~M. Sesay.
+\newblock The critical role of parallelism and multicore processors in advancing high-level programming practices.
+\newblock {\em Global Science Journal}, Wrze. 2024.
+\newblock Accessed via ResearchGate.
+
+\bibitem{10876950}
+M.~Shehryar,  F.~H. Khan.
+\newblock State-of-the-art multi-core architectures: Analyzing current research, identifying gaps, and exploring future directions.
+\newblock {\em 2024 21st International Bhurban Conference on Applied Sciences and Technology (IBCAST)}, strony 163--168, 2024.
+
 \bibitem{SecurityInRust}
 J.~Sible,  D.~Svoboda.
 \newblock Rust software security: A current state assessment.
@@ -316,6 +345,12 @@ B.~Troutwine.
 \bibitem{ARMTBB}
 A.~Tuby,  A.~Morrison.
 \newblock Reverse engineering the apple m1 conditional branch predictor for out-of-place spectre mistraining, 2025.
+
+\bibitem{DoD2023MemorySafe}
+{U.S. Department of Defense Chief Information Officer}.
+\newblock The case for memory-safe roadmaps.
+\newblock \url{https://media.defense.gov/2023/Dec/06/2003352724/-1/-1/0/THE-CASE-FOR-MEMORY-SAFE-ROADMAPS-TLP-CLEAR.PDF}, December 2023.
+\newblock Dostęp: 2025-06-12.
 
 \bibitem{ZamiennikWEmbedded}
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
