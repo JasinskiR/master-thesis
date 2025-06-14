@@ -155,7 +155,7 @@ System własności w języku Rust eliminuje całe klasy błędów pamięciowych 
 
 Porównując mechanizmy współbieżności w językach Rust i C++, można zauważyć fundamentalne różnice w filozofii projektowej i gwarancjach bezpieczeństwa. Rust przyjmuje podejście "bezpieczeństwo przede wszystkim", podczas gdy C++ oferuje większą elastyczność, ale wymaga większej dyscypliny od programisty.
 
-\subsubsection{Rust - kanały typowane}
+\subsubsection{Rust - kanały typizowane}
 Implementacja Rust wykorzystuje kanały z różnymi semantykami komunikacji (\texttt{broadcast}):
 \begin{lstlisting}[language=Rust, caption={Producent-Konsument w Rust z mpsc channels}, label={lst:rust_producer_consumer}]
 // Rust: producent-konsument z kanałami mpsc
@@ -288,104 +288,81 @@ public:
 \subsubsection{C++ - wersja asynchroniczna z epoll/kqueue}
 C++ oferuje także asynchroniczną implementację używającą \texttt{epoll} (Linux) lub \texttt{kqueue} \mbox{(macOS)}:
 \begin{lstlisting}[language=C++, style=VS2017,  caption={Async Echo Serwer w C++ z event loop}, label={lst:cpp_async_echo_server}]
+// C++: Async Event-Driven Echo Server (epoll/kqueue)
 class AsyncEchoServer {
     int server_socket;
     std::atomic<bool> running{true};
     std::vector<int> active_clients;
     
 #ifdef __APPLE__
-    int kqueue_fd;  // macOS: kqueue for event multiplexing
-#else
-    int epoll_fd;   // Linux: epoll for event multiplexing  
+    int event_fd;  // kqueue descriptor
+#else  
+    int event_fd;  // epoll descriptor
 #endif
 
 public:
     AsyncEchoServer(const std::string& addr, int port) {
+        // Setup non-blocking server socket
         server_socket = socket(AF_INET, SOCK_STREAM, 0);
-        fcntl(server_socket, F_SETFL, O_NONBLOCK); // Non-blocking socket
+        fcntl(server_socket, F_SETFL, O_NONBLOCK);
         
         sockaddr_in server_addr{AF_INET, htons(port), {INADDR_ANY}};
         bind(server_socket, (sockaddr*)&server_addr, sizeof(server_addr));
         listen(server_socket, SOMAXCONN);
         
-#ifdef __APPLE__
-        kqueue_fd = kqueue();
-        struct kevent ev;
-        EV_SET(&ev, server_socket, EVFILT_READ, EV_ADD, 0, 0, nullptr);
-        kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-#else
-        epoll_fd = epoll_create1(0);
-        struct epoll_event ev{EPOLLIN, {.fd = server_socket}};
-        epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_socket, &ev);
-#endif
+        // Platform-specific event system initialization
+        init_event_system();
     }
     
     void run_async() {
         while (running.load()) {
-#ifdef __APPLE__
-            struct kevent events[64];
-            int nev = kevent(kqueue_fd, nullptr, 0, events, 64, nullptr);
+            auto events = wait_for_events();  // Platform abstraction
             
-            for (int i = 0; i < nev; ++i) {
-                if ((int)events[i].ident == server_socket) {
+            for (auto& event : events) {
+                if (event.fd == server_socket) {
                     handle_new_connection();
                 } else {
-                    handle_client_data((int)events[i].ident);
+                    handle_client_data(event.fd);
                 }
             }
-#else
-            struct epoll_event events[64];
-            int nfds = epoll_wait(epoll_fd, events, 64, -1);
-            
-            for (int i = 0; i < nfds; ++i) {
-                if (events[i].data.fd == server_socket) {
-                    handle_new_connection();
-                } else {
-                    handle_client_data(events[i].data.fd);
-                }
-            }
-#endif
         }
     }
     
 private:
+    void init_event_system() {
+#ifdef __APPLE__
+        event_fd = kqueue();
+        struct kevent ev;
+        EV_SET(&ev, server_socket, EVFILT_READ, EV_ADD, 0, 0, nullptr);
+        kevent(event_fd, &ev, 1, nullptr, 0, nullptr);
+#else
+        event_fd = epoll_create1(0);
+        struct epoll_event ev{EPOLLIN, {.fd = server_socket}};
+        epoll_ctl(event_fd, EPOLL_CTL_ADD, server_socket, &ev);
+#endif
+    }
+    
     void handle_new_connection() {
         int client = accept(server_socket, nullptr, nullptr);
         fcntl(client, F_SETFL, O_NONBLOCK);
         active_clients.push_back(client);
-        
-        // Add client to event system
-#ifdef __APPLE__
-        struct kevent ev;
-        EV_SET(&ev, client, EVFILT_READ, EV_ADD, 0, 0, nullptr);
-        kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-#else
-        struct epoll_event ev{EPOLLIN, {.fd = client}};
-        epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client, &ev);
-#endif
+        add_to_event_system(client);
     }
     
     void handle_client_data(int client_socket) {
         char buffer[1024];
         int n = recv(client_socket, buffer, sizeof(buffer), 0);
+        
         if (n > 0) {
-            send(client_socket, buffer, n, 0); // Echo back
+            send(client_socket, buffer, n, 0);  // Echo back
         } else {
-            // Client disconnected - remove from event system
-#ifdef __APPLE__
-            struct kevent ev;
-            EV_SET(&ev, client_socket, EVFILT_READ, EV_DELETE, 0, 0, nullptr);
-            kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-#else
-            epoll_ctl(epoll_fd, EPOLL_CTL_DEL, client_socket, nullptr);
-#endif
-            close(client_socket);
-            active_clients.erase(
-                std::remove(active_clients.begin(), active_clients.end(), client_socket),
-                active_clients.end()
-            );
+            disconnect_client(client_socket);
         }
     }
+    
+    void add_to_event_system(int fd) { /* platform-specific add */ }
+    void disconnect_client(int fd) { /* cleanup + remove from events */ }
+    auto wait_for_events() { /* platform-specific event waiting */ }
 };
 \end{lstlisting}
 
