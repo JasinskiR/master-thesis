@@ -133,7 +133,7 @@ W całej analizie dominuje implementacja \texttt{tbb}, która osiąga najwyższe
 
 Klasy problemowe różnią się nie tylko poziomem bezwzględnej wydajności, lecz także charakterem skalowania. Klasy A i B zachowują się podobnie - osiągają wysoką wydajność i~wykazują regularne skalowanie. Klasa S prezentuje niższe wartości i bardziej nieregularny przebieg, natomiast klasa W cechuje się najwyższymi szczytowymi wynikami, ale też największym zróżnicowaniem pomiędzy implementacjami.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
@@ -153,7 +153,7 @@ Wszystkie analizowane implementacje na wykresie - rysunek \ref{is_analiza_skalow
 
 \subsection{Wyniki profilowania wydajności - platforma ARM64}
 Aby lepiej zrozumieć charakterystyki pamięciowe testowanych implementacji benchmarku IS, przeprowadzono analizę zużycia pamięci, błędów stron pamięci oraz mechanizmu ich odzyskiwania. Wnioski wyciągnięto na podstawie trzech grup wykresów: bezwzględnych wartości \mbox{(rys. \ref{is_porownanie_zuzycia_pamieci})}, porównania względnego względem \texttt{old\_omp} (rys. \ref{is_analiza_wzgledem_old_omp}) oraz kompromisów między metrykami \mbox{(rys. \ref{is_kompromisy_pamiec_bledy})}.
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/chart_01_memory_comparison.png}
     \caption{Profilowanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
@@ -169,7 +169,7 @@ Wykresy w górnym rzędzie przedstawiają bezwzględne zużycie pamięci oraz li
 \end{itemize}
 W prawym dolnym wykresie zaprezentowano korelację między zużyciem pamięci a liczbą oddanych stron. Wykres ujawnia wyraźną korelację dodatnią - implementacje i klasy, które zużywają więcej pamięci, zwalniają również więcej stron z pamięcią, co wynika z konieczności intensywniejszej obsługi zarządzania pamięcią operacyjną.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/chart_05_performance_ratios.png}
     \caption{Analiza wydajności względem \texttt{old\_omp} (punkt odniesienia) z wartościami bezwzględnymi}
@@ -237,7 +237,7 @@ Lewy dolny wykres drugiego zestawu - rysunek \ref{is_porownanie_wydajnosci_platf
 
 Analiza skalowalności według liczby wątków (prawy dolny wykres) pokazuje, że obie platformy wykazują wzrost wydajności wraz ze zwiększaniem liczby wątków do około 4-5, po czym następuje stabilizacja lub lekki spadek. ARM macOS konsekwentnie utrzymuje wyższą bezwzględną wydajność, przy czym najwyższa wartość przypada na 4 wątki (913 MFLOPS dla ARM a 518 MFLOPS dla x86\_64).
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/compare/is_szczegolowa_analiza_wydajnosci.png}
     \caption{Szczegółowa analiza wydajności benchmarku IS dla platform ARM64 i x86\_64}
