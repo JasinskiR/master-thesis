@@ -1,44 +1,19 @@
 \section{Implementacje w C++ (nowoczesne podejście)}
 \subsection{Struktura i organizacja kodu}
 Nowoczesne implementacje C++ wykorzystują obiektowy design z RAII i enkapsulacją:
-\begin{lstlisting}[language=C++, caption={Implementacja nowoczesnego C++ - struktura kodu}, label={lst:modern-cpp-structure}]
-namespace npb {
-
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Implementacja nowoczesnego C++ - struktura kodu}, label={lst:modern-cpp-structure}]
+// New C++: RAII + enkapsulacja
 class NPBBenchmark {
-public:
-    explicit NPBBenchmark(char class_type, int num_threads = 1);
-    virtual ~NPBBenchmark() = default;
+    std::vector<double> data_;        // Automatic memory management
+    std::vector<int> indices_;        // vs malloc/free
+    BenchmarkResults results_;
     
+public:
     virtual void run() = 0;
     virtual bool verify() const = 0;
-    virtual double get_mops() const = 0;
-
-protected:
-    // Enkapsulowane dane z automatycznym zarządzaniem
-    struct ProblemParameters {
-        int64_t size;
-        char class_type;
-        int iterations;
-    } params_;
     
-    // RAII dla wszystkich zasobów
-    std::vector<double> primary_data_;
-    std::vector<double> secondary_data_;
-    
-    // Wyniki i stan
-    BenchmarkResults results_;
-    bool verified_ = false;
-    bool timers_enabled_ = false;
-    int num_threads_;
-    
-private:
-    virtual void init() = 0;
-    virtual void compute() = 0;
-    virtual bool verify_results() = 0;
-};
-
-class EPBenchmark : public NPBBenchmark {
-    // Konkretna implementacja
+    // RAII ensures automatic cleanup
+    ~NPBBenchmark() = default;
 };
 
 }
@@ -55,78 +30,35 @@ class EPBenchmark : public NPBBenchmark {
 
   
 \subsection{Zarządzanie pamięcią}
-\begin{lstlisting}[language=C++, caption={Implementacja nowoczesnego C++ - zarządzanie pamięcią}, label={lst:modern-cpp-memory}]
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Implementacja nowoczesnego C++ - zarządzanie pamięcią}, label={lst:modern-cpp-memory}]
+// Modern C++: RAII + smart pointers vs manual memory
 class NPBBenchmark {
-private:
-    // std::vector automatycznie zarządza pamięcią
-    std::vector<double> data_;
-    std::vector<int64_t> indices_;
-    std::unique_ptr<WorkingMemory> working_memory_;
+    std::vector<double> data_;                    
+    std::unique_ptr<WorkingMemory> working_mem_;  
     
 public:
-    explicit NPBBenchmark(const ProblemParameters& params) 
-        : params_(params),
-          data_(params.size),
-          indices_(params.index_size),
-          working_memory_(std::make_unique<WorkingMemory>(params)) {
-        // Automatyczna inicjalizacja z exception safety
-        init_data_structures();
-    }
+    NPBBenchmark(size_t size) : data_(size) {}   
     
-    void worker_task(int tid, int num_workers) {
-        // Automatyczne zarządzanie lokalnych zasobów
-        std::vector<double> local_working_array(params_.local_size);
-        std::vector<double> local_results(params_.result_size, 0.0);
-        
-        // RAII gwarantuje cleanup nawet przy wyjątkach
-        process_local_data(local_working_array, local_results);
-        
-        // Thread-safe aggregation
-        aggregate_results(local_results);
-    }
-    
-    // Destruktor automatycznie zwalnia wszystkie zasoby
-    ~NPBBenchmark() = default;
+    void worker_task() {
+        std::vector<double> local_data(size_);
+        /* computation... */
+    }  // Automatic cleanup on scope exit
 };
 \end{lstlisting}
 
 \subsection{Mechanizmy równoległości}
-\begin{lstlisting}[language=C++, caption={Implementacja nowoczesnego C++ - równoległość}, label={lst:modern-cpp-parallelism}]
-class NPBBenchmark {
-    protected:
-        void parallel_computation() {
-            // Modern C++ threading z RAII
-            std::vector<std::thread> threads;
-            threads.reserve(num_threads_);
-            
-            // Exception-safe thread management
-            try {
-                for (int i = 0; i < num_threads_; i++) {
-                    threads.emplace_back([this, i]() {
-                        this->worker_task(i, num_threads_);
-                    });
-                }
-                
-                // RAII ensures proper cleanup
-                for (auto& thread : threads) {
-                    thread.join();
-                }
-            } catch (...) {
-                // Exception safety - cleanup threads
-                for (auto& thread : threads) {
-                    if (thread.joinable()) {
-                        thread.join();
-                    }
-                }
-                throw;
-            }
-        }
-        
-        void thread_safe_aggregation(const LocalResults& local) {
-            // Modern synchronization primitives
-            std::lock_guard<std::mutex> lock(results_mutex_);
-            results_.aggregate(local);
-        }
-    };
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Implementacja nowoczesnego C++ - równoległość}, label={lst:modern-cpp-parallelism}]
+// Nowy C++: std::thread + RAII
+void parallel_computation() {
+    std::vector<std::thread> threads;
+    
+    // Exception-safe thread creation
+    for (int i = 0; i < num_threads_; ++i) {
+        threads.emplace_back([this, i]() { worker_task(i); });
+    }
+    
+    // RAII ensures proper cleanup
+    for (auto& t : threads) { t.join(); }
+}
 \end{lstlisting}
 

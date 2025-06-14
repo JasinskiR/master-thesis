@@ -176,7 +176,7 @@ captionpos=t
     xleftmargin=4pt,
     xrightmargin=4pt,
     backgroundcolor=\color{BackgroundRust},
-    basicstyle=\ttfamily\color{BlackText},
+    basicstyle=\footnotesize\ttfamily\color{BlackText},
     keywords={
         true,false,
         unsafe,async,await,move,
@@ -211,7 +211,7 @@ captionpos=t
     breaklines=true,
     postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{GrayCodeBlock}\hookrightarrow\space}},
     breakatwhitespace=true,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\footnotesize,
     upquote=true,
     morestring=[b]",
     stringstyle=\color{string},
@@ -261,7 +261,8 @@ captionpos=t
 	% use the user types color
 	keywordstyle=\color{clr-type},
 	keywordstyle={[2]\color{clr-constant}}, % you'll need to define these or use a custom language
-	tabsize=4
+	tabsize=4,
+	basicstyle=\ttfamily\footnotesize,
 }
 % styl json
 \newcommand\JSONnumbervaluestyle{\color{blue}}

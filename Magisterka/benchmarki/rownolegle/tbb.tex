@@ -1,35 +1,21 @@
 \section{Implementacje w C++ (TBB)}
 \subsection{Struktura i organizacja kodu}
 Implementacje TBB zachowują proceduralną strukturę z minimalnymi modyfikacjami względem wersji OpenMP:
-\begin{lstlisting}[language=C++, caption={Implementacja TBB - struktura kodu}, label={lst:TBB-structure}]
-#include "TBB/parallel_for.h"
-#include "TBB/parallel_reduce.h"
-#include "TBB/blocked_range.h"
-#include "TBB/task_scheduler_init.h"
-#include "TBB/mutex.h"
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Implementacja TBB - struktura kodu}, label={lst:TBB-structure}]
+// TBB: funkcyjny interfejs + globalne zmienne
+#include <TBB/parallel_reduce.h>
+#include <TBB/task_scheduler_init.h>
 
-// Identyczne globalne zmienne jak w wersji OpenMP
-#if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
-static DataType primary_array[MAX_SIZE];
-static DataType secondary_array[MAX_SIZE];
-#else
-static DataType (*primary_array)=(DataType*)malloc(sizeof(DataType)*(MAX_SIZE));
-static DataType (*secondary_array)=(DataType*)malloc(sizeof(DataType)*(MAX_SIZE));
-#endif
+static double (*data) = (double*)malloc(sizeof(double) * SIZE);
 
-int main(int argc, char **argv){
-    // Inicjalizacja TBB scheduler
-    int num_workers;
-    if(const char * nw = std::getenv("TBB_NUM_THREADS")) {
-        num_workers = atoi(nw);
-    } else {
-        num_workers = 1;
-    }
+int main() {
+    // TBB: explicit scheduler initialization  
+    TBB::task_scheduler_init init(TBB::task_scheduler_init::automatic);
     
-    TBB::task_scheduler_init init(num_workers);
+    parallel_algorithm();
     
-    // Reszta kodu identyczna jak w wersji klasycznej
-    algorithm_implementation();
+    free(data); // Ręczne zarządzanie pamięcią
+}
 }
 \end{lstlisting}
 \begin{itemize}
@@ -47,31 +33,31 @@ TBB nie wprowadza ulepszeń w zarządzaniu pamięcią - wykorzystuje identyczny 
 
 \subsection{Mechanizmy równoległości}
 TBB zastępuje dyrektywy OpenMP funkcyjnym API z work-stealing scheduler:
-\begin{lstlisting}[language=C++, caption={Implementacja TBB - równoległość}, label={lst:TBB-parallelism}]
-// Zastąpienie OpenMP reduction przez TBB parallel_reduce
-static void parallel_computation(/* parametry */) {
-// Parallel reduction z lambda expressions
-double result = TBB::parallel_reduce(
-    TBB::blocked_range<size_t>(0, problem_size), 
-    0.0, 
-    [&](const TBB::blocked_range<size_t>& r, double worker_sum){
-        for (size_t i = r.begin(); i != r.end(); i++) {
-            worker_sum += compute_element(i);
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Implementacja TBB - równoległość}, label={lst:TBB-parallelism}]
+/// TBB: funkcyjny interfejs + work-stealing scheduler
+void parallel_algorithm() {
+    // TBB: parallel reduction with lambda
+    double sum = TBB::parallel_reduce(
+        TBB::blocked_range<size_t>(0, SIZE),
+        0.0,
+        [&](const TBB::blocked_range<size_t>& r, double local_sum) {
+            for (size_t i = r.begin(); i != r.end(); ++i) {
+                local_sum += compute_element(i);
+            }
+            return local_sum;
+        },
+        std::plus<double>()
+    );
+    
+    // TBB: parallel for with automatic load balancing
+    TBB::parallel_for(
+        TBB::blocked_range<size_t>(0, SIZE),
+        [&](const TBB::blocked_range<size_t>& r) {
+            for (size_t i = r.begin(); i != r.end(); ++i) {
+                process_element(i);
+            }
         }
-        return worker_sum;
-    }, 
-    std::plus<double>()
-);
-
-// Parallel for z blocked ranges
-TBB::parallel_for(
-    TBB::blocked_range<size_t>(0, iterations), 
-    [&](const TBB::blocked_range<size_t>& r){
-        for (size_t i = r.begin(); i != r.end(); i++) {
-            process_iteration(i);
-        }
-    }
-);
+    );
 }
 \end{lstlisting}
 \begin{itemize}
