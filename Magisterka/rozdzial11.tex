@@ -1,0 +1,190 @@
+\chapter{Wnioski i rekomendacje}
+
+\section{Omówienie wyników badań}
+Przeprowadzone w ramach niniejszej pracy badania porównawcze mechanizmów programowania współbieżnego i równoległego w językach Rust i C++ na architekturach ARM64 i x86\_64 pozwoliły na sformułowanie obserwacji dotyczących wydajności, skalowania oraz charakterystyki wykorzystania zasobów systemowych. Analiza obejmowała benchmarki {NAS} {Parallel} {Benchmarks} (CG, EP, IS) dla programowania równoległego oraz implementacje wzorców producent-konsument i echo-serwer dla programowania współbieżnego.
+
+\subsection{Wydajność implementacji równoległych}
+
+\subsubsection{Benchmark EP (trywialnie równoległy)}
+
+Analiza benchmarku EP, reprezentującego klasę problemów o wysokim stopniu równoległości bez zależności międzyzadaniowych, ujawniła systematyczną przewagę architektury ARM64 nad x86\_64. Implementacja Rust z biblioteką Rayon osiągnęła najwyższe wartości wydajności na platformie ARM (164 MFLOPS średnio), przewyższając zarówno Intel TBB (148 MFLOPS), jak i implementacje OpenMP. Na architekturze x86\_64 wyniki dla Rust wynosiły 109 MFLOPS, co oznacza współczynnik przyspieszenia ARM/x86 na poziomie 1,55x - najwyższy spośród wszystkich badanych implementacji.
+
+Analiza skalowania wykazała niemal liniowy wzrost wydajności do poziomu 5-6 wątków na obu architekturach, po czym następowało spłaszczenie charakterystyki ze względu na rosnące narzuty synchronizacji. Efektywność równoległości dla 8 wątków wynosiła około 68\% dla ARM i 78\% dla x86\_64, co wskazuje na większą wrażliwość architektury ARM na koszty wielowątkowości przy wyższej liczbie wątków roboczych.
+
+\subsubsection{Benchmark CG (gradient sprzężony)}
+
+W przypadku benchmarku CG, charakteryzującego się intensywną komunikacją między wątkami i nieregularnymi wzorcami dostępu do pamięci, implementacja Intel TBB konsekwentnie osiągała najwyższą wydajność na obu platformach (5761 MFLOPS na ARM, 4757 MFLOPS na x86\_64). Implementacja Rust również wykazywała lepszą wydajność na platformie ARM z~współczynnikiem przyspieszenia ARM/x86 wynoszącym 1,62x.
+
+Szczególnie istotną obserwacją był wpływ architektury na wzorce zarządzania pamięcią. Analiza operacji zwolnień stron pamięci wykazała, że implementacja \texttt{new\_omp} generowała najwyższe liczby takich operacji (ponad 64 tys. dla klasy B), podczas gdy Rust charakteryzował się stosunkowo niskim poziomem zwolnień we wszystkich klasach problemowych, co wskazuje na bardziej efektywne wykorzystanie pamięci przez alokator środowiska Rust.
+
+\subsubsection{Benchmark IS (sortowanie liczb całkowitych)}
+
+Benchmark IS ujawnił najbardziej zróżnicowane charakterystyki wydajnościowe między implementacjami. Implementacja Rust wykazywała problemy ze skalowalnością, osiągając współczynnik przyspieszenia oscylujący wokół 1,0 niezależnie od liczby wątków. W przeciwieństwie do tego, Intel TBB demonstrował doskonałe skalowanie z~współczynnikiem przyspieszenia osiągającym 4,8x w~klasie W przy 6-8 wątkach.
+
+Architektura ARM ponownie wykazywała przewagę wydajnościową, osiągając średnio 2,26x wyższą wydajność niż x86\_64 dla implementacji TBB. Największe różnice były widoczne w~klasach A i B (4506 a 3458 MFLOPS), co potwierdza efektywność architektury ARM w~zadaniach intensywnie wykorzystujących przepustowość pamięci.
+
+\subsection{Analiza mechanizmów programowania współbieżnego}
+
+\subsubsection{Wzorzec producent-konsument}
+
+Badanie implementacji wzorca producent-konsument ujawniło znaczące różnice w przepustowości komunikacji międzywątkowej między architekturami. Implementacje Rust z biblioteką Tokio osiągały przepustowość rzędu $10^4$--$10^5$ wiadomości/s na architekturze ARM, podczas gdy implementacje C++ z wykorzystaniem tradycyjnych wątków osiągały jedynie $10^1$--$10^2$ wiadomości/s na x86\_64. Różnica ta wynosi 1-2 rzędy wielkości na korzyść architektury ARM.
+
+Pod względem wykorzystania zasobów, implementacje Rust charakteryzowały się znacznie niższym zużyciem pamięci (około 3 MB) w porównaniu z implementacją C++ (około 10 MB). Wykorzystanie CPU było bardziej zróżnicowane na ARM (0-100\%) niż na x86\_64 (0-30\%), co~wskazuje na bardziej dynamiczne zarządzanie zasobami na platformie macOS.
+
+\subsubsection{Implementacja echo-serwera}
+
+W testach echo-serwera architektura ARM osiągnęła średnią przepustowość sieciową na poziomie 100 Mbps z wartościami szczytowymi do 600 Mbps, podczas gdy x86\_64 utrzymywał średnią przepustowość na poziomie 20-30 Mbps. Implementacje C++ na ARM osiągały medianę przepustowości 170 Mbps w porównaniu do 100 Mbps dla Rust, co wskazuje na potencjał optymalizacji wydajności w C++ przy odpowiedniej konfiguracji.
+
+Efektywność pamięciowa, wyrażona jako stosunek liczby obsłużonych wiadomości do zużytej pamięci, była znacząco wyższa na ARM (3-5 wiadomości/MB) niż na x86\_64 \mbox{(0,3-1 wiadomości/MB)}. Model asynchroniczny Rust wykazał najlepszą efektywność w tej metryce.
+
+\section{Wpływ architektury i modeli pamięci na wyniki}
+
+\subsection{Modele zarządzania pamięcią}
+
+System własności i pożyczania w Rust eliminuje wyścigi danych na etapie kompilacji poprzez statyczną analizę modułu kontroli własności i pożyczania, co przekłada się na przewidywalne wzorce zarządzania pamięcią i często lepszą wydajność w scenariuszach z intensywnym wykorzystaniem pamięci. Koszt tego bezpieczeństwa przejawia się narzutem związanym z koniecznością użycia konstrukcji \texttt{Arc<Mutex<T> >} w scenariuszach współdzielenia stanu, co obserwowano jako spadek przepustowości o 8-12\% względem bezpośredniego dostępu do pamięci współdzielonej w C++.
+
+Model C++ oferuje większą elastyczność kosztem ryzyka błędów związanych z zarządzaniem pamięcią. Intel TBB wykorzystuje zaawansowane optymalizacje lokalności pamięci podręcznej, co jest szczególnie widoczne w wynikach benchmarku CG, gdzie różnice w wydajności między implementacjami sięgały 12-18\% na korzyść TBB ze względu na lepsze zarządzanie fragmentacją pamięci przy dynamicznych kontenerach.
+
+\subsection{Architektura sprzętowa}
+
+Przewaga architektury ARM64 (Apple M1) może być przypisana kilku czynnikom technologicznym. Heterogeniczna architektura \emph{big.LITTLE} z 4 rdzeniami wydajnościowymi (P-cores) i~4 energooszczędnymi (E-cores) umożliwia efektywniejsze zarządzanie obciążeniem wielowątkowym. Ujednolicona architektura pamięci \eng{unified memory architecture}, eliminuje koszty kopiowania danych między CPU a pamięcią, co jest szczególnie korzystne w aplikacjach intensywnie wykorzystujących przepustowość pamięci.
+
+Hierarchiczna pamięć podręczna (12MB L2 dla P-cores, 4MB dla E-cores) przyczynia się do poprawy wydajności w warunkach zmiennego obciążenia. Niemniej jednak, jak wskazują autorzy \cite{arml2c}, główne ograniczenia wynikają nie tyle z przepustowości przy intensywnej komunikacji między wątkami, ile z nieoptymalnego wykorzystania pamięci podręcznej, zwłaszcza w~kontekście lokalności i alokacji danych w środowiskach wielowątkowych, co obserwowano jako szybszy spadek efektywności skalowania ARM przy większej liczbie wątków.
+
+\subsection{Wpływ środowiska kompilacyjnego i bibliotek}
+
+Zidentyfikowane różnice między kompilatorami Clang (macOS) a GCC (Linux) wprowadzały zmienność wyników na poziomie 10-15\% w testach współbieżności. Clang wykazywał lepsze wsparcie dla instrukcji wektorowych na ARM, podczas gdy GCC zapewniał skuteczniejsze mechanizmy optymalizacyjne dla architektury x86\_64. 
+
+W trakcie prac nad implementacją aplikacji w języku C++ z wykorzystaniem biblioteki Threading Building Blocks (TBB) zaobserwowano istotne różnice w procesie budowania i~konfiguracji projektu pomiędzy platformami opartymi na architekturze x86-64 (Linux) a systemem macOS z procesorem Apple M1 (ARM64), co jest również potwierdzone przez pracę \cite{ARMTBB}. Aplikacja, która kompilowała się bezproblemowo i działała optymalnie w środowisku x86, wymagała licznych modyfikacji przy próbie przeniesienia jej na platformę Apple Silicon. W~szczególności konieczne było ręczne dostosowanie flag kompilatora, aktualizacja konfiguracji CMake z~uwzględnieniem architektury ARM oraz zastosowanie społecznościowych łatek w celu rozwiązania problemów z rozpoznawaniem architektury \texttt{(Unknown architecture flag: \mbox{-arch armv4t}}. Te trudności potwierdzają, że proces przenoszenia aplikacji opartych na TBB na \mbox{macOS} z procesorem M1 nie jest trywialny i wymaga świadomego podejścia projektowego oraz głębszego zrozumienia różnic międzyplatformowych -- zarówno na poziomie sprzętowym, jak i systemowym. Dodatkowo jak podają autorzy \cite{TBBARMCONCLUSIONS}, testy na maszynie wirtualnej z emulacją Intel wykazały spadek wydajności w porównaniu z natywnym wykonaniem na M1.
+
+Klasa \texttt{std::jthread} została wprowadzona dopiero w standardzie C++20, który nie jest w pełni wspierany przez kompilator Apple Clang w wersji 15.0.0. Ograniczenia te należy uwzględnić przy tworzeniu aplikacji na system macOS, co wymusza zastosowanie alternatywnych rozwiązań programistycznych zapewniających kompatybilność z daną wersją kompilatora. Analiza wyników działania CMake wskazuje, że nawet przy użyciu kompilatora Clang w wersji 20.1.6, klasa \texttt{std::jthread} pozostaje niedostępna. Wynika to z faktu, iż jej obsługa zależy nie tylko od samego kompilatora, lecz również od implementacji biblioteki standardowej C++. W~środowisku macOS, mimo wykorzystania najnowszej wersji Clanga, systemowa wersja biblioteki \texttt{libc++} może nie zawierać jeszcze implementacji \texttt{std::jthread}. W związku z tym pełna zgodność ze standardem C++20 w zakresie zarządzania wątkami wymaga nie tylko odpowiedniego kompilatora, ale także aktualnej wersji biblioteki standardowej.
+
+\section{Rekomendacje praktyczne}
+
+\subsection{Dobór technologii w zależności od charakterystyki problemu}
+
+\subsubsection{Obliczenia typu trywialnie równoległego}
+
+Na podstawie wyników benchmarku EP, rekomenduje się Rust z biblioteką Rayon jako rozwiązanie główne ze względu na najwyższą osiągniętą wydajność (164 MFLOPS na ARM), bezpieczeństwo pamięci oraz abstrakcje bezkosztowe. Alternatywnie, dla istniejących baz kodu C++, zaleca się Intel TBB z uwagi na dobre skalowanie i dojrzałość rozwiązania.
+
+\subsubsection{Algorytmy z intensywną komunikacją międzywątkową}
+
+Dla algorytmów iteracyjnych i symulacji numerycznych zaleca się C++ z Intel TBB jako rozwiązanie główne, co potwierdza przewaga w benchmarkach CG i IS. Dojrzałe optymalizacje pamięci podręcznej oraz zaawansowane techniki przydzielania zadań w czasie wykonywania czynią TBB optymalnym wyborem dla tej klasy problemów. Rust wymaga dalszych optymalizacji w tym obszarze, szczególnie w kontekście skalowalności przy nieregularnych wzorcach dostępu do pamięci.
+
+\subsubsection{Aplikacje sieciowe wysokiej przepustowości}
+
+Rekomenduje się Rust z biblioteką Tokio ze względu na model asynchroniczny M:N, wysoką efektywność pamięciową (3-5 wiadomości/MB) oraz wbudowane mechanizmy \texttt{async/await}. C++ może być rozważany w przypadkach wymagających precyzyjnej kontroli latencji pojedynczych operacji, szczególnie przy wykorzystaniu zaawansowanych bibliotek asynchronicznych.
+
+\subsection{Wybór platformy sprzętowej}
+
+Wybór platformy sprzętowej powinien być dostosowany do charakteru zadań oraz wymagań aplikacji. Architektura ARM64 (Apple Silicon) jest szczególnie korzystna dla obciążeń o zmiennym charakterze oraz systemów, w których kluczowa jest efektywność energetyczna. Z kolei architektura x86\_64 pozostaje preferowanym rozwiązaniem w przypadku klasycznych obliczeń wysokiej wydajności (HPC), środowisk wymagających pełnej kontroli nad przypisaniem wątków do procesorów, a także tam, gdzie istotne jest korzystanie z dojrzałego i stabilnego ekosystemu narzędzi oraz bibliotek. Ponadto, architektura ta gwarantuje kompatybilność z istniejącym kodem \eng{legacy code} i umożliwia precyzyjną kontrolę nad szczegółami implementacji.
+
+\subsection{Rekomendacje dotyczące środowiska kompilacyjnego}
+
+Dla C++ zaleca się wykorzystanie kompilatora Clang zamiast GCC do kompilacji kodu równoległego, co w badaniach skutkowało skróceniem czasu wykonania o 10-15\% dzięki lepszemu wsparciu dla instrukcji wektorowych. W Rust zaleca się stosowanie Rayon do równoległego przetwarzania danych oraz Tokio do aplikacji asynchronicznych w celu minimalizacji narzutu kontekstu.
+
+\section{Ograniczenia metodologiczne badania}
+
+\subsection{Heterogeniczność środowisk testowych}
+
+Największym ograniczeniem przeprowadzonych badań była niemożność zapewnienia jednolitego środowiska testowego. Wykorzystanie różnych kompilatorów (Clang 14.0.3 na macOS a~GCC 11.4.0 na Linux), różnych systemów operacyjnych (macOS z jądrem Darwin a Linux) oraz różnych implementacji bibliotek standardowych (\texttt{libc++} a \texttt{libstdc++}) wprowadzało zmienne systemowe mogące wpływać na wyniki porównań.
+
+\subsection{Ograniczenia narzędzi diagnostycznych}
+
+Przeprowadzone badanie ujawniło fundamentalne ograniczenie narzędzia \texttt{hwloc-ps} na platformie macOS, szczególnie w architekturze Apple Silicon, wynikające z celowych restrykcji systemowych w jądrze XNU. Jak wykazano w \cite{HWLOC555}, brak implementacji interfejsów \texttt{sched\_setaffinity()}/\texttt{sched\_getaffinity()} uniemożliwia odczyt i kontrolę przypisań procesów do rdzeni \eng{process-to-core binding}, co stanowi barierę metodologiczną w porównawczych badaniach wydajnościowych między architekturami ARM (M1) i x86\_64. W~odróżnieniu od pełnej funkcjonalności \texttt{hwloc-ps} w systemie Linux \cite{hwlocHardwareLocality}, gdzie narzędzie precyzyjnie raportuje przypisania wątków, na macOS możliwe jest jedynie wykrywanie topologii sprzętowej przez \texttt{lstopo} - przy użyciu mechanizmów \texttt{sysctl}. Ograniczenie to uniemożliwiło bezpośrednią weryfikację wpływu przypisań wątków \eng{thread pinning} na wydajność implementacji współbieżnych w językach Rust/C++.
+
+Różnice w narzędziach profilowania (\texttt{Instruments} na macOS a \texttt{perf} na Linux) mogły wprowadzać dodatkową zmienność w pomiarach wykorzystania zasobów.
+
+\subsection{Ograniczenia doboru benchmarków}
+
+Wybrane benchmarki NAS (CG, EP, IS) reprezentują głównie problemy o regularnej strukturze obliczeniowej charakterystyczne dla klasycznych zastosowań HPC. Współczesne aplikacje często charakteryzują się nieregularnymi wzorcami dostępu do pamięci, dynamiczną alokacją zadań oraz hybrydowymi modelami obliczeniowymi, co ogranicza generalizację wniosków do innych domen aplikacyjnych.
+
+\section{Kierunki dalszych badań}
+
+\subsection{Ujednolicone środowisko badawcze}
+
+Priorytetem dla przyszłych badań powinno być przeprowadzenie eksperymentów na maszynach Apple wyposażonych zarówno w procesory Intel, jak i Apple Silicon, co pozwoliłoby na:
+\begin{itemize}
+    \item Eliminację zmienności wynikającej z różnic systemowych między macOS a Linux
+    \item Użycie identycznego kompilatora (Clang) i bibliotek systemowych
+    \item Precyzyjną izolację wpływu architektury procesora od wpływu środowiska systemowego
+    \item Kontrolę nad identycznością mechanizmów szeregowania zadań
+\end{itemize}
+
+\subsection{Rozszerzenie zakresu architektur i platform}
+
+\subsubsection{Architektury heterogeniczne}
+
+Dalsze badania powinny uwzględnić systemy hybrydowe wykorzystujące:
+\begin{itemize}
+    \item GPU poprzez CUDA (C++) i rust-gpu/wgpu (Rust)
+    \item Systemy SoC z dedykowanymi akceleratorami (NPU, DSP)
+    \item Platformy FPGA w kontekście programowania wysokiej wydajności
+    \item Procesory RISC-V jako alternatywę dla ARM i x86
+\end{itemize}
+
+\subsubsection{Nowe paradygmaty programowania}
+
+Eksploracja powinna obejmować:
+\begin{itemize}
+    \item Model aktorowy (Actix dla Rust a CAF dla C++)
+    \item programowanie przepływu danych oraz reaktywne strumienie danych
+    \item Mechanizmy C++20 \texttt{coroutines} a Rust \texttt{async/await}
+    \item Hybrydowe modele łączące synchroniczne i asynchroniczne wzorce
+\end{itemize}
+
+
+\section{Wkład pracy}
+
+\subsubsection{Pierwsze porównanie wydajności benchmarków NAS Parallel Benchmarks na architekturach ARM64 oraz x86\_64 w językach Rust i C++}
+
+Niniejsza praca stanowi pierwsze w literaturze porównanie wydajności mechanizmów programowania równoległego między językami Rust i C++ z wykorzystaniem standardowych benchmarków NAS Parallel Benchmarks na architekturach ARM64 \mbox{(Apple Silicon)} i x86\_64. Dotychczasowe badania koncentrowały się głównie na platformach x86 lub nie uwzględniały nowoczesnych architektur ARM w kontekście zastosowań HPC. Wykazanie systematycznej przewagi architektury ARM64 w większości testowanych scenariuszy (współczynniki przyspieszenia 1,55x--2,26x) stanowi istotne odkrycie dla społeczności zajmującej się obliczeniami wysokiej wydajności.
+
+\subsubsection{Empiryczna walidacja abstrakcji wysokopoziomowych w programowaniu równoległym}
+
+Badania empirycznie potwierdzają tezę, że nowoczesne abstrakcje wysokopoziomowe (Rust Rayon, Intel TBB) nie tylko zwiększają bezpieczeństwo programowania, ale również oferują wydajność konkurencyjną lub wyższą od tradycyjnych rozwiązań niskopoziomowych (klasyczne OpenMP). Szczególnie znaczące jest wykazanie, że biblioteka Rayon osiąga najwyższą wydajność w benchmarku EP (164 MFLOPS na ARM), przewyższając dojrzałe implementacje OpenMP i TBB.
+
+\subsubsection{Analiza wpływu modeli zarządzania pamięcią na wydajność współbieżną w kontekście architektur ARM64 i x86\_64}
+
+Niniejsza praca wnosi nowe spojrzenie na oddziaływanie różnych modeli zarządzania pamięcią, w~szczególności systemu własności w języku Rust oraz manualnego zarządzania pamięcią w~C++, na wydajność aplikacji wielowątkowych. Przeprowadzone systematyczne porównania na architekturach ARM64 oraz x86\_64 umożliwiły empiryczne wykazanie, że eliminacja wyścigów danych na etapie kompilacji w Rust przekłada się na przewidywalne wzorce wykorzystania pamięci. Obserwowany narzut wydajnościowy różni się w zależności od platformy - wynosi około 8-12\% na architekturze x86\_64, podczas gdy na ARM64 ujawnia inne charakterystyki. Wyniki te dostarczają istotnych informacji umożliwiających lepsze zrozumienie kompromisów pomiędzy bezpieczeństwem a efektywnością w programowaniu systemowym, zwłaszcza w kontekście środowisk wieloplatformowych.
+
+\subsubsection{Identyfikacja ograniczeń metodologicznych w badaniach wieloplatformowych}
+
+Badania ujawniły ograniczenia w dostępnych narzędziach diagnostycznych dla architektur ARM na platformie macOS, szczególnie w kontekście \texttt{hwloc-ps} i mechanizmów przypisania procesu do konkretnego rdzenia procesora. Zidentyfikowanie tych ograniczeń oraz ich wpływu na wiarygodność pomiarów między architekturami może pomóc przyszłym badaczom w wyborze narzędzi pomiarowych.
+
+\subsubsection{Walidacja efektywności architektur heterogenicznych w programowaniu równoległym}
+
+Wyniki potwierdzają teoretyczne założenia dotyczące korzyści płynących z heterogenicznych architektur \emph{big.LITTLE} (Apple M1) w kontekście aplikacji wielowątkowych. Empiryczne wykazano, że architektura ta zapewnia lepszą wydajność przy zmiennym obciążeniu, przy jednoczesnej identyfikacji jej ograniczeń przy wysokiej liczbie wątków (spadek efektywności do 68\% a 78\% na x86\_64).
+
+\subsubsection{Praktyczne wytyczne dla wyboru technologii w programowaniu współbieżnym}
+
+Na podstawie systematycznych pomiarów wydajności sformułowano empirycznie uzasadnione wytyczne dla wyboru języka programowania i bibliotek w zależności od charakterystyki problemu obliczeniowego i docelowej architektury. Rekomendacje te, oparte na konkretnych danych wydajnościowych, stanowią praktyczny wkład dla inżynierów oprogramowania projektujących systemy współbieżne i równoległe.
+
+\section{Podsumowanie wniosków}
+
+Przeprowadzone badania wykazały, że wybór między Rust a C++ oraz między różnymi bibliotekami równoległości powinien być podyktowany specyfiką problemu obliczeniowego, wymaganiami wydajnościowymi, docelową architekturą sprzętową oraz kontekstem organizacyjnym. Nie istnieje uniwersalnie optymalne rozwiązanie - każde z badanych podejść wykazuje przewagi w określonych scenariuszach.
+
+Rust z biblioteką Rayon wyłania się jako silna alternatywa dla C++ w dziedzinie programowania systemowego i współbieżnego, oferując unikalne gwarancje bezpieczeństwa przy zachowaniu wysokiej wydajności, szczególnie na architekturach ARM. C++, z bogatym ekosystemem i dojrzałymi narzędziami takimi jak Intel TBB, pozostaje kluczowym językiem dla aplikacji wymagających najwyższej wydajności, zwłaszcza na architekturach x86\_64 w zastosowaniach HPC.
+
+Architektura ARM64, reprezentowana przez Apple Silicon, udowodniła swoją konkurencyjność względem x86\_64, oferując często wyższą wydajność przy niższym zużyciu energii. Wymaga to jednak adaptacji istniejących narzędzi i bibliotek, co stanowi wyzwanie dla szerokiego przyjęcia.
+
+Dalszy rozwój obu języków, postępująca dywersyfikacja platform sprzętowych oraz rosnące wymagania aplikacji będą stymulować ewolucję mechanizmów programowania współbieżnego jak i równoległego. Kontynuacja badań porównawczych, uwzględniająca nowe architektury i paradygmaty programowania, pozostaje niezbędna dla świadomego wyboru technologii w szybko zmieniającym się środowisku obliczeniowym.
+
+
+% The option of developing new computer languages may be the clean- est and most efficient way to provide support for parallel processing. However, practical issues make the wide acceptance of a new computer language close to impossible. Nobody likes to rewrite old code to new lan- guages. It is difficult to justify such effort in most cases. Also, educating and convincing a large enough group of developers to make a new lan- guage gain critical mass is an extremely difficult task.
+
+
+
+%\show\chapter
+%\show\section
+%\show\subsection
+
+%\showthe\secindent
+%\showthe\beforesecskip
+%\showthe\aftersecskip
+%\showthe\secheadstyle
+%\showthe\subsecindent
+%\showthe\beforesubsecskip
+%\showthe\aftersubsecskip
+%\showthe\subseccheadstyle
+%\showthe\parskip

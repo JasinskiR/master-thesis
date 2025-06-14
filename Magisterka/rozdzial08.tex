@@ -1,11 +1,488 @@
 %Porównanie Rust i C++
-\chapter{Analiza wyników - programowanie równoległe}
-W tym rozdziale zostały zebrane wyniki testów, które porównują ze sobą mechanizmy programowania równoległego w językach Rust i C++.
-\nopagebreak
-\input{analiza/rownolegle.tex}
+\chapter{Porównanie międzyjęzykowe - programowanie współbieżne}
 
-\chapter{Analiza wyników - programowanie współbieżne}
-W tym rozdziale zostały zebrane wyniki testów, które porównują ze sobą mechanizmy progra-
-mowania współbieżnego w językach Rust i C++.
+W ramach analizy programowania współbieżnego przeanalizowano implementacje wzorców producent-konsument oraz serwer echo w językach Rust i C++. Obie wersje korzystają z różnych podejść do zarządzania współbieżnością: Rust z biblioteką Tokio oraz C++ z mechanizmami standardowej biblioteki i rozszerzeniami języka C++20.
 
-\input{analiza/wspolbiezne.tex}
+\section{Porównanie międzyjęzykowe}
+
+\subsection{Struktura i organizacja kodu}
+
+\begin{table}[H]
+    \centering
+    \caption{Porównanie aspektów struktury i organizacji kodu w implementacjach współbieżnych}
+    \begin{tabularx}{\textwidth}{lXX}
+        \toprule
+        \textbf{Aspekt} &
+        \textbf{Rust (Tokio)} &
+        \textbf{C++ (std::thread + epoll/kqueue)} \\
+        \midrule
+        Architektura &
+        Sterowana zdarzeniami z asynchronicznym środowiskiem wykonawczym, tworzenie zadań &
+        Wątek na połączenie + opcjonalna pętla zdarzeń \\
+        \hline
+        Enkapsulacja &
+        Moduły, cechy, system własności &
+        Klasy, szablony, przestrzenie nazw \\
+        \hline
+        Obsługa błędów &
+        \texttt{Result<T,E>}, operator \texttt{?}, wymuszona propagacja &
+        \texttt{std::optional}, wyjątki, kody \texttt{errno} \\
+        \hline
+        Asynchroniczność &
+        \texttt{async/await}, \texttt{tokio::select!}, wbudowane środowisko wykonawcze &
+        \texttt{std::async}, ręczne pętle zdarzeń (epoll/kqueue) \\
+        \hline
+        Bezpieczeństwo typów &
+        Sprawdzanie własności w czasie kompilacji, cechy \texttt{Send/Sync} &
+        Sprawdzanie w czasie wykonania, ręczna synchronizacja \\
+        \hline
+        Konfiguracja &
+        Cargo.toml, flagi funkcjonalności \eng{feature flags} &
+        CMake/Make, dyrektywy preprocesora \\
+        \hline
+        Zarządzanie zależnościami &
+        Scentralizowane z crates.io &
+        Zdecentralizowane, pakiety systemowe \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Implementacja w języku Rust cechuje się większą spójnością architektoniczną dzięki wbudowanym mechanizmom asynchroniczności oraz systemowi cech \eng{traits}. C++ zapewnia większą elastyczność kosztem złożoności zarządzania zgodnością między różnymi wersjami standardu.
+
+
+\subsection{Zarządzanie pamięcią}
+
+\begin{table}[H]
+    \centering
+    \caption{Porównanie modeli zarządzania pamięcią w badanych implementacjach}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{lX X}
+        \toprule
+        \textbf{Aspekt} &
+        \textbf{Rust} &
+        \textbf{C++} \\
+        \midrule
+        Model podstawowy &
+        Własność z automatycznym zwalnianiem; sprawdzanie pożyczania w czasie kompilacji &
+        RAII z ręcznym zarządzaniem czasem życia obiektów \\
+        \midrule
+        Współdzielenie w wątkach &
+        \texttt{Arc<T>} dla danych niemutowalnych, \texttt{Arc<Mutex<T>>} dla mutowalnych &
+        \texttt{std::shared\_ptr<T>}, ręczne opakowanie muteksem \\
+        \midrule
+        Bezpieczeństwo pamięci &
+        Gwarantowane na etapie kompilacji, eliminacja wyścigów danych &
+        Błędy ujawniane w czasie wykonania; ryzyko użycia po zwolnieniu \\
+        \midrule
+        Zwalnianie zasobów &
+        Automatyczne dzięki cechom \texttt{Drop} &
+        Destruktory RAII, często konieczne jawne zwolnienie (np. \texttt{close()}) \\
+        \midrule
+        Pomiar pamięci &
+        Ograniczony dostęp do systemu plików \texttt{/proc} &
+        Pełna analiza wykorzystania pamięci (RSS, sterta) \\
+        \midrule
+        Zarządzanie buforami &
+        Bezpieczne wskaźniki i struktury (\texttt{Vec<T>}, \texttt{slice}) ze sprawdzaniem granic &
+        Surowe wskaźniki i tablice, ryzyko przepełnień \\
+        \midrule
+        Porządek pamięci &
+        \texttt{Ordering::Relaxed}, \texttt{Acquire}, \texttt{Release} &
+        Odpowiedniki w \texttt{std::memory\_order} \\
+        \midrule
+        Wykrywanie wycieków &
+        Rzadkie (np. cykliczne referencje z \texttt{Arc}); wspierane przez system typów &
+        Częsty problem, wymagane zewnętrzne narzędzia (np. Valgrind) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+
+
+System własności w języku Rust eliminuje całe klasy błędów pamięciowych na etapie kompilacji. C++ wymaga większej ostrożności programisty oraz wykorzystania narzędzi diagnostycznych.
+
+\subsection{Mechanizmy współbieżności}
+
+\begin{table}[H]
+    \centering
+    \caption{Porównanie mechanizmów współbieżności w badanych implementacjach}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+        \toprule
+        \textbf{Mechanizm} &
+        \textbf{Rust (Tokio)} &
+        \textbf{C++ (std + wywołania systemowe)} \\
+        \midrule
+        Model wykonania &
+        Wątki M:N z planistą opartym na kradzieży zadań (work-stealing scheduler) &
+        Wątki 1:1 zarządzane przez systemowy planista \\
+        \midrule
+        Tworzenie zadań &
+        \texttt{tokio::spawn(async move \{\})} - lekki i szybki sposób uruchamiania zadań asynchronicznych &
+        \texttt{std::thread::spawn()} z opcjonalnym \texttt{.detach()} lub synchronizacją przez \texttt{join()} \\
+        \midrule
+        Komunikacja &
+        Kanały wieloproducent-pojedynczykonsument: \texttt{mpsc::channel} z \texttt{Arc<Mutex<Receiver>>} &
+        Własna implementacja \texttt{Channel<T>} oparta na \texttt{std::condition\_variable} \\
+        \midrule
+        Synchronizacja &
+        Primitives: \texttt{tokio::sync::Mutex}, \texttt{Semaphore}, \texttt{RwLock} - dostosowane do async &
+        Klasyczne prymitywy: \texttt{std::mutex}, \texttt{condition\_variable}, atomiki z \texttt{std::atomic} \\
+        \midrule
+        Operacje wejścia/wyjścia &
+        Nieblokujące I/O z użyciem await, np. \texttt{TcpListener::bind().await} &
+        Blokujące systemowe wywołania: \texttt{accept()}, \texttt{recv()}, \texttt{send()} \\
+        \midrule
+        Obsługa zdarzeń &
+        Asynchroniczne makro \texttt{tokio::select!} do oczekiwania na wiele zdarzeń &
+        Ręczne pętle zdarzeń z wykorzystaniem \texttt{epoll\_wait()} lub \texttt{kevent()} \\
+        \midrule
+        Ograniczenia zasobów &
+        Semafory asynchroniczne, np. \texttt{Semaphore::try\_acquire\_owned()} &
+        Własne liczniki z użyciem \texttt{std::atomic<size\_t>} \\
+        \midrule
+        Koordynacja zamknięcia &
+        Kanały rozgłoszeniowe, np. \texttt{broadcast::channel} z łagodnym zamykaniem (graceful shutdown) &
+        Flagi typu \texttt{std::atomic<bool>} sygnalizujące zakończenie wątku \\
+        \midrule
+        Zapobieganie wyścigom danych &
+        Zapewnione na etapie kompilacji przez ograniczenia traitów \texttt{Send} i \texttt{Sync} &
+        Potrzebna synchronizacja ręczna; ryzyko błędów wykonawczych i wyścigów danych \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+
+Porównując mechanizmy współbieżności w językach Rust i C++, można zauważyć fundamentalne różnice w filozofii projektowej i gwarancjach bezpieczeństwa. Rust przyjmuje podejście "bezpieczeństwo przede wszystkim", podczas gdy C++ oferuje większą elastyczność, ale wymaga większej dyscypliny od programisty.
+
+\subsubsection{Rust - kanały typowane}
+Implementacja Rust wykorzystuje kanały z różnymi semantykami komunikacji (\texttt{broadcast}):
+\begin{lstlisting}[language=Rust, caption={Producent-Konsument w Rust z mpsc channels}, label={lst:rust_producer_consumer}]
+// Rust: producent-konsument z kanałami mpsc
+fn producer_consumer_benchmark() {
+    let (tx, rx) = mpsc::channel();
+    let rx = Arc::new(Mutex::new(rx));
+    let shutdown = Arc::new(AtomicBool::new(false));
+    
+    // Wątki producentów
+    thread::spawn(move || {
+        for i in 0..ITEMS {
+            tx.send(format!("Item-{}", i)).unwrap();
+        }
+        // Kanał zamyka się automatycznie po usunięciu tx
+    });
+
+    // Wątki konsumentów - współdzielony odbiornik z Arc<Mutex<>>
+    let rx_clone = Arc::clone(&rx);
+    thread::spawn(move || {
+        while let Ok(msg) = rx_clone.lock().unwrap().try_recv() {
+            process_message(msg);
+        }
+    });
+}
+\end{lstlisting}
+
+\subsubsection{C++ - ręczna synchronizacja}
+Wersja C++ opiera się na ręcznym zarządzaniu współbieżnością z użyciem mutexów i zmiennych warunkowych:
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Producent-Konsument w C++ z Channel}, label={lst:cpp_producer_consumer}]
+// C++: Własny kanał z ręczną synchronizacją
+template<typename T>
+class Channel {
+    std::queue<T> queue_;
+    mutable std::mutex mutex_;
+    std::condition_variable condition_;
+    bool closed_ = false;
+    
+public:
+    void send(T item) { 
+        std::lock_guard lock(mutex_); 
+        queue_.push(std::move(item)); condition_.notify_one(); 
+    }
+    
+    bool recv(T& item) {
+        std::unique_lock lock(mutex_);
+        condition_.wait(lock, [this]{ return !queue_.empty() || closed_; });
+        if (queue_.empty()) return false;
+        item = std::move(queue_.front()); queue_.pop();
+        return true;
+    }
+    
+    void close() { std::lock_guard lock(mutex_); closed_ = true; condition_.notify_all(); }
+};
+\end{lstlisting}
+
+\subsubsection{Serwera echo}
+
+\subsubsection{Rust - wejście/wyjście sterowane zdarzeniami}
+Implementacja Rust wykorzystuje nieblokujące I/O:
+\begin{lstlisting}[language=Rust, caption={Echo Serwer w Rust z Tokio}, label={lst:rust_echo_server}]
+// Rust: Asynchroniczny echo serwer z Tokio
+async fn run_echo_server(addr: &str, max_connections: usize) {
+    let listener = TcpListener::bind(addr).await.unwrap();
+    let semaphore = Arc::new(Semaphore::new(max_connections));
+    
+    loop {
+        tokio::select! {
+            Ok((stream, addr)) = listener.accept() => {
+                if let Ok(permit) = semaphore.clone().try_acquire_owned() {
+                    tokio::spawn(async move {
+                        handle_client(stream, addr).await;
+                        drop(permit); // Auto connection limit
+                    });
+                }
+            }
+            _ = shutdown_signal() => break,
+        }
+    }
+}
+
+async fn handle_client(mut stream: TcpStream, addr: SocketAddr) {
+    let mut buffer = [0; 1024];
+    while let Ok(n) = stream.read(&mut buffer).await {
+        if n == 0 { break; }
+        stream.write_all(&buffer[..n]).await.unwrap(); // Echo back
+    }
+}
+\end{lstlisting}
+
+\subsubsection{C++ - jeden wątek na połączenie}
+Wersja C++ tworzy osobny wątek dla każdego klienta:
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Echo Serwer w C++ z jednym wątkiem na połączenie}, label={lst:cpp_echo_server}]
+// C++: Traditional Thread-per-Connection Model
+class EchoServer {
+    int server_socket;
+    std::atomic<bool> running{true};
+    std::atomic<size_t> current_connections{0};
+    size_t max_connections;
+    
+public:
+    EchoServer(const std::string& addr, int port, size_t max_conn) : max_connections(max_conn) {
+        server_socket = socket(AF_INET, SOCK_STREAM, 0);
+        sockaddr_in server_addr{AF_INET, htons(port), {INADDR_ANY}};
+        bind(server_socket, (sockaddr*)&server_addr, sizeof(server_addr));
+        listen(server_socket, SOMAXCONN);
+    }
+    
+    void run() {
+        while (running.load()) {
+            int client = accept(server_socket, nullptr, nullptr);
+            if (current_connections.load() < max_connections) {
+                // C++: Each connection = new OS thread
+                std::thread([this, client]() {
+                    current_connections++;
+                    char buffer[1024];
+                    while (int n = recv(client, buffer, sizeof(buffer), 0)) {
+                        send(client, buffer, n, 0); // Echo back
+                    }
+                    close(client);
+                    current_connections--;
+                }).detach();
+            } else {
+                close(client); // Reject if at capacity
+            }
+        }
+    }
+};
+\end{lstlisting}
+
+\subsubsection{C++ - wersja asynchroniczna z epoll/kqueue}
+C++ oferuje także asynchroniczną implementację używającą \texttt{epoll} (Linux) lub \texttt{kqueue} \mbox{(macOS)}:
+\begin{lstlisting}[language=C++, style=VS2017,  caption={Async Echo Serwer w C++ z event loop}, label={lst:cpp_async_echo_server}]
+class AsyncEchoServer {
+    int server_socket;
+    std::atomic<bool> running{true};
+    std::vector<int> active_clients;
+    
+#ifdef __APPLE__
+    int kqueue_fd;  // macOS: kqueue for event multiplexing
+#else
+    int epoll_fd;   // Linux: epoll for event multiplexing  
+#endif
+
+public:
+    AsyncEchoServer(const std::string& addr, int port) {
+        server_socket = socket(AF_INET, SOCK_STREAM, 0);
+        fcntl(server_socket, F_SETFL, O_NONBLOCK); // Non-blocking socket
+        
+        sockaddr_in server_addr{AF_INET, htons(port), {INADDR_ANY}};
+        bind(server_socket, (sockaddr*)&server_addr, sizeof(server_addr));
+        listen(server_socket, SOMAXCONN);
+        
+#ifdef __APPLE__
+        kqueue_fd = kqueue();
+        struct kevent ev;
+        EV_SET(&ev, server_socket, EVFILT_READ, EV_ADD, 0, 0, nullptr);
+        kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
+#else
+        epoll_fd = epoll_create1(0);
+        struct epoll_event ev{EPOLLIN, {.fd = server_socket}};
+        epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_socket, &ev);
+#endif
+    }
+    
+    void run_async() {
+        while (running.load()) {
+#ifdef __APPLE__
+            struct kevent events[64];
+            int nev = kevent(kqueue_fd, nullptr, 0, events, 64, nullptr);
+            
+            for (int i = 0; i < nev; ++i) {
+                if ((int)events[i].ident == server_socket) {
+                    handle_new_connection();
+                } else {
+                    handle_client_data((int)events[i].ident);
+                }
+            }
+#else
+            struct epoll_event events[64];
+            int nfds = epoll_wait(epoll_fd, events, 64, -1);
+            
+            for (int i = 0; i < nfds; ++i) {
+                if (events[i].data.fd == server_socket) {
+                    handle_new_connection();
+                } else {
+                    handle_client_data(events[i].data.fd);
+                }
+            }
+#endif
+        }
+    }
+    
+private:
+    void handle_new_connection() {
+        int client = accept(server_socket, nullptr, nullptr);
+        fcntl(client, F_SETFL, O_NONBLOCK);
+        active_clients.push_back(client);
+        
+        // Add client to event system
+#ifdef __APPLE__
+        struct kevent ev;
+        EV_SET(&ev, client, EVFILT_READ, EV_ADD, 0, 0, nullptr);
+        kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
+#else
+        struct epoll_event ev{EPOLLIN, {.fd = client}};
+        epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client, &ev);
+#endif
+    }
+    
+    void handle_client_data(int client_socket) {
+        char buffer[1024];
+        int n = recv(client_socket, buffer, sizeof(buffer), 0);
+        if (n > 0) {
+            send(client_socket, buffer, n, 0); // Echo back
+        } else {
+            // Client disconnected - remove from event system
+#ifdef __APPLE__
+            struct kevent ev;
+            EV_SET(&ev, client_socket, EVFILT_READ, EV_DELETE, 0, 0, nullptr);
+            kevent(kqueue_fd, &ev, 1, nullptr, 0, nullptr);
+#else
+            epoll_ctl(epoll_fd, EPOLL_CTL_DEL, client_socket, nullptr);
+#endif
+            close(client_socket);
+            active_clients.erase(
+                std::remove(active_clients.begin(), active_clients.end(), client_socket),
+                active_clients.end()
+            );
+        }
+    }
+};
+\end{lstlisting}
+
+\subsection{Wydajność i bezpieczeństwo}
+
+\begin{table}[H]
+    \centering
+    \caption{Porównanie wydajności i bezpieczeństwa implementacji współbieżnych}
+    \begin{tabularx}{\textwidth}{lXX}
+        \toprule
+        \textbf{Aspekt} &
+        \textbf{Rust} &
+        \textbf{C++} \\
+        \midrule
+        Bezpieczeństwo kompilacji &
+        Wysokie - system pożyczania eliminuje wyścigi danych &
+        Średnie - wymaga zewnętrznych narzędzi (np. ThreadSanitizer) \\
+        \hline
+        Narzut w czasie wykonania &
+        Niski - abstrakcje bezkosztowe \eng{zero-cost} &
+        Średni - narzut tworzenia wątków \\
+        \hline
+        Efektywność pamięci &
+        Wysoka - współdzielona własność z \texttt{Arc<T>} &
+        Średnia - ryzyko wycieków pamięci \\
+        \hline
+        Skalowanie &
+        Wysokie - model M:N, kradzież zadań &
+        Ograniczone - model 1:1, ograniczenia systemowe \\
+        \hline
+        Odzyskiwanie po błędach &
+        Strukturalne - propagacja błędów przez \texttt{Result<T, E>} &
+        Oparte na wyjątkach - ryzyko wycieków zasobów \\
+        \hline
+        Trudność debugowania &
+        Średnia - błędy kompilacji z \eng{borrow checker} &
+        Wysoka - wyścigi, błędy pamięci \\
+        \hline
+        Dojrzałość ekosystemu &
+        Rozwijający się - Tokio, async-std &
+        Dojrzały - OpenMP, TBB, Boost.Asio \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Modele wykonania i zarządzanie zadaniami}
+
+Implementacja Rust wykorzystuje bibliotekę Tokio, która dostarcza model wątków M:N z planistą kradzieży zadań. W praktyce oznacza to, że liczba wątków systemu operacyjnego jest niezależna od liczby zadań aplikacyjnych. Funkcja \texttt{tokio::spawn()} tworzy lekkie zadania zarządzane przez środowisko wykonawcze, co umożliwia efektywne wykorzystanie zasobów przy dużej liczbie współbieżnych operacji.
+
+Implementacja C++ opiera się na modelu 1:1, gdzie każde połączenie obsługiwane jest przez dedykowany wątek systemu operacyjnego. Alternatywna wersja asynchroniczna wykorzystuje wywołania systemowe \texttt{epoll()} na Linux lub \texttt{kevent()} na macOS do implementacji pętli zdarzeń, jednak wymaga to jawnego zarządzania stanem połączeń.
+
+\subsubsection{Komunikacja i synchronizacja}
+
+W implementacji Rust komunikacja realizowana jest przez \texttt{mpsc::channel()} w konfiguracji \texttt{Arc<Mutex<Receiver<T> > >} dla wielu odbiorców. Kanał zapewnia bezpieczeństwo typów i automatyczne sprzątanie przy zamknięciu wszystkich nadawców.
+
+Implementacja C++ definiuje własną klasę \texttt{Channel<T>} opartą na \texttt{std::queue} z synchronizacją przez \texttt{std::mutex} i \texttt{std::condition\_variable}. Klasa implementuje metody \texttt{send()}, \texttt{try\_recv()} oraz \texttt{recv()} z semantyką blokującą, wymagając ręcznego zarządzania stanem zamknięcia kanału.
+
+\subsubsection{Obsługa I/O}
+
+Rust wykorzystuje \texttt{TcpListener::bind().await} z nieblokującymi operacjami \mbox{wejścia/wyjścia}. Makro \texttt{tokio::select!} umożliwia równoległe oczekiwanie na wiele zdarzeń (nowe połączenia, sygnał zamknięcia). Ograniczenia połączeń realizowane są przez \texttt{Semaphore::try\_acquire\_owned()}.
+
+C++ implementuje blokujące wejście/wyjście przez bezpośrednie wywołania systemowe: \texttt{socket()}, \texttt{bind()}, \texttt{listen()}, \texttt{accept()}. Każde połączenie obsługiwane jest w dedykowanym wątku z synchronicznymi operacjami \texttt{recv()}/\texttt{send()}. Wersja asynchroniczna wymaga ręcznego zarządzania stanem dla każdego deskryptora pliku.
+
+\subsection{Zarządzanie błędami i zasobami}
+
+Rust wymusza jawną obsługę błędów przez typy \texttt{Result<T, E>} i operator \texttt{?}. Automatyczne sprzątanie zasobów zapewniany jest przez cechę \texttt{Drop} - połączenia gniazd, alokacje pamięci oraz uchwyty wątków są automatycznie zwalniane.
+
+C++ opiera się na wzorcu RAII z ręcznymi wywołaniami destruktorów. Sprzątanie gniazd wymaga explicite wywołań \texttt{close()}, a obsługa błędów realizowana jest przez rzucanie wyjątków lub sprawdzanie \texttt{errno}. Wycieki pamięci mogą wystąpić przy nieprawidłowym zarządzaniu cyklem życia objektów.
+
+
+\subsubsection{Bezpieczeństwo współbieżności}
+
+Najbardziej zasadnicza różnica między Rust a C++ dotyczy podejścia do bezpieczeństwa współbieżnego. Rust stosuje rygorystyczny system typów oraz cechy \texttt{Send} i \texttt{Sync}, które gwarantują bezpieczeństwo dostępu do danych współdzielonych już na etapie kompilacji. Kompilator odrzuca programy mogące prowadzić do wyścigów danych, co eliminuje całą klasę trudnych do wykrycia błędów.
+
+W C++ bezpieczeństwo współbieżności opiera się na odpowiedzialności programisty. Wszelkie błędy synchronizacji (np. brak blokady, nadmierne współdzielenie danych) mogą prowadzić do wyścigów, które są trudne do wykrycia i debugowania. Choć dostępne są narzędzia analityczne, takie jak ThreadSanitizer, nie eliminują one problemów przed uruchomieniem programu i nie oferują gwarancji podobnych do Rust.
+
+
+
+\subsection{Wnioski}
+
+Analiza rzeczywistych implementacji ujawnia konkretne kompromisy między językami w kontekście programowania współbieżnego.
+Rust z Tokio charakteryzuje się:
+\begin{itemize}
+    \item Bezpieczeństwem w czasie kompilacji przez system własności i cechy \texttt{Send/Sync}
+    \item Architekturą sterowaną zdarzeniami z efektywnym wykorzystaniem zasobów
+    \item Wymuszonym obsługą błędów eliminującym ciche awarie \eng{silent failures}
+    \item Ograniczonymi możliwościami introspekcji środowiska wykonawczego
+    \item Zależnością od zewnętrznych pakietów \eng{external crates} dla podstawowej funkcjonalności
+\end{itemize}
+
+C++ ze standardową biblioteką oferuje:
+\begin{itemize}
+    \item Bezpośrednią kontrolę nad zasobami systemowymi i układem pamięci
+    \item Kompleksowe monitorowanie i profilowanie w czasie wykonania  
+    \item Kompatybilność międzyplatformową z ręcznymi abstrakcjami platformowymi
+    \item Model wątek na połączenie z przewidywalnym użyciem zasobów
+    \item Ryzyko błędów w czasie wykonania wymagające ostrożnej synchronizacji
+\end{itemize}
+
+W praktyce wybór między językami zależy od priorytetów projektu: bezpieczeństwo a~kontrola, produktywność a elastyczność, nowoczesność a kompatybilność. Należy również uwzględnić kompetencje zespołu oraz wymagania środowiska docelowego.
