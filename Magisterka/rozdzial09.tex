@@ -30,7 +30,7 @@ Architektura ARM ponownie wykazywała przewagę wydajnościową, osiągając śr
 
 Badanie implementacji wzorca producent-konsument ujawniło znaczące różnice w przepustowości komunikacji międzywątkowej między architekturami. Implementacje Rust z biblioteką Tokio osiągały przepustowość rzędu $10^4$--$10^5$ wiadomości/s na architekturze ARM, podczas gdy implementacje C++ z wykorzystaniem tradycyjnych wątków osiągały jedynie $10^1$--$10^2$ wiadomości/s na x86\_64. Różnica ta wynosi 1-2 rzędy wielkości na korzyść architektury ARM.
 
-Pod względem wykorzystania zasobów, implementacje Rust charakteryzowały się znacznie niższym zużyciem pamięci (około 3 MB) w porównaniu do implementacji C++ (około 10 MB). Wykorzystanie CPU było bardziej zróżnicowane na ARM (0-100\%) niż na x86\_64 (0-30\%), co~wskazuje na bardziej dynamiczne zarządzanie zasobami na platformie macOS.
+Pod względem wykorzystania zasobów, implementacje Rust charakteryzowały się znacznie niższym zużyciem pamięci (około 3 MB) w porównaniu z implementacją C++ (około 10 MB). Wykorzystanie CPU było bardziej zróżnicowane na ARM (0-100\%) niż na x86\_64 (0-30\%), co~wskazuje na bardziej dynamiczne zarządzanie zasobami na platformie macOS.
 
 \subsubsection{Implementacja echo-serwera}
 
@@ -161,7 +161,7 @@ Wyniki potwierdzają teoretyczne założenia dotyczące korzyści płynących z 
 
 Na podstawie systematycznych pomiarów wydajności sformułowano empirycznie uzasadnione wytyczne dla wyboru języka programowania i bibliotek w zależności od charakterystyki problemu obliczeniowego i docelowej architektury. Rekomendacje te, oparte na konkretnych danych wydajnościowych, stanowią praktyczny wkład dla inżynierów oprogramowania projektujących systemy współbieżne i równoległe.
 
-\section{Podsumowanie końcowe}
+\section{Podsumowanie wniosków}
 
 Przeprowadzone badania wykazały, że wybór między Rust a C++ oraz między różnymi bibliotekami równoległości powinien być podyktowany specyfiką problemu obliczeniowego, wymaganiami wydajnościowymi, docelową architekturą sprzętową oraz kontekstem organizacyjnym. Nie istnieje uniwersalnie optymalne rozwiązanie - każde z badanych podejść wykazuje przewagi w określonych scenariuszach.
 

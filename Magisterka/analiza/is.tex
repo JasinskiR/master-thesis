@@ -3,14 +3,14 @@
 Celem eksperymentów była ocena efektywności implementacji algorytmu sortowania całkowitoliczbowego (Integer Sort, IS) w czterech wersjach programistycznych (\texttt{new\_omp}, \texttt{old\_omp}, \texttt{tbb}, \texttt{rust}) przy różnych klasach problemów (S, W, A, B) i liczbie wątków. Porównanie obejmuje czas wykonania, wydajność (MFLOPS) oraz współczynnik zmienności (CV - coefficient of variation), obrazujący stabilność pomiarową.
 
 \subsection{Wyniki benchmarków - platforma ARM64}
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/is_porownanie_czasow_wykonania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/is_porownanie_czasow_wykonania.png}
     \caption{Porównanie czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_czasow_wykonania}
 \end{figure}
 
-Najbardziej znaczącym obserwowanym zjawiskiem jest dominacja implementacji w języku Rust, która osiąga zdecydowanie najkrótsze czasy wykonania we wszystkich klasach problemu oraz dla wszystkich konfiguracji liczby wątków. W szczególności w klasach A i B różnice pomiędzy Rust a pozostałymi implementacjami są bardzo wyraźne i sięgają nawet kilku razy krótszych czasów wykonania, co sugeruje fundamentalnie bardziej efektywną organizację obliczeń.
+Na wykresie - rysunek \ref{is_porownanie_czasow_wykonania} najbardziej znaczącym obserwowanym zjawiskiem jest dominacja implementacji w języku Rust, która osiąga zdecydowanie najkrótsze czasy wykonania we wszystkich klasach problemu oraz dla wszystkich konfiguracji liczby wątków. W szczególności w klasach A i B różnice pomiędzy Rust a pozostałymi implementacjami są bardzo wyraźne i sięgają nawet kilku razy krótszych czasów wykonania, co sugeruje fundamentalnie bardziej efektywną organizację obliczeń.
 
 W przypadku klas A i B wszystkie implementacje, z wyjątkiem Rust, wykazują systematyczny spadek czasu wykonania wraz ze wzrostem liczby wątków. Na skali logarytmicznej zależność ta przyjmuje niemal liniowy charakter, co oznacza, że wzrost liczby wątków przekłada się na wykładniczą poprawę wydajności. Szczególnie dobrze skalują się implementacje oparte na bibliotekach \texttt{tbb} oraz OpenMP (zarówno \texttt{old\_omp}, jak i \texttt{new\_omp}), co potwierdza skuteczność zastosowanych modeli równoległości dla dużych, dobrze zbalansowanych zadań.
 
@@ -22,7 +22,7 @@ Dalsza analiza \ref{is_porownanie_czasow_wykonania} według klas problemu pozwal
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/is_analiza_zmiennosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/is_analiza_zmiennosci.png}
     \caption{Analiza zmienności czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_analiza_zmiennosci}
 \end{figure}
@@ -39,11 +39,11 @@ Rozkład współczynnika zmienności MFLOPS jest ogólnie mniej symetryczny niż
 %------------------------------
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/is_porownanie_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/is_porownanie_wydajnosci.png}
     \caption{Porównanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_wydajnosci}
 \end{figure}
-Na wykresach na rysunku \ref{ep_porownanie_wydajnosci} zaprezentowano porównanie wydajności benchmarku IS mierzonej w MFLOPS (milionach operacji zmiennoprzecinkowych na sekundę). Wydajność została przedstawiona jako funkcja liczby wątków (1-8) dla czterech implementacji równoległych.
+Na wykresach na rysunku \ref{is_porownanie_wydajnosci} zaprezentowano porównanie wydajności benchmarku IS mierzonej w MFLOPS (milionach operacji zmiennoprzecinkowych na sekundę). Wydajność została przedstawiona jako funkcja liczby wątków (1-8) dla czterech implementacji równoległych.
 
 Analiza zależności wydajności od liczby wątków ujawnia nietypowy wzorzec skalowania. W przeciwieństwie do klasycznych benchmarków, w których można zaobserwować proporcjonalny wzrost wydajności wraz ze wzrostem liczby wątków, implementacje \texttt{tbb}, \texttt{old\_omp} oraz \texttt{new\_omp} wykazują poprawę wydajności jedynie do poziomu 3-4 wątków. Po tym punkcie wydajność zaczyna się stabilizować, a w niektórych przypadkach wręcz nieznacznie spada. Może to wskazywać na istnienie fundamentalnych ograniczeń wynikających z przepustowości pamięci lub narzutu synchronizacji, które skutecznie ograniczają dalsze korzyści wynikające z równoległości.
 
@@ -58,11 +58,11 @@ W mniejszych klasach problemowych różnice pomiędzy implementacjami są wyraź
 Implementacja \texttt{rust} utrzymuje konsekwentnie niższy poziom wydajności we wszystkich klasach i konfiguracjach. Jest to zaskakujące, biorąc pod uwagę jej bardzo dobre wyniki w innych benchmarkach, takich jak EP.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/is_mapa_ciepla_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/is_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_heatmap_wydajnosci}
 \end{figure}
-Powyższa mapa cieplna - rysunek \ref{ep_heatmap_wydajnosci} przedstawia wydajność (w MFLOPS). Wydajność została przedstawiona w zależności od liczby użytych wątków. Odcienie koloru od żółtego do ciemnoczerwonego wskazują na wzrost wydajności.
+Powyższa mapa cieplna - rysunek \ref{is_heatmap_wydajnosci} przedstawia wydajność (w MFLOPS). Wydajność została przedstawiona w zależności od liczby użytych wątków. Odcienie koloru od żółtego do ciemnoczerwonego wskazują na wzrost wydajności.
 
 W klasie S wydajność wszystkich implementacji jest wyraźnie niższa, co manifestuje się jako jaśniejszy poziomy pas na mapie. Jest to efekt słabego skalowania oraz niewielkich rozmiarów danych, które ograniczają możliwość efektywnego podziału pracy między wątki. Z kolei wiersze odpowiadające implementacji \texttt{rust} są dość jednolite i jasne, co potwierdza zarówno niższą ogólną wydajność, jak i brak znaczącego wpływu liczby wątków na wynik końcowy.
 
@@ -70,7 +70,7 @@ Wreszcie, klasa W ukazuje największe wahania, co dobrze ilustrują nieregularne
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/is_analiza_skalowania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/is_analiza_skalowania.png}
     \caption{Analiza skalowania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_analiza_skalowania}
 \end{figure}
@@ -90,7 +90,7 @@ Z kolei implementacja napisana w języku Rust prezentuje zupełnie odmienny obra
 \subsection{Wyniki benchmarków - platforma x86\_64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_porownanie_czasow_wykonania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_porownanie_czasow_wykonania.png}
     \caption{Porównanie czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_czasow_wykonania_x86}
 \end{figure}
@@ -106,7 +106,7 @@ W przypadku klas S i W obserwowane różnice między implementacjami są mniej w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_analiza_zmiennosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_analiza_zmiennosci.png}
     \caption{Analiza zmienności czasów wykonania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_analiza_zmiennosci_x86}
 \end{figure}
@@ -123,7 +123,7 @@ Z drugiej strony, najwyższą medianę zmienności MFLOPS (około 0,10) osiąga 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_porownanie_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_porownanie_wydajnosci.png}
     \caption{Porównanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_wydajnosci_x86}
 \end{figure}
@@ -135,7 +135,7 @@ Klasy problemowe różnią się nie tylko poziomem bezwzględnej wydajności, le
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_mapa_ciepla_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_heatmap_bench_wydajnosci_x86}
 \end{figure}
@@ -143,19 +143,19 @@ Mapa ciepła - rysunek \ref{is_heatmap_bench_wydajnosci_x86} stanowi syntetyczne
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/is_analiza_skalowania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/is_analiza_skalowania.png}
     \caption{Analiza skalowania benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_analiza_skalowania_x86}
 \end{figure}
-Wszystkie analizowane implementacje wykazują odchylenie od idealnego skalowania liniowego. Nawet najlepszy wynik - przyspieszenie rzędu 4,8x dla implementacji \texttt{tbb} w klasie W~przy 6-8 wątkach - stanowi zaledwie około 60\% teoretycznego maksimum. Spośród wszystkich badanych rozwiązań to właśnie \texttt{tbb} osiąga najefektywniejsze skalowanie we wszystkich klasach, szczególnie w klasie W, gdzie zdecydowanie dominuje nad konkurencją. Implementacje OpenMP (\texttt{old\_omp} i \texttt{new\_omp}) prezentują umiarkowane przyspieszenia, rzędu 3,8-4,3x w większych klasach problemowych (A i B), natomiast Rust praktycznie nie skaluje się wcale - współczynnik przyspieszenia oscyluje wokół 1, niezależnie od liczby wątków. Skalowanie silnie zależy również od klasy problemu. Klasy A i B charakteryzują się najbardziej efektywnym, choć wciąż dalekim od idealnego, wykorzystaniem równoległości (do około 4,6x). Klasa S wypada najsłabiej, nie przekraczając przyspieszenia 2x, co wynika z małej skali problemu niedostosowanej do architektury wielowątkowej. W klasie W obserwujemy najwyższe zróżnicowanie między implementacjami, przy czym \texttt{tbb} wyraźnie się wyróżnia. Dla większości implementacji punkt nasycenia wydajności przypada na 5-6 wątków, po czym następuje stabilizacja lub lekki spadek. Wskazuje to na osiągnięcie limitów przepustowości pamięci lub narzutów związanych z~synchronizacją w środowisku wielowątkowym.
+Wszystkie analizowane implementacje na wykresie - rysunek \ref{is_analiza_skalowania_x86} wykazują odchylenie od idealnego skalowania liniowego. Nawet najlepszy wynik - przyspieszenie rzędu 4,8x dla implementacji \texttt{tbb} w klasie W~przy 6-8 wątkach - stanowi zaledwie około 60\% teoretycznego maksimum. Spośród wszystkich badanych rozwiązań to właśnie \texttt{tbb} osiąga najefektywniejsze skalowanie we wszystkich klasach, szczególnie w klasie W, gdzie zdecydowanie dominuje nad konkurencją. Implementacje OpenMP (\texttt{old\_omp} i \texttt{new\_omp}) prezentują umiarkowane przyspieszenia, rzędu 3,8-4,3x w większych klasach problemowych (A i B), natomiast Rust praktycznie nie skaluje się wcale - współczynnik przyspieszenia oscyluje wokół 1, niezależnie od liczby wątków. Skalowanie silnie zależy również od klasy problemu. Klasy A i B charakteryzują się najbardziej efektywnym, choć wciąż dalekim od idealnego, wykorzystaniem równoległości (do około 4,6x). Klasa S wypada najsłabiej, nie przekraczając przyspieszenia 2x, co wynika z małej skali problemu niedostosowanej do architektury wielowątkowej. W klasie W obserwujemy najwyższe zróżnicowanie między implementacjami, przy czym \texttt{tbb} wyraźnie się wyróżnia. Dla większości implementacji punkt nasycenia wydajności przypada na 5-6 wątków, po czym następuje stabilizacja lub lekki spadek. Wskazuje to na osiągnięcie limitów przepustowości pamięci lub narzutów związanych z~synchronizacją w środowisku wielowątkowym.
 %------------------------------
 %------------------------------
 
 \subsection{Wyniki profilowania wydajności - platforma ARM64}
-Aby lepiej zrozumieć charakterystyki pamięciowe testowanych implementacji benchmarku IS, przeprowadzono analizę zużycia pamięci, błędów stron pamięci oraz mechanizmu ich odzyskiwania. Wnioski wyciągnięto na podstawie trzech grup wykresów: bezwzględnych wartości (rys. \ref{is_porownanie_zuzycia_pamieci}), porównania względnego względem \texttt{old\_omp} (rys. \ref{is_analiza_wzgledem_old_omp}) oraz kompromisów między metrykami \mbox{(rys. \ref{is_kompromisy_pamiec_bledy})}.
+Aby lepiej zrozumieć charakterystyki pamięciowe testowanych implementacji benchmarku IS, przeprowadzono analizę zużycia pamięci, błędów stron pamięci oraz mechanizmu ich odzyskiwania. Wnioski wyciągnięto na podstawie trzech grup wykresów: bezwzględnych wartości \mbox{(rys. \ref{is_porownanie_zuzycia_pamieci})}, porównania względnego względem \texttt{old\_omp} (rys. \ref{is_analiza_wzgledem_old_omp}) oraz kompromisów między metrykami \mbox{(rys. \ref{is_kompromisy_pamiec_bledy})}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/chart_01_memory_comparison.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/chart_01_memory_comparison.png}
     \caption{Profilowanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_zuzycia_pamieci}
 \end{figure}
@@ -171,7 +171,7 @@ W prawym dolnym wykresie zaprezentowano korelację między zużyciem pamięci a 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/chart_05_performance_ratios.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/chart_05_performance_ratios.png}
     \caption{Analiza wydajności względem \texttt{old\_omp} (punkt odniesienia) z wartościami bezwzględnymi}
     \label{is_analiza_wzgledem_old_omp}
 \end{figure}
@@ -185,9 +185,9 @@ Wykres ten - rysunek \ref{is_analiza_wzgledem_old_omp} przedstawia zmiany procen
 
 
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/arm/chart_06_bubble_chart.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/arm/chart_06_bubble_chart.png}
     \caption{Kompromisy \eng{trade-off} pomiędzy zużyciem pamięci a błędami stron pamięci, z uwzględnieniem liczby odzyskanych stron jako trzeciej zmiennej reprezentowanej przez rozmiar bąbla}
     \label{is_kompromisy_pamiec_bledy}
 \end{figure}
@@ -200,7 +200,7 @@ Na podstawie wykresu bąbelkowego - rysunek \ref{is_kompromisy_pamiec_bledy} mo�
 \subsection{Wyniki profilowania wydajności - platforma x86\_64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/chart_01_memory_comparison.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/chart_01_memory_comparison.png}
     \caption{Profilowanie wydajności benchmarku IS dla klas S, W, A, B względem liczby użytych wątków}
     \label{is_porownanie_zuzycia_pamieci_x86}
 \end{figure}
@@ -214,7 +214,7 @@ Z kolei brak błędów stron we wszystkich implementacjach i klasach problemu je
 Wykres korelacyjny między liczbą zwolnień stron a zużyciem pamięci wskazuje na silną zależność między tymi dwiema metrykami. Dane tworzą wyraźne grupy odpowiadające klasom problemu - od klasy B z najwyższym zużyciem pamięci, po klasę S z najniższym. W ramach każdej grupy implementacja Rust wykazuje tendencję do generowania większej liczby reklamacji stron przy podobnym zużyciu pamięci, co może świadczyć o jej specyficznym podejściu do alokacji i zwalniania pamięci - bardziej intensywnym, lecz potencjalnie korzystnym dla innych aspektów wydajności.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/x86/chart_03_heatmap.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/x86/chart_03_heatmap.png}
     \caption{Znormalizowana mapa ciepła metryk wydajności}
     \label{is_heatmap_wydajnosci_x86}
 \end{figure}
@@ -223,7 +223,7 @@ Znormalizowana mapa ciepła metryk wydajności - rysunek \ref{is_heatmap_wydajno
 \subsection{Porównanie pomiędzy platformami}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/compare/is_porownanie_platform_arm_vs_x86.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/compare/is_porownanie_platform_arm_vs_x86.png}
     \caption{Porównanie średniej wydajności benchmarku IS dla platform ARM64 i x86\_64}
     \label{is_porownanie_wydajnosci_platformy}
 \end{figure}
@@ -239,7 +239,7 @@ Analiza skalowalności według liczby wątków (prawy dolny wykres) pokazuje, ż
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/compare/is_szczegolowa_analiza_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/compare/is_szczegolowa_analiza_wydajnosci.png}
     \caption{Szczegółowa analiza wydajności benchmarku IS dla platform ARM64 i x86\_64}
     \label{is_szczegolowa_analiza_wydajnosci}
 \end{figure}
@@ -252,7 +252,7 @@ Analiza współczynnika przyspieszenia wskazuje, że implementacja Rust osiąga 
 Ostatni wykres przedstawia efektywność równoległości w zależności od liczby wątków. Architektura ARM rozpoczyna z wyższą efektywnością przy małej liczbie wątków, jednak doświadcza szybszego spadku efektywności wraz ze wzrostem liczby wątków. Przy 8 wątkach obie platformy osiągają efektywność około 30\%, przy czym x86\_64 wypada nieznacznie lepiej, co wskazuje na lepsze zachowanie skalowalności przy wyższej liczbie wątków.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/is/compare/is_analiza_istotnosci_statystycznej.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/is/compare/is_analiza_istotnosci_statystycznej.png}
     \caption{Analiza istotności statystycznej benchmarku IS dla platform ARM64 i x86\_64}
     \label{is_analiza_istotnosci_statystycznej}
 \end{figure}

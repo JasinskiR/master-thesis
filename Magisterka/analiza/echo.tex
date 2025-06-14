@@ -4,7 +4,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/echo/arm/analiza_benchmarku.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/echo/arm/analiza_benchmarku.png}
     \caption{Analiza wyników benchmarku echo serwer}
     \label{analiza_benchmarku_echo_serwer}
 \end{figure}
@@ -19,7 +19,7 @@ Centralny wykres górnego - rysunek \ref{analiza_benchmarku_echo_serwer} rzędu 
 Implementacja synchroniczna w C++ osiąga najwyższą przepustowość, sięgającą 600 MB/s dla komunikatów o rozmiarze 10 KB. Implementacja asynchroniczna w C++ plasuje się na drugiej pozycji z wydajnością około 470 MB/s, podczas gdy implementacja Rust osiąga około \mbox{250 MB/s}. Warto zauważyć, że różnice wydajnościowe między implementacjami powiększają się wraz ze wzrostem rozmiaru komunikatów, co może sugerować odmienne optymalizacje mechanizmów buforowania i przetwarzania danych w badanych językach.
 
 \subsubsection{Rozkład użycia CPU}
-Wykres w prawym górnym rogu - rysunek \ref{analiza_benchmarku_echo_serwer} przedstawia rozkład procentowego wykorzystania procesora dla poszczególnych implementacji. Analiza wykresu pudełkowego wskazuje, że implementacja w języku Rust charakteryzuje się wyższą medianą wykorzystania CPU (około 28\%) w porównaniu do implementacji C++ (około 18-20\%). W przypadku języka C++ widoczne są pewne różnice między wariantami asynchronicznym i synchronicznym, przy czym wariant synchroniczny (threaded) wykazuje szerszą dystrybucję wartości, co może świadczyć o większej zmienności obciążenia procesora.
+Wykres w prawym górnym rogu - rysunek \ref{analiza_benchmarku_echo_serwer} przedstawia rozkład procentowego wykorzystania procesora dla poszczególnych implementacji. Analiza wykresu pudełkowego wskazuje, że implementacja w języku Rust charakteryzuje się wyższą medianą wykorzystania CPU (około 28\%) w porównaniu z implementacją C++ (około 18-20\%). W przypadku języka C++ widoczne są pewne różnice między wariantami asynchronicznym i synchronicznym, przy czym wariant synchroniczny (threaded) wykazuje szerszą dystrybucję wartości, co może świadczyć o większej zmienności obciążenia procesora.
 
 Występowanie wartości odstających, oznaczonych punktami powyżej górnych wąsów wykresu, wskazuje na sporadyczne skoki wykorzystania procesora, potencjalnie związane z operacjami zarządzania pamięcią, takimi jak mechanizm odśmiecania w przypadku Rusta lub zarządzanie pulami wątków w przypadku C++.
 
@@ -46,7 +46,7 @@ Wyniki badań sugerują, że wybór optymalnego modelu programowania współbie�
 \subsection{Wyniki benchmarków - platforma x86\_64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/echo/x86/analiza_benchmarku.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/echo/x86/analiza_benchmarku.png}
     \caption{Analiza wyników benchmarku echo serwer}
     \label{analiza_benchmarku_echo_serwer_x86_64}
 \end{figure}
@@ -88,7 +88,7 @@ Wyniki sugerują, że asynchroniczny model programowania w języku Rust, wykorzy
 \subsection{Porównanie pomiędzy platformami}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/echo/compare/rysunek_1_wydajnosc_sieciowa.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/echo/compare/rysunek_1_wydajnosc_sieciowa.png}
     \caption{Porównanie wydajności sieciowej pomiędzy platformami ARM i x86\_64}
     \label{rysunek_1_wydajnosc_sieciowa}
 \end{figure}
@@ -132,7 +132,7 @@ Przeprowadzona analiza porównawcza wydajności sieciowej między architekturami
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/echo/compare/rysunek_2_skalowanie_obciazenia.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/echo/compare/rysunek_2_skalowanie_obciazenia.png}
     \caption{Analiza skalowania względem obciążenia sieciowego}
     \label{rysunek_2_skalowanie_obciazenia}
 \end{figure}

@@ -11,8 +11,8 @@
 \kierunek{Informatyka Stosowana (IST)} % IFO: nazwa kierunku
 \specjalnosc{Inżynieria Oprogramowania (IO)} % INFO: nazwa specjalności
 \promotor{dr inż. Zdzisław Spławski} % INFO: dane promotora 
-\kvpl{współbieżność i równoległość, Rust i C++, ARM i x86\_64} % INFO: s�owa kluczowe po polsku
-\kven{concurrency and parallelism, Rust and C++, ARM and x86\_64} % INFO: s�owa kluczowe po angielsku
+\kvpl{współbieżność, równoległość, Rust, C++, ARM, x86\_64} % INFO: s�owa kluczowe po polsku
+\kven{concurrency, parallelism, Rust, C++, ARM, x86\_64} % INFO: s�owa kluczowe po angielsku
 \date{WROCŁAW 2025} % INFO: miejscowość, rok złożenia pracy dyplomowej
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,18 +58,37 @@
 \chapterstyle{default}
 
 
-\include{rozdzial01}
-\include{rozdzial02}
-\include{rozdzial03}
-\include{rozdzial04}
-\include{rozdzial05}
-\include{rozdzial06}
+% \include{rozdzial01}
+% \include{rozdzial02}
+% \include{rozdzial03}
+% \include{rozdzial04}
+% \include{rozdzial05}
+% \include{rozdzial06}
 \include{rozdzial07}
-\include{rozdzial08}
+% \include{rozdzial08}
 \include{rozdzial09}
 \include{rozdzial10}
 
 
+
+% LITERATURA (zostanie wygenerowana automatycznie)
+%UWAGA: bibliotekę referencji należy przygotować samemu. Dobrym do tego narzędziem jest JabRef.
+%       JabRef oferuje jednak większą liczbę typów rekordów niż obsługuje BibTeX.
+%       Proszę nie deklarować rekordów o typach nieobsługiwanych przez BibTeX.
+%       Formatowania wykazu literatury i cytowań odbywać się ma zgodnie z zadeklarowanym stylem.
+%       Zalecane są style produkujące numeryczne cytowania (w postaci [1], [2,3]).
+%       Takim stylem jest np. plabbrv
+\bibliographystyle{plabbrv}
+%       Aby zapanować nad odstępami w wykazie literatury można posłużyć się poniższą komendą
+\setlength{\bibitemsep}{2pt} % - zacieśnia wykaz
+%       Pozycja Literatura pojawia się w spisie treści nieco inaczej niż spisy rysunków, tabel itp.
+%       Aby zachować właściwe odstępy należy użyć poniższej komendy
+\addtocontents{toc}{\addvspace{2pt}} % ustawiamy odstęp w spisie treści przed pozycją Literatura 
+%       Nazwę pliku przygotowanej biblioteki wpisuje się bez rozszerzenia .bib
+%       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
+\bibliography{dokumentacja}
+\nocite{*}
+\clearpage
 
 % SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
 \pdfbookmark[0]{Spis rysunków}{spisRysunkow.1} % jeśli chcemy mieć w spisie treści, to zamarkować tę linię, a odmarkować linie poniższe
@@ -90,24 +109,6 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Spis listingów}
 \lstlistoflistings*
-
-% LITERATURA (zostanie wygenerowana automatycznie)
-%UWAGA: bibliotekę referencji należy przygotować samemu. Dobrym do tego narzędziem jest JabRef.
-%       JabRef oferuje jednak większą liczbę typów rekordów niż obsługuje BibTeX.
-%       Proszę nie deklarować rekordów o typach nieobsługiwanych przez BibTeX.
-%       Formatowania wykazu literatury i cytowań odbywać się ma zgodnie z zadeklarowanym stylem.
-%       Zalecane są style produkujące numeryczne cytowania (w postaci [1], [2,3]).
-%       Takim stylem jest np. plabbrv
-\bibliographystyle{plabbrv}
-%       Aby zapanować nad odstępami w wykazie literatury można posłużyć się poniższą komendą
-\setlength{\bibitemsep}{2pt} % - zacieśnia wykaz
-%       Pozycja Literatura pojawia się w spisie treści nieco inaczej niż spisy rysunków, tabel itp.
-%       Aby zachować właściwe odstępy należy użyć poniższej komendy
-\addtocontents{toc}{\addvspace{2pt}} % ustawiamy odstęp w spisie treści przed pozycją Literatura 
-%       Nazwę pliku przygotowanej biblioteki wpisuje się bez rozszerzenia .bib
-%       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
-\bibliography{dokumentacja}
-\nocite{*}
 
 \appendix
 %\include{dodatekA}

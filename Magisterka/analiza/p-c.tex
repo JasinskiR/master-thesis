@@ -4,7 +4,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/arm/mega_overview_2x3.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/arm/mega_overview_2x3.png}
     \caption{Analiza wyników benchmarku producent-klient}
     \label{analiza_benchmarku_producent_klient}
 \end{figure}
@@ -47,7 +47,7 @@ Warto również zauważyć, że w obu językach mechanizm kolejki wykazuje odmie
 \subsection{Wyniki benchmarków - platforma x86\_64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/x86/mega_overview_2x3.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/x86/mega_overview_2x3.png}
     \caption{Analiza wyników benchmarku producent-klient}
     \label{analiza_benchmarku_producent_klient_x86_64}
 \end{figure}
@@ -97,7 +97,7 @@ Szczególnie interesująca jest obserwacja, że pomimo niższej przepustowości,
 \subsection{Porównanie pomiędzy platformami}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/compare/rysunek_1_porownanie_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/compare/rysunek_1_porownanie_wydajnosci.png}
     \caption{Porównanie wydajności komunikacji między architekturami ARM i x86}
     \label{rysunek_1_porownanie_wydajnosci}
 \end{figure}
@@ -121,7 +121,7 @@ Wykres (b) - rysunek \ref{rysunek_1_porownanie_wydajnosci} dostarcza bardziej sz
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/compare/rysunek_2_skalowanie_watkow.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/compare/rysunek_2_skalowanie_watkow.png}
     \caption{Analiza skalowania względem liczby wątków}
     \label{rysunek_2_skalowanie_watkow}
 \end{figure}
@@ -148,7 +148,7 @@ Kluczowe obserwacje:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/compare/rysunek_3_zuzycie_pamieci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/compare/rysunek_3_zuzycie_pamieci.png}
     \caption{Analiza zużycia pamięci}
     \label{rysunek_3_zuzycie_pamieci}
 \end{figure}
@@ -164,7 +164,7 @@ Wykres (a) - rysunek \ref{rysunek_3_zuzycie_pamieci} przedstawia porównanie szc
 \subsubsection{Zależność wydajności od zużycia pamięci}
 Wykres (b) - rysunek \ref{rysunek_3_zuzycie_pamieci} ilustruje relację między szczytowym zużyciem pamięci a osiąganą przepustowością komunikacji dla czterech kombinacji: ARM-Rust (ciemnozielone kółka), ARM-C++ (jasnozielone kwadraty), x86-Rust (jasnoniebieskie kółka) i x86-C++ (ciemnoniebieskie kwadraty). Analiza tego wykresu ujawnia kilka istotnych zależności:
 \begin{itemize}
-    \item Implementacje na architekturze ARM osiągają znacząco wyższą przepustowość (rzędu $10^6$ wiadomości/s) w porównaniu do implementacji na architekturze x86 (rzędu $10^4$-$10^5$ wiadomości/s), przy tylko nieznacznie wyższym zużyciu pamięci.
+    \item Implementacje na architekturze ARM osiągają znacząco wyższą przepustowość (rzędu $10^6$ wiadomości/s) w porównaniu z implementacją na architekturze x86 (rzędu $10^4$-$10^5$ wiadomości/s), przy tylko nieznacznie wyższym zużyciu pamięci.
     \item Punkty danych dla architektury ARM tworzą zwartą grupę w prawym górnym obszarze wykresu, co sugeruje stabilną wydajność przy podobnym zużyciu pamięci niezależnie od wybranego języka programowania.
     \item Implementacje na architekturze x86 charakteryzują się większym rozproszeniem punktów wzdłuż osi zużycia pamięci, szczególnie widocznym dla języka C++, gdzie obserwujemy punkty od około 2 MB do nawet 16 MB.
     \item Najbardziej efektywną kombinacją pod względem stosunku wydajności do zużycia pamięci wydają się być implementacje ARM-Rust, które osiągają wysoką przepustowość przy relatywnie niskim i stabilnym zużyciu pamięci.
@@ -174,7 +174,7 @@ Wykres (b) - rysunek \ref{rysunek_3_zuzycie_pamieci} ilustruje relację między 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/conc/pc/compare/rysunek_4_analiza_statystyczna.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/conc/pc/compare/rysunek_4_analiza_statystyczna.png}
     \caption{Analiza statystyczna różnic między architekturami ARM i x86}
     \label{rysunek_4_analiza_statystyczna}
 \end{figure}

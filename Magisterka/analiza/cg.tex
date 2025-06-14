@@ -1,10 +1,9 @@
-
 \section{Benchmark CG}
 \subsection{Wyniki benchmarków - platforma ARM64}
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_porownanie_czasow_wykonania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/cg_porownanie_czasow_wykonania.png}
     \caption{Porównanie czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_porownanie_czasow_wykonania}
 \end{figure}
@@ -18,7 +17,7 @@ Analizując wzorce skalowania, wszystkie implementacje wykazują wzrost wydajno�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_analiza_zmiennosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/cg_analiza_zmiennosci.png}
     \caption{Analiza zmienności czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_analiza_zmiennosci}
 \end{figure}
@@ -32,7 +31,7 @@ Z punktu widzenia poszczególnych klas problemowych, klasy A i B - reprezentują
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_porownanie_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/cg_porownanie_wydajnosci.png}
     \caption{Porównanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_porownanie_wydajnosci}
 \end{figure}
@@ -54,7 +53,7 @@ Klasy A i B wykazują podobne charakterystyki skalowania, z wyraźnym wzrostem w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_mapa_ciepla_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/cg_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_heatmap_wydajnosci}
 \end{figure}
@@ -65,7 +64,7 @@ Zauważalny jest również gradient wydajności w przypadku klasy S, gdzie wszys
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/cg_analiza_skalowania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/cg_analiza_skalowania.png}
     \caption{Analiza skalowania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_analiza_skalowania}
 \end{figure}
@@ -91,13 +90,13 @@ Klasa W prezentuje charakterystykę skalowania pośrednią między klasami A/B a
 
 
 \subsection{Wyniki benchmarków - platforma x86\_64}
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_porownanie_czasow_wykonania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/cg_porownanie_czasow_wykonania.png}
     \caption{Porównanie czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}
     \label{cg_porownanie_czasow_wykonania_x86_64}
 \end{figure}
-Na wykresach - rysunek \ref{cg_porownanie_czasow_wykonania_x86_64} porównujących czasy wykonania poszczególnych implementacji benchmarku CG (przedstawione w skali logarytmicznej) dla czterech klas problemów (A, B, S, W), zaobserwować można wyraźne różnice w wydajności poszczególnych implementacji oraz ich skalowaniu wraz ze wzrostem liczby wątków.
+Na wykresach - rysunek \ref{cg_porownanie_czasow_wykonania_x86_64} porównujący czasy wykonania poszczególnych implementacji benchmarku CG (przedstawione w skali logarytmicznej) dla czterech klas problemów (A, B, S, W), zaobserwować można wyraźne różnice w wydajności poszczególnych implementacji oraz ich skalowaniu wraz ze wzrostem liczby wątków.
 
 Implementacja \texttt{new\_omp} konsekwentnie wykazuje najdłuższe czasy wykonania we wszystkich klasach problemów, z wartościami o rząd wielkości wyższymi niż pozostałe implementacje. Szczególnie widoczne jest to w klasach problemów A i B, gdzie różnica między implementacją \texttt{new\_omp} a pozostałymi jest najbardziej znacząca. Pomimo stosunkowo dobrej stabilności tej implementacji, jej niska wydajność czyni ją najmniej optymalnym wyborem spośród badanych wariantów.
 
@@ -109,7 +108,7 @@ Wszystkie implementacje wykazują poprawę wydajności wraz ze wzrostem liczby w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_analiza_zmiennosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/cg_analiza_zmiennosci.png}
     \caption{Analiza zmienności czasów wykonania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}
     \label{cg_analiza_zmiennosci_x86_64}
 \end{figure}
@@ -123,7 +122,7 @@ Interesującym aspektem jest obecność pojedynczych obserwacji odstających wid
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_porownanie_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/cg_porownanie_wydajnosci.png}
     \caption{Porównanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_porownanie_wydajnosci_x86_64}
 \end{figure}
@@ -139,7 +138,7 @@ Implementacja wykorzystująca nowszą wersję OpenMP (\texttt{new\_omp}), konsek
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_mapa_ciepla_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/cg_mapa_ciepla_wydajnosci.png}
     \caption{Mapa ciepła wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_heatmap_wydajnosci_x86_64}
 \end{figure}
@@ -149,7 +148,7 @@ Mapa ciepła potwierdza również wyjątkową charakterystykę klasy S, gdzie na
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/cg_analiza_skalowania.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/cg_analiza_skalowania.png}
     \caption{Analiza skalowania benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_analiza_skalowania_x86_64}
 \end{figure}
@@ -174,7 +173,7 @@ Klasa W wykazuje umiarkowane skalowanie, do ok. 3,5x, przy czym do 3-4 wątków 
 \subsection{Wyniki profilowania wydajności - platforma ARM64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/chart_01_memory_comparison.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/chart_01_memory_comparison.png}
     \caption{Profilowanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie ARM64}
     \label{cg_porownanie_zuzycia_pamieci}
 \end{figure}
@@ -207,7 +206,7 @@ Trzeci wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (lewy dolny róg) pr
     \item Wyniki te sugerują bardzo efektywną gospodarkę pamięciową w wersji \texttt{rust}.
 \end{itemize}
 
-\subsubsection{Korelacja: Liczba zwolnionych stron pamięci a Zużycie pamięci}
+\subsubsection{Korelacja: Liczba zwolnionych stron pamięci a zużycie pamięci}
 Ostatni wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy dolny róg) ilustruje zależność pomiędzy liczbą zwolnionych stron pamięci a zużyciem pamięci.
 \begin{itemize}
     \item Widoczna jest silna dodatnia korelacja - im większe zużycie pamięci, tym większa liczba zwolnionych stron pamięci. Najwyraźniejszym punktem odniesienia jest wersja \texttt{new\_omp} dla klasy B, która dominuje pod względem obu metryk.
@@ -216,7 +215,7 @@ Ostatni wykres - rysunek \ref{cg_porownanie_zuzycia_pamieci} (prawy dolny róg) 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/chart_05_performance_ratios.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/chart_05_performance_ratios.png}
     \caption{Analiza wydajności względem \texttt{old\_omp} (punkt odniesienia) z wartościami bezwzględnymi na platformie ARM64}
     \label{cg_analiza_wzgledem_old_omp}
 \end{figure}
@@ -235,7 +234,7 @@ Na ostatnim wykresie - rysunek \ref{cg_analiza_wzgledem_old_omp} (prawy dolny r�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/arm/chart_06_bubble_chart.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/arm/chart_06_bubble_chart.png}
     \caption{Kompromisy \eng{trade-off} pomiędzy zużyciem pamięci a błędami stron pamięci, z uwzględnieniem liczby odzyskanych stron jako trzeciej zmiennej reprezentowanej przez rozmiar bąbla na platformie ARM64}
     \label{cg_kompromisy_pamiec_bledy}
 \end{figure}
@@ -251,7 +250,7 @@ Implementacja \texttt{tbb} prezentuje wyniki pośrednie, w niektórych przypadka
 \subsection{Wyniki profilowania wydajności - platforma x86\_64}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/x86/chart_01_memory_comparison.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/x86/chart_01_memory_comparison.png}
     \caption{Profilowanie wydajności benchmarku CG dla klas S, W, A, B względem liczby użytych wątków na platformie x86\_64}
     \label{cg_porownanie_zuzycia_pamieci_x86_64}
 \end{figure}
@@ -278,7 +277,7 @@ Ze względu na brak błędów stron nie zamieszczono pozostałych wykresów, kt�
 \subsubsection{Średnia wydajność i współczynnik przyspieszenia}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/compare/cg_porownanie_platform_arm_vs_x86.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/compare/cg_porownanie_platform_arm_vs_x86.png}
     \caption{Porównanie średniej wydajności benchmarku CG dla platform ARM64 i x86\_64}
     \label{cg_porownanie_platform_arm_vs_x86}
 \end{figure}
@@ -292,7 +291,7 @@ Analiza wykresu skalowalności pokazuje, że ARM osiąga wyższe wartości MFLOP
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/compare/cg_szczegolowa_analiza_wydajnosci.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/compare/cg_szczegolowa_analiza_wydajnosci.png}
     \caption{Szczegółowa analiza wydajności benchmarku CG dla platform ARM64 i x86\_64}
     \label{cg_szczegolowa_analiza_wydajnosci}
 \end{figure}
@@ -306,7 +305,7 @@ Analiza efektywności równoległości (rozumianej jako stosunek osiągniętej w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{analiza/images/parallel/cg/compare/cg_analiza_istotnosci_statystycznej.png}
+    \includegraphics[width=0.9\textwidth]{analiza/images/parallel/cg/compare/cg_analiza_istotnosci_statystycznej.png}
     \caption{Analiza istotności statystycznej benchmarku CG dla platform ARM64 i x86\_64}
     \label{cg_analiza_istotnosci_statystycznej}
 \end{figure}
