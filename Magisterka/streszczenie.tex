@@ -1,16 +1,16 @@
 \pdfbookmark[0]{Streszczenie}{streszczenie.1}
 
-%\mbox{}\vspace{2cm} % mo¿na przesun¹æ, w zale¿noci od d³ugoci streszczenia
+%\mbox{}\vspace{2cm} % mo¿na przesun¹æ, w zale¿noci od d³ugoci streszczenia
 \begin{abstract}
-Praca jest poświęcona porównaniu mechanizmów programowania współbieżnego i równoległego w językach Rust i C++. Pierwsza część obejmuje teoretyczne podstawy oraz przegląd literatury, identyfikując luki badawcze w porównaniach tych języków na różnych architekturach sprzętowych.
+Praca skupia się na porównaniu mechanizmów programowania współbieżnego i równoległego w językach Rust i C++. Pierwsza część obejmuje teoretyczne podstawy programowania równoległego oraz przegląd literatury przedmiotu, identyfikując luki badawcze w porównaniach tych języków na różnych architekturach sprzętowych.
 
-Kolejne rozdziały przedstawiają mechanizmy współbieżności, omawiając biblioteki Rust Rayon i Tokio oraz C++ OpenMP i Intel TBB. Metodologia badań obejmuje środowisko testowe na architekturach ARM64 (Apple Silicon M1) i x86\_64 (Intel) z różnymi kompilatorami i systemami operacyjnymi.
+Kolejne rozdziały przedstawiają mechanizmy współbieżności w analizowanych językach, omawiając biblioteki Rust Rayon i Tokio oraz C++ OpenMP i Intel TBB. Metodologia badań obejmuje opis środowiska testowego na architekturach ARM64 (Apple Silicon M1) i x86\_64 (Intel) z różnymi kompilatorami i systemami operacyjnymi.
 
-Implementacja zawiera benchmarki NAS Parallel Benchmarks (CG, EP, IS) oraz aplikacje testowe (producent-konsument, echo-serwer) w obu językach. Analiza wyników obejmuje pomiary wydajności w MFLOPS, skalowanie względem liczby wątków oraz zużycie zasobów systemowych.
+Implementacja zawiera benchmarki NAS Parallel Benchmarks (CG, EP, IS) dla programowania równoległego oraz aplikacje testowe (producent-konsument, echo-serwer) dla programowania współbieżnego w obu językach. Analiza wyników obejmuje pomiary wydajności w MFLOPS, skalowanie względem liczby wątków, zużycie zasobów systemowych oraz efektywność komunikacji sieciowej.
 
-Badania ujawniły systematyczną przewagę architektury ARM64 z współczynnikami przyspieszenia 1,55x-2,26x. Rust z Rayon osiągnął najwyższą wydajność w~obliczeniach równoległych, Intel TBB dominowała w zadaniach komunikacyjnych.
+Badania ujawniły systematyczną przewagę architektury ARM64 z współczynnikami przyspieszenia 1,55x-2,26x. Rust z Rayon osiągnął najwyższą wydajność w~obliczeniach równoległych, Intel TBB dominowała w zadaniach komunikacyjnych, a model bezpieczeństwa pamięci Rust nie wprowadzał narzutów wydajnościowych. Głównym ograniczeniem była heterogeniczność środowisk testowych.
 
-Praca dostarcza pierwszego kompleksowego porównania tych języków na dwóch architekturach oraz praktycznych rekomendacji wyboru technologii.
+Praca dostarcza pierwszego kompleksowego porównania tych języków na dwóch architekturach oraz praktycznych rekomendacji wyboru technologii w zależności od charakterystyki problemu obliczeniowego.
 
 \end{abstract}
 % \mykeywords{}
@@ -18,16 +18,15 @@ Praca dostarcza pierwszego kompleksowego porównania tych języków na dwóch ar
 {
 \selectlanguage{english}
 \begin{abstract}
-The thesis focuses on comparing concurrent and parallel programming mechanisms in Rust and C++ languages. The first part covers theoretical foundations and literature review, identifying research gaps in comparisons across different hardware architectures.
+The thesis focuses on comparing concurrent and parallel programming mechanisms in Rust and C++ languages. The first part covers theoretical foundations of~parallel programming and literature review, identifying research gaps in comparisons of~these languages across different hardware architectures.
 
-Subsequent chapters present concurrency mechanisms, discussing Rust Rayon and Tokio libraries, and C++ OpenMP and Intel TBB. Research methodology encompasses testing environment on ARM64 (Apple Silicon M1) and x86\_64 (Intel) architectures with different compilers and operating systems.
+Subsequent chapters present concurrency mechanisms in analyzed languages, discussing Rust Rayon and Tokio libraries, and C++ OpenMP and Intel TBB. Research methodology encompasses testing environment description on ARM64 (Apple Silicon M1) and x86\_64 (Intel) architectures with different compilers and operating systems.
 
-Implementation includes NAS Parallel Benchmarks (CG, EP, IS) and test applications (producer-consumer, echo-server) in both languages. Results analysis covers MFLOPS performance measurements, thread scaling, and system resource consumption.
+Implementation includes NAS Parallel Benchmarks (CG, EP, IS) for parallel programming and test applications (producer-consumer, echo-server) for concurrent programming in both languages. Results analysis covers MFLOPS performance measurements, thread scaling, system resource consumption, and network communication efficiency.
 
-Research revealed systematic ARM64 superiority with speedup factors of~\mbox{1,55x-2,26x}. Rust with Rayon achieved highest performance in parallel computations, Intel TBB dominated communication-intensive tasks.
+Research revealed systematic ARM64 superiority with speedup factors of~\mbox{1,55x-2,26x}. Rust with Rayon achieved highest performance in parallel computations, Intel TBB dominated communication-intensive tasks, and Rust's memory safety model introduced no performance overhead. The main limitation was testing environment heterogeneity.
 
-The work provides the first comprehensive comparison of these languages across two architectures and practical technology selection recommendations.
-
+The work provides the first comprehensive comparison of these languages across two architectures and practical recommendations for technology selection based on~computational problem characteristics.
 \end{abstract}
 % \mykeywords{}
 }
