@@ -2,6 +2,27 @@
 \setlength\bibindent{1.5em}
 \newdimen\bibspacing
 \setlength\bibspacing\z@
+
+% Add URL support
+\RequirePackage{url}
+\RequirePackage{hyperref}
+
+% Define commands for DOI and URL formatting
+\providecommand{\doi}[1]{%
+  \textsc{doi:}~\href{https://doi.org/#1}{\nolinkurl{#1}}}
+
+\providecommand{\showurl}[1]{%
+  \url{#1}}
+
+% Modify BibTeX to display DOI and URL fields
+\AtBeginDocument{%
+  \@ifpackageloaded{natbib}{%
+    % If natbib is loaded
+    \renewcommand{\harvardurl}[1]{\showurl{#1}}
+    \renewcommand{\harvardurn}[1]{\showurl{#1}}
+  }{}
+}
+
 \renewenvironment{thebibliography}[1]{%
   \section*{\refname
         \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}}%
