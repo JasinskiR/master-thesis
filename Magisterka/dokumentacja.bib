@@ -62,7 +62,8 @@
   isbn={9781638356356},
   url={https://books.google.pl/books?id=BzgzEAAAQBAJ},
   year={2019},
-  publisher={Manning}
+  publisher={Manning},
+  note={ISBN: 9781638356356}
 }
 %8
 @book{ProgramminInOpenMp,
@@ -111,11 +112,11 @@
     volume = {24},
     number = {17},
     doi = {10.3390/s24175818},
-    note = {DOI: 10.3390/s24175818},
     url = {https://www.scopus.com/inward/record.uri?eid=2-s2.0-85203869090&doi=10.3390%2fs24175818&partnerID=40&md5=33ec1f280a710122d80b3020dd5fe952},
     type = {Article},
     publication_stage = {Final},
-    source = {Scopus}
+    source = {Scopus},
+    howpublished = {\url{https://doi.org/10.3390/s24175818}},
 }
 
 @ARTICLE{GPUSystemComapre,
@@ -181,7 +182,7 @@
   booktitle={2019 IEEE International Symposium on Software Reliability Engineering Workshops (ISSREW)},
   pages={19--24},
   year={2019},
-  organization={IEEE}
+  organization={IEEE},
 }
 
 @article{RustSafety3,
@@ -217,18 +218,19 @@
       howpublished = {\url{https://arxiv.org/abs/1902.01906}},
 }
 
-@misc{RustPerformance1,
-  title={Evaluating {M}emory {M}odels for {G}raph-{L}ike {D}ata {S}tructures in the {R}ust {P}rogramming {L}anguage: {P}erformance and {U}sabiliy},
-  author={Viitanen, Rasmus},
-  year={2020}
-}
+ @phdthesis{RustPerformance1, title={Evaluating {M}emory {M}odels for {G}raph-{L}ike {D}ata {S}tructures in the {R}ust {P}rogramming {L}anguage: {P}erformance and {U}sabiliy}, url={https://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-168902}, 
+ abstractNote={Representing graphs in Rust is a problematic issue, as ownership forbids typical representations found in e.g. C++. A common approach is to use reference counting to represent graphs, but this can easily lead to memory leaks if cycles are present in the graph. As naïve reference counting is not suﬀicient, we must search for alternative representations. In this thesis, we explore different memory models that allow safe representations of graph-like data structures in Rust. These memory models are later evaluated in terms of performance and usability. We find that region-based allocation is, in most cases, the best model to use when performance is of importance. In cases where usability is more important, either reference-counting with cycle collection or tracing garbage collection is a solid choice. When it comes to multi-threading, we propose a new implementation of a lock-free transactional graph in Rust. To our knowledge, this is the first lock-free graph representation in Rust. The model demonstrates poor scalability, but for certain graph topologies and sizes, it offers performance that exceeds the other graph models.}, 
+ author={Viitanen, Rasmus}, 
+ year={2020} 
+ }
+
 
 @inproceedings{RustPerformance2,
   title={Exploring {R}ust for {U}nikernel {D}evelopment},
   author={Lankes, Stefan and Breitbart, Jens and Pickartz, Simon},
   booktitle={Proceedings of the 10th Workshop on Programming Languages and Operating Systems},
   pages={8--15},
-  year={2019}
+  year={2019},
 }
 
 @inproceedings{RustPerformance3,
@@ -248,7 +250,8 @@
   number={11},
   pages={89--98},
   year={2016},
-  publisher={ACM New York, NY, USA}
+  publisher={ACM New York, NY, USA},
+  howpublished = {\url{https://doi.org/10.1145/3022671.2984020}},
 }
 
 @misc{parallelrustcppIntroductionComparing,
@@ -298,9 +301,9 @@ title={Rust {S}oftware {S}ecurity: {A} {C}urrent {S}tate {A}ssessment},
   author={Sible, Joe and Svoboda, David},
   month={Dec},
   year={2022},
-  howpublished={Carnegie Mellon University, Software Engineering Institute's Insights (blog)},
   url={https://doi.org/10.58012/0px4-9n81},
-  note={[Dostęp: 2025-03-12]}
+  note={[Dostęp: 2025-03-12]},
+  howpublished = {\url{https://doi.org/10.58012/0px4-9n81}},
 }
 
 @ARTICLE{MigratingCtoRustforMemorySafety,
@@ -343,7 +346,8 @@ month=jul}
   isbn={9781633439771},
   url={https://books.google.pl/books?id=pORwzwEACAAJ},
   year={2024},
-  publisher={Manning}
+  publisher={Manning},
+  note={ISBN: 9781633439771}
 }
 
 @misc{Paluch,
@@ -414,7 +418,8 @@ ARTICLE-NUMBER = {4307},
 URL = {https://www.mdpi.com/2079-9292/13/21/4307},
 ISSN = {2079-9292},
 ABSTRACT = {Rust is a relatively new programming language that aims to provide memory safety at compile time. It introduces a novel ownership system that enforces the automatic deallocation of unused resources without using a garbage collector. In light of Rust’s promise of safety, a natural question arises about the possible benefits of exploiting ownership to ensure the memory safety of C programs. In our previous work, we developed a formal ownership checker to verify whether a C program satisfies exclusive ownership constraints. In this paper, we further propose an ownership-based safe memory deallocation approach, named SafeMD, to fix memory leaks in the C programs that satisfy exclusive ownership defined in the prior formal ownership checker. Benefiting from the C programs satisfying exclusive ownership, SafeMD obviates alias and inter-procedural analysis. Also, the patches generated by SafeMD make the input C programs still satisfy exclusive ownership. Usually, a C program that satisfies the exclusive ownership constraints is safer than its normal version. Our evaluation shows that SafeMD is effective in fixing memory leaks of C programs that satisfy exclusive ownership.},
-DOI = {10.3390/electronics13214307}
+DOI = {10.3390/electronics13214307},
+howpublished = {\url{https://doi.org/10.3390/electronics13214307}},
 }
 
 @CONFERENCE{PPL1_2,
@@ -427,7 +432,8 @@ DOI = {10.3390/electronics13214307}
 	url = {https://www.scopus.com/inward/record.uri?eid=2-s2.0-85197266852&doi=10.1145%2f3652032.3657579&partnerID=40&md5=3c8e90b1cd3bcb94f998ed506a3a3b83},
 	type = {Conference paper},
 	publication_stage = {Final},
-	source = {Scopus}
+	source = {Scopus},
+  howpublished = {\url{https://doi.org/10.1145/3652032.3657579}},
 }
 
 @INPROCEEDINGS{FFTPerformance,
@@ -438,9 +444,11 @@ DOI = {10.3390/electronics13214307}
   volume={},
   number={},
   pages={1-6},
-  doi={10.1109/CISS56502.2023.10089631}} 
+  doi={10.1109/CISS56502.2023.10089631},
+  howpublished = {\url{https://doi.org/10.1109/CISS56502.2023.10089631}}
+} 
 
-@unpublished{LanguageComparison_1,
+@misc{LanguageComparison_1,
 author = {Ali, Saqib and Qayyum, Sammar},
 year = {2021},
 month = {06},
@@ -450,12 +458,15 @@ doi = {10.14293/S2199-1006.1.SOR-.PP5RV1O.v1},
 howpublished = {\url{https://doi.org/10.14293/S2199-1006.1.SOR-.PP5RV1O.v1}},
 }
 
-@article{LanguageComparison_2,
-author = {Alomari, Zakaria and Halimi, Oualid and Sivaprasad, Kaushik and Pandit, Chitrang},
-year = {2015},
-month = {04},
-pages = {},
-title = {Comparative {S}tudies of {S}ix {P}rogramming {L}anguages}
+@misc{LanguageComparison_2,
+      title={Comparative Studies of Six Programming Languages}, 
+      author={Zakaria Alomari and Oualid El Halimi and Kaushik Sivaprasad and Chitrang Pandit},
+      year={2015},
+      eprint={1504.00693},
+      archivePrefix={arXiv},
+      primaryClass={cs.PL},
+      url={https://arxiv.org/abs/1504.00693},
+      howpublished = {\url{https://arxiv.org/abs/1504.00693}},
 }
 
 @misc{LanguageComparison_3,
@@ -491,15 +502,20 @@ abstract = {Context: Developing concurrent software has long been recognized as 
 }
 %Powyższa cytuje tą niżej, ale inne badnie przeprowadzili
 @article{ConcurrentSemanticComparison_2,
-author = {Nanz, Sebastian and Torshizi, Faraz and Pedroni, Michela and Meyer, Bertrand},
-year = {2010},
-month = {11},
-pages = {},
-title = {A {C}omparative {S}tudy of the {U}sability of {T}wo {O}bject-oriented {C}oncurrent {P}rogramming {L}anguages},
-volume = {55},
-journal = {Information and Software Technology},
-doi = {10.1016/j.infsof.2012.08.013}
-}
+   title={Design of an empirical study for comparing the usability of concurrent programming languages},
+   volume={55},
+   ISSN={0950-5849},
+   url={http://dx.doi.org/10.1016/j.infsof.2012.08.013},
+   DOI={10.1016/j.infsof.2012.08.013},
+   number={7},
+   journal={Information and Software Technology},
+   publisher={Elsevier BV},
+   author={Nanz, Sebastian and Torshizi, Faraz and Pedroni, Michela and Meyer, Bertrand},
+   year={2013},
+   month=jul, pages={1304-1315},
+   howpublished = {\url{https://doi.org/10.1016/j.infsof.2012.08.013}},
+   }
+
 
 @misc{rainbow,
 	author = {Remy DeWolf},
@@ -587,7 +603,8 @@ doi = {https://doi.org/10.1016/j.future.2021.07.021},
 url = {https://www.sciencedirect.com/science/article/pii/S0167739X21002831},
 author = {Júnior Löff and Dalvan Griebler and Gabriele Mencagli and Gabriell Araujo and Massimo Torquati and Marco Danelutto and Luiz Gustavo Fernandes},
 keywords = {NAS Parallel Benchmarks, Parallel programming, Multicore architectures, Performance evaluation},
-abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in Fortran, is a consolidated suite containing several benchmarks extracted from Computational Fluid Dynamics (CFD) models. The benchmark suite has important characteristics such as intensive memory communications, complex data dependencies, different memory access patterns, and hardware components/sub-systems overload. Parallel programming APIs, libraries, and frameworks that are written in C++ as well as new optimizations and parallel processing techniques can benefit if NPB is made fully available in this programming language. In this paper we present NPB-CPP, a fully C++ translated version of NPB consisting of all the NPB kernels and pseudo-applications developed using OpenMP, Intel TBB, and FastFlow parallel frameworks for multicores. The design of NPB-CPP leverages the Structured Parallel Programming methodology (essentially based on parallel design patterns). We show the structure of each benchmark application in terms of composition of few patterns (notably Map and MapReduce constructs) provided by the selected C++ frameworks. The experimental evaluation shows the accuracy of NPB-CPP with respect to the original NPB source code. Furthermore, we carefully evaluate the parallel performance on three multi-core systems (Intel, IBM Power, and AMD) with different C++ compilers (gcc, icc, and clang) by discussing the performance differences in order to give to the researchers useful insights to choose the best parallel programming framework for a given type of problem.}
+abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in Fortran, is a consolidated suite containing several benchmarks extracted from Computational Fluid Dynamics (CFD) models. The benchmark suite has important characteristics such as intensive memory communications, complex data dependencies, different memory access patterns, and hardware components/sub-systems overload. Parallel programming APIs, libraries, and frameworks that are written in C++ as well as new optimizations and parallel processing techniques can benefit if NPB is made fully available in this programming language. In this paper we present NPB-CPP, a fully C++ translated version of NPB consisting of all the NPB kernels and pseudo-applications developed using OpenMP, Intel TBB, and FastFlow parallel frameworks for multicores. The design of NPB-CPP leverages the Structured Parallel Programming methodology (essentially based on parallel design patterns). We show the structure of each benchmark application in terms of composition of few patterns (notably Map and MapReduce constructs) provided by the selected C++ frameworks. The experimental evaluation shows the accuracy of NPB-CPP with respect to the original NPB source code. Furthermore, we carefully evaluate the parallel performance on three multi-core systems (Intel, IBM Power, and AMD) with different C++ compilers (gcc, icc, and clang) by discussing the performance differences in order to give to the researchers useful insights to choose the best parallel programming framework for a given type of problem.},
+howpublished = {\url{https://doi.org/10.1016/j.future.2021.07.021}},
 }
 
 @misc{NPBRust,
@@ -644,13 +661,15 @@ abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in 
 @ARTICLE{flynn1,
   author={Flynn, Michael J.},
   journal={IEEE Transactions on Computers}, 
-  title={Some Computer Organizations and Their Effectiveness}, 
+  title={Some {C}omputer {O}rganizations and {T}heir {E}ffectiveness}, 
   year={1972},
   volume={C-21},
   number={9},
   pages={948-960},
   keywords={Organizations;Computers;Entropy;Computational modeling;Data mining;Probability density function;Bandwidth;Computer organization;instruction stream;overlapped;parallel processors;resource hierarchy},
-  doi={10.1109/TC.1972.5009071}}
+  doi={10.1109/TC.1972.5009071},
+  howpublished = {\url{https://doi.org/10.1109/TC.1972.5009071}}
+}
 
 @misc{amdahl,
 	author = {},
@@ -667,7 +686,7 @@ abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in 
   year         = {2022},
   type         = {Technical Paper},
   url          = {https://www.intel.com/content/www/us/en/content-details/737973/best-practices-for-real-time-optimizations-with-the-12th-generation-intel-core-processors-technical-paper.html},
-  note         = {[Dostęp: 2025-06-11]}
+  note         = {\url{https://www.intel.com/content/www/us/en/content-details/737973/best-practices-for-real-time-optimizations-with-the-12th-generation-intel-core-processors-technical-paper.html}[Dostęp: 2025-06-11]}
 }
 
 @misc{arml2c,
@@ -700,7 +719,9 @@ abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in 
   number={},
   pages={163-168},
   keywords={Temperature measurement;Multicore processing;Software algorithms;Parallel processing;Thermal management;Prediction algorithms;Software;Thermal analysis;Software reliability;Security;Multi-core architecture;Performance optimization;Energy efficiency;Parallelism;Security;CRC algorithms;Thermal management;Memory bandwidth;Reliability;Scalability;Resource allocation;Deterministic memory hierarchy;Fault tolerance},
-  doi={10.1109/IBCAST61650.2024.10876950}}
+  doi={10.1109/IBCAST61650.2024.10876950},
+  howpublished = {\url{https://doi.org/10.1109/IBCAST61650.2024.10876950}}
+}
 
   @article{Sesay2024Parallelism,
   author       = {Sesay, Isaac Muckson},
@@ -709,7 +730,7 @@ abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in 
   year         = {2024},
   month        = sep,
   doi          = {10.11216/gsj.2024.09.229326},
-  note         = {Accessed via ResearchGate},
+  howpublished = {\url{https://doi.org/10.11216/gsj.2024.09.229326}},
 }
 
 @article{Adefemi2025Parallelization,
@@ -723,6 +744,7 @@ abstract = {The NAS Parallel Benchmarks (NPB), originally implemented mostly in 
   primaryClass = {cs.DC},
   doi          = {10.48550/arXiv.2504.03647},
   note         = {preprint},
+  howpublished = {\url{https://arxiv.org/abs/2504.03647}},
 }
 
 @misc{Hazarika2025RustVsCpp,

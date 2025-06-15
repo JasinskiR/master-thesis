@@ -90,12 +90,12 @@ T.~Adefemi.
 \bibitem{LanguageComparison_1}
 S.~Ali,  S.~Qayyum.
 \newblock A {P}ragmatic {C}omparison of {F}our {D}ifferent {P}rogramming {L}anguages.
-\newblock 06 2021.
+\newblock \url{https://doi.org/10.14293/S2199-1006.1.SOR-.PP5RV1O.v1}, 06 2021.
 
 \bibitem{LanguageComparison_2}
-Z.~Alomari, O.~Halimi, K.~Sivaprasad, C.~Pandit.
-\newblock Comparative {S}tudies of {S}ix {P}rogramming {L}anguages.
-\newblock 04 2015.
+Z.~Alomari, O.~E. Halimi, K.~Sivaprasad, C.~Pandit.
+\newblock Comparative studies of six programming languages.
+\newblock \url{https://arxiv.org/abs/1504.00693}, 2015.
 
 \bibitem{UnsafeRust}
 V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
@@ -123,6 +123,7 @@ J.~Blandy, J.~Orendorff, L.~Tindall.
 K.~Bobrov.
 \newblock {\em Grokking {C}oncurrency}.
 \newblock Manning, 2024.
+\newblock ISBN: 9781633439771.
 
 \bibitem{RustAtomicsAndLocks}
 M.~Bos.
@@ -151,7 +152,7 @@ T.-C. Chen, M.~Dezani-Ciancaglini, N.~Yoshida.
 I.~Corporation.
 \newblock Best {P}ractices for {R}eal-{T}ime {O}ptimizations {W}ith the 12th {G}eneration {I}ntel\textregistered\ {C}ore\texttrademark\ {P}rocessors.
 \newblock Technical paper, Intel Corporation, 2022.
-\newblock [Dostęp: 2025-06-11].
+\newblock \url{https://www.intel.com/content/www/us/en/content-details/737973/best-practices-for-real-time-optimizations-with-the-12th-generation-intel-core-processors-technical-paper.html}[Dostęp: 2025-06-11].
 
 \bibitem{RustPerformance3}
 M.~Costanzo, E.~Rucci, M.~Naiouf, A.~De~Giusti.
@@ -177,7 +178,7 @@ Z.~Fehervari.
 
 \bibitem{flynn1}
 M.~J. Flynn.
-\newblock Some computer organizations and their effectiveness.
+\newblock Some {C}omputer {O}rganizations and {T}heir {E}ffectiveness.
 \newblock {\em IEEE Transactions on Computers}, C-21(9):948--960, 1972.
 
 \bibitem{RustSafety1}
@@ -277,15 +278,15 @@ M.~Mitzenmacher,  E.~Upfal.
 \newblock Cambridge University Press, 2017.
 \newblock ISBN: 9781108107990.
 
-\bibitem{ConcurrentSemanticComparison_2}
-S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
-\newblock A {C}omparative {S}tudy of the {U}sability of {T}wo {O}bject-oriented {C}oncurrent {P}rogramming {L}anguages.
-\newblock {\em Information and Software Technology}, 55, 11 2010.
-
 \bibitem{ConcurrentSemanticComparison_1}
 S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
 \newblock Design of an {E}mpirical {S}tudy for {C}omparing the {U}sability of {C}oncurrent {P}rogramming {L}anguages.
 \newblock {\em Information and Software Technology}, 55(7):1304--1315, 2013.
+
+\bibitem{ConcurrentSemanticComparison_2}
+S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
+\newblock Design of an empirical study for comparing the usability of concurrent programming languages.
+\newblock {\em Information and Software Technology}, 55(7):1304--1315, Lip. 2013.
 
 \bibitem{ParallelProgramming}
 P.~Pacheco.
@@ -323,7 +324,6 @@ A.~Saligrama, A.~Shen, J.~Gjengset.
 I.~M. Sesay.
 \newblock The {C}ritical {R}ole of {P}arallelism and {M}ulticore {P}rocessors in {A}dvancing {H}igh-{L}evel {P}rogramming {P}ractices.
 \newblock {\em Global Science Journal}, Wrze. 2024.
-\newblock Accessed via ResearchGate.
 
 \bibitem{10876950}
 M.~Shehryar,  F.~H. Khan.
@@ -333,7 +333,7 @@ M.~Shehryar,  F.~H. Khan.
 \bibitem{SecurityInRust}
 J.~Sible,  D.~Svoboda.
 \newblock Rust {S}oftware {S}ecurity: {A} {C}urrent {S}tate {A}ssessment.
-\newblock Carnegie Mellon University, Software Engineering Institute's Insights (blog), Dec 2022.
+\newblock \url{https://doi.org/10.58012/0px4-9n81}, Dec 2022.
 \newblock [Dostęp: 2025-03-12].
 
 \bibitem{PPL1_2}
@@ -368,11 +368,11 @@ A.~Tuby,  A.~Morrison.
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
 \newblock Overview of {E}mbedded {R}ust {O}perating {S}ystems and {F}rameworks.
 \newblock {\em Sensors}, 24(17), 2024.
-\newblock DOI: 10.3390/s24175818.
 
 \bibitem{RustPerformance1}
 R.~Viitanen.
-\newblock Evaluating {M}emory {M}odels for {G}raph-{L}ike {D}ata {S}tructures in the {R}ust {P}rogramming {L}anguage: {P}erformance and {U}sabiliy, 2020.
+\newblock {\em Evaluating {M}emory {M}odels for {G}raph-{L}ike {D}ata {S}tructures in the {R}ust {P}rogramming {L}anguage: {P}erformance and {U}sabiliy}.
+\newblock Praca doktorska, 2020.
 
 \bibitem{ParallelProgramminginC++withOpenMP}
 V.~Q.~T. (vuquangtrong@gmail.com).
@@ -384,6 +384,7 @@ V.~Q.~T. (vuquangtrong@gmail.com).
 A.~Williams.
 \newblock {\em C++ {C}oncurrency in {A}ction}.
 \newblock Manning, 2019.
+\newblock ISBN: 9781638356356.
 
 \bibitem{PPL1_1}
 X.~Yin, Z.~Huang, S.~Kan, G.~Shen.
