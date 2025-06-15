@@ -153,7 +153,8 @@ System własności w języku Rust eliminuje całe klasy błędów pamięciowych 
 \end{table}
 
 
-Porównując mechanizmy współbieżności w językach Rust i C++, można zauważyć fundamentalne różnice w filozofii projektowej i gwarancjach bezpieczeństwa. Rust przyjmuje podejście "bezpieczeństwo przede wszystkim", podczas gdy C++ oferuje większą elastyczność, ale wymaga większej dyscypliny od programisty.
+Porównując mechanizmy współbieżności w językach Rust i C++, można zauważyć fundamentalne różnice w filozofii projektowej i gwarancjach bezpieczeństwa. Rust przyjmuje podejście "bezpieczeństwo przede wszystkim", wykorzystując zaawansowane mechanizmy sprawdzania typów inspirowane formalnymi systemami weryfikacji protokołów komunikacyjnych \cite{10.1145/3678232.3678258}, podczas gdy C++ oferuje większą elastyczność, ale wymaga większej dyscypliny od programisty.
+
 
 \subsubsection{Rust - kanały typizowane}
 Implementacja Rust wykorzystuje kanały z różnymi semantykami komunikacji (\texttt{broadcast}):
