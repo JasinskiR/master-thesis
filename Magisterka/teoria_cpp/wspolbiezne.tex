@@ -162,7 +162,7 @@ int main() {
 \end{lstlisting}    
 W listingu \ref{promise_example} wątek główny tworzy promesę i pobiera powiązaną z nią futurę. Wątek producenta wykonuje obliczenie i przekazuje wynik przez promesę. Funkcja \texttt{result.get()} wstrzymuje główny wątek do czasu dostępności wyniku.
 \subsubsection{std::packaged\_task}
-\texttt{std::packaged\_task} to obiekt otaczający dowolną wywoływalną funkcję (np. funkcję, lambda, \texttt{std::bind}), który integruje się z future. Pozwala to uruchomić zadanie w wątku i obserwować jego wynik.
+\texttt{std::packaged\_task} to obiekt otaczający dowolną wywoływalną funkcję (np. funkcję, lambda, \texttt{std::bind}), który integruje się z future. Pozwala to uruchomić zadanie w wątku i~obserwować jego wynik.
 \begin{lstlisting}[language=C++, style=VS2017,  caption={Przykład użycia std::packaged\_task}, label={packaged_task_example}]
 #include <iostream>
 #include <thread>

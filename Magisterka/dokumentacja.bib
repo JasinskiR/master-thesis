@@ -213,7 +213,8 @@
  @phdthesis{RustPerformance1, title={Evaluating {M}emory {M}odels for {G}raph-{L}ike {D}ata {S}tructures in the {R}ust {P}rogramming {L}anguage: {P}erformance and {U}sabiliy}, url={https://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-168902}, 
  abstractNote={Representing graphs in Rust is a problematic issue, as ownership forbids typical representations found in e.g. C++. A common approach is to use reference counting to represent graphs, but this can easily lead to memory leaks if cycles are present in the graph. As naïve reference counting is not suﬀicient, we must search for alternative representations. In this thesis, we explore different memory models that allow safe representations of graph-like data structures in Rust. These memory models are later evaluated in terms of performance and usability. We find that region-based allocation is, in most cases, the best model to use when performance is of importance. In cases where usability is more important, either reference-counting with cycle collection or tracing garbage collection is a solid choice. When it comes to multi-threading, we propose a new implementation of a lock-free transactional graph in Rust. To our knowledge, this is the first lock-free graph representation in Rust. The model demonstrates poor scalability, but for certain graph topologies and sizes, it offers performance that exceeds the other graph models.}, 
  author={Viitanen, Rasmus}, 
- year={2020} 
+ year={2020},
+ school={Linköping University}
  }
 
 
@@ -538,7 +539,8 @@ abstract = {Context: Developing concurrent software has long been recognized as 
  url={https://urn.kb.se/resolve?urn=urn:nbn:se:kth:diva-280110}, 
  abstractNote={With computer systems increasingly relying on multithreading for increasing performance the importance of multithreaded programs also increase. In this comparative study of performance and implementation complexity, the same multithreaded key-value store database was developed in three languages: Java, Rust and C++. By using a read-focused and a write-focused test, the performance of the three implementations were compared. The amount of operations and cores was varied between the tests. The implementation complexity of the programs was compared by the number of lines of codes (LOC). The results showed that Java was measurably slower at all tests while Rust and C++ displayed roughly equal performance. However, C++ required significantly more lines of code than Rust and Java. This led to the conclusion that in the case of implementing a multithreaded key-value store, Rust is the best suited language.}, 
  author={Heyman, Hugo and Brandefelt, Love}, 
- year={2020}, 
+ year={2020},
+ school={KTH Royal Institute of Technology},
  collection={TRITA-EECS-EX} 
  }
 

@@ -70,12 +70,12 @@ Taka charakterystyka może wskazywać na odmienne podejścia do optymalizacji w 
 \subsubsection{Zużycie pamięci}
 Prawy górny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} przedstawia porównanie zużycia pamięci dla analizowanych implementacji. W przeciwieństwie do wyników wydajnościowych, to język Rust wykazuje zdecydowaną przewagę pod względem efektywności wykorzystania zasobów pamięciowych. Zarówno implementacja wykorzystująca kanał, jak i implementacja wykorzystująca kolejkę w~języku Rust wykazują zużycie pamięci na poziomie 1,9 MB.
 
-Dla porównania, obie implementacje w języku C++ charakteryzują się zużyciem pamięci na poziomie 16,8 MB, co stanowi prawie dziewięciokrotnie wyższe zapotrzebowanie na pamięć w porównaniu do rozwiązań w Rust. Ta różnica wynika prawdopodobnie z odmiennych podejść do zarządzania pamięcią: Rust wykorzystuje system własności i analizę czasu życia obiektów, co pozwala na bardziej efektywne zarządzanie zasobami pamięciowymi.
+Dla porównania, obie implementacje w języku C++ charakteryzują się zużyciem pamięci na poziomie 16,8 MB, co stanowi prawie dziewięciokrotnie wyższe zapotrzebowanie na pamięć w~porównaniu do rozwiązań w Rust. Ta różnica wynika prawdopodobnie z odmiennych podejść do zarządzania pamięcią: Rust wykorzystuje system własności i analizę czasu życia obiektów, co pozwala na bardziej efektywne zarządzanie zasobami pamięciowymi.
 
 \subsubsection{Wydajność względem rozmiaru problemu}
 Lewy dolny wykres - rysunek \ref{analiza_benchmarku_producent_klient_x86_64} ilustruje zależność wydajności od rozmiaru problemu, wyrażonego liczbą przetwarzanych elementów. Ponownie obserwujemy wyraźną przewagę wydajnościową implementacji C++ (niebieskie punkty) nad implementacjami Rust (czerwone punkty) w całym spektrum badanych rozmiarów problemu.
 
-Implementacje C++ utrzymują stałą, wysoką wydajność rzędu $10^5$ wiadomości/s niezależnie od rozmiaru problemu. Implementacje Rust wykazują ogólnie niższą wydajność rzędu $10^1$ do $10^2$ wiadomości/s, z nieznaczną tendencją wzrostową wraz ze zwiększaniem rozmiaru problemu, szczególnie widoczną przy przejściu z 2000 do 6000 elementów. Może to sugerować, że koszty inicjalizacji i zarządzania w Rust są amortyzowane przy większych rozmiarach problemu.
+Implementacje C++ utrzymują stałą, wysoką wydajność rzędu $10^5$ wiadomości/s niezależnie od rozmiaru problemu. Implementacje Rust wykazują ogólnie niższą wydajność rzędu $10^1$ do $10^2$ wiadomości/s, z~nieznaczną tendencją wzrostową wraz ze zwiększaniem rozmiaru problemu, szczególnie widoczną przy przejściu z 2000 do 6000 elementów. Może to sugerować, że koszty inicjalizacji i zarządzania w Rust są amortyzowane przy większych rozmiarach problemu.
 
 
 

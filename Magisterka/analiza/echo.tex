@@ -83,7 +83,7 @@ Prawy dolny wykres -rysunek \ref{analiza_benchmarku_echo_serwer_x86_64} przedsta
 Umiarkowana dodatnia korelacja (0,62) między liczbą wiadomości na sekundę a przepustowością potwierdza oczekiwaną zależność między tymi powiązanymi metrykami. Interesujące są również negatywne korelacje między procentowym wykorzystaniem CPU a przepustowością \mbox{(-0,21)} oraz między wskaźnikiem wydajności a zużyciem pamięci (-0,078), sugerujące, że wyższe obciążenie zasobów nie przekłada się bezpośrednio na lepszą wydajność.
 
 \subsubsection{Podsumowanie}
-Wyniki sugerują, że asynchroniczny model programowania w języku Rust, wykorzystujący zaawansowany system zarządzania zadaniami, oferuje najkorzystniejszy kompromis między wydajnością a skalowalnością dla wymagających zastosowań sieciowych. Implementacja wykorzystująca wielowątkowość w C++ może stanowić rozsądną alternatywę dla systemów o~umiarkowanym obciążeniu, podczas gdy model asynchroniczny w C++ może być preferowany w sytuacjach, gdzie krytyczne znaczenie ma minimalizacja opóźnień pojedynczych operacji.
+Wyniki sugerują, że asynchroniczny model programowania w języku Rust, wykorzystujący zaawansowany system zarządzania zadaniami, oferuje najkorzystniejszy kompromis między wydajnością a skalowalnością dla wymagających zastosowań sieciowych. Implementacja wykorzystująca wielowątkowość w C++ może stanowić rozsądną alternatywę dla systemów o~umiarkowanym obciążeniu, podczas gdy model asynchroniczny w C++ może być preferowany w~sytuacjach, gdzie krytyczne znaczenie ma minimalizacja opóźnień pojedynczych operacji.
 
 \subsection{Porównanie pomiędzy platformami}
 \begin{figure}[H]
@@ -95,7 +95,7 @@ Wyniki sugerują, że asynchroniczny model programowania w języku Rust, wykorzy
 \subsubsection{Przepustowość wiadomości według implementacji}
 Wykres (a) - rysunek \ref{rysunek_1_wydajnosc_sieciowa} przedstawia porównanie przepustowości komunikacji sieciowej, wyrażonej liczbą wiadomości na sekundę, dla architektur x86 i ARM, z uwzględnieniem dwóch typów implementacji: asynchronicznej (kolor zielony) i wątkowej (kolor niebieski). Analiza wykresu wskazuje na dramatyczną różnicę wydajnościową na korzyść architektury ARM:
 \begin{itemize}
-    \item Implementacje na architekturze x86 osiągają przepustowość rzędu $10^1$-$10^2$ wiadomości/s, z medianą około 5-10 wiadomości/s niezależnie od typu implementacji.
+    \item Implementacje na architekturze x86 osiągają przepustowość rzędu $10^1$-$10^2$ wiadomości/s, z~medianą około 5-10 wiadomości/s niezależnie od typu implementacji.
     \item Implementacje na architekturze ARM wykazują przepustowość o 1-2 rzędy wielkości wyższą, osiągając $10^3$-$10^5$ wiadomości/s, z~medianą około $3$-$4\times10^4$ wiadomości/s.
     \item Implementacja wątkowa na ARM osiąga nieznacznie wyższą wydajność median niż implementacja asynchroniczna, podczas gdy na x86 różnica między typami implementacji jest marginalna.
 \end{itemize}
@@ -160,7 +160,7 @@ Wykres (c) - rysunek \ref{rysunek_2_skalowanie_obciazenia} przedstawia rozkład 
 \begin{itemize}
     \item Architektura ARM charakteryzuje się ogólnie niższą medianą latencji (około 500-600 $\mu s$) w~porównaniu do x86 (około 1 000 $\mu s$).
     \item Implementacje na architekturze x86 wykazują znacznie większy rozrzut wartości latencji, co wskazuje na mniej przewidywalne czasy odpowiedzi, szczególnie dla implementacji asynchronicznej (zielony wykres pudełkowy).
-    \item Implementacja wątkowa na x86 (niebieski wykres pudełkowy po lewej) charakteryzuje się występowaniem pojedynczych, ekstremalnie niskich wartości latencji (sięgających około 30 $\mu s$), co może wskazywać na okazjonalną, wyjątkowo efektywną obsługę pewnych typów żądań.
+    \item Implementacja wątkowa na x86 (niebieski wykres pudełkowy po lewej) charakteryzuje się występowaniem pojedynczych, ekstremalnie niskich wartości latencji \mbox{(sięgających około 30 $\mu s$)}, co może wskazywać na okazjonalną, wyjątkowo efektywną obsługę pewnych typów żądań.
     \item Różnica między implementacją asynchroniczną a wątkową jest bardziej wyraźna na architekturze x86 niż na ARM, gdzie obie metody osiągają zbliżoną dystrybucję czasów latencji.
 \end{itemize}
 

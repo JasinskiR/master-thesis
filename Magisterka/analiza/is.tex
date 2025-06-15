@@ -53,7 +53,7 @@ W wyraźnym kontraście pozostaje implementacja w języku Rust, która wykazuje 
 
 Porównując osiągi różnych implementacji, zauważa się wyraźną dominację \texttt{tbb} i \texttt{old\_omp} w klasach A i B. Obie te implementacje osiągają szczytowe wartości na poziomie około \mbox{1200 MFLOPS} przy użyciu 3-4 wątków, natomiast \texttt{new\_omp} nieznacznie ustępuje im, osiągając maksymalnie około 1100 MFLOPS. Różnice te są niewielkie, ale powtarzalne i mogą wskazywać na subtelne różnice w sposobie zarządzania wątkami lub rozdzielania zadań.
 
-W mniejszych klasach problemowych różnice pomiędzy implementacjami są wyraźniejsze, a uzyskane rezultaty mniej przewidywalne. Po raz kolejny wyróżnia się tutaj implementacja \texttt{tbb}, która w klasie W bije rekord wydajności, osiągając wspomniane 1840 MFLOPS. Skalowanie w tych klasach jest nierówne i często nieliniowe, co świadczy o dużej wrażliwości na liczbę wątków oraz właściwości algorytmu w kontekście niewielkich zbiorów danych.
+W mniejszych klasach problemowych różnice pomiędzy implementacjami są wyraźniejsze, a~uzyskane rezultaty mniej przewidywalne. Po raz kolejny wyróżnia się tutaj implementacja \texttt{tbb}, która w klasie W bije rekord wydajności, osiągając wspomniane 1840 MFLOPS. Skalowanie w tych klasach jest nierówne i często nieliniowe, co świadczy o dużej wrażliwości na liczbę wątków oraz właściwości algorytmu w kontekście niewielkich zbiorów danych.
 
 Implementacja \texttt{rust} utrzymuje konsekwentnie niższy poziom wydajności we wszystkich klasach i konfiguracjach. Jest to zaskakujące, biorąc pod uwagę jej bardzo dobre wyniki w innych benchmarkach, takich jak EP.
 \begin{figure}[H]
@@ -129,7 +129,7 @@ Z drugiej strony, najwyższą medianę zmienności MFLOPS (około 0,10) osiąga 
 \end{figure}
 Na wykresie - rysunek \ref{is_porownanie_wydajnosci_x86} rzuca się w oczy wyraźna różnica w charakterystyce wydajnościowej implementacji Rust względem pozostałych rozwiązań. Podczas gdy implementacje \texttt{tbb}, \texttt{old\_omp} i \texttt{new\_omp} wykazują wyraźny wzrost wydajności wraz ze wzrostem liczby wątków, implementacja Rust utrzymuje niemal stały poziom - około 150-160 MFLOPS w klasach A i B - niezależnie od stopnia zrównoleglenia.
 
-W całej analizie dominuje implementacja \texttt{tbb}, która osiąga najwyższe wartości wydajności we wszystkich klasach problemu, szczególnie w klasie W, gdzie przewaga nad rozwiązaniami opartymi na OpenMP sięga kilkuset MFLOPS. Wydajność \texttt{tbb} wzrasta stabilnie do około 5-6 wątków, po czym osiąga linię prostą lub delikatnie spada, co jest typowym zjawiskiem przy nasyceniu zasobów systemowych.
+W całej analizie dominuje implementacja \texttt{tbb}, która osiąga najwyższe wartości wydajności we wszystkich klasach problemu, szczególnie w klasie W, gdzie przewaga nad rozwiązaniami opartymi na OpenMP sięga kilkuset MFLOPS. Wydajność \texttt{tbb} wzrasta stabilnie do około \mbox{5-6} wątków, po czym osiąga linię prostą lub delikatnie spada, co jest typowym zjawiskiem przy nasyceniu zasobów systemowych.
 
 Klasy problemowe różnią się nie tylko poziomem bezwzględnej wydajności, lecz także charakterem skalowania. Klasy A i B zachowują się podobnie - osiągają wysoką wydajność i~wykazują regularne skalowanie. Klasa S prezentuje niższe wartości i bardziej nieregularny przebieg, natomiast klasa W cechuje się najwyższymi szczytowymi wynikami, ale też największym zróżnicowaniem pomiędzy implementacjami.
 
