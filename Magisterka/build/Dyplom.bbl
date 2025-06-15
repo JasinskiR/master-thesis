@@ -91,11 +91,13 @@ T.~Adefemi.
 S.~Ali,  S.~Qayyum.
 \newblock A {P}ragmatic {C}omparison of {F}our {D}ifferent {P}rogramming {L}anguages.
 \newblock \url{https://doi.org/10.14293/S2199-1006.1.SOR-.PP5RV1O.v1}, 06 2021.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{LanguageComparison_2}
 Z.~Alomari, O.~E. Halimi, K.~Sivaprasad, C.~Pandit.
 \newblock Comparative studies of six programming languages.
 \newblock \url{https://arxiv.org/abs/1504.00693}, 2015.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{UnsafeRust}
 V.~Astrauskas, C.~Matheja, F.~Poli, P.~M{\"u}ller, A.~J. Summers.
@@ -292,6 +294,7 @@ S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
 S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
 \newblock Design of an empirical study for comparing the usability of concurrent programming languages.
 \newblock {\em Information and Software Technology}, 55(7):1304--1315, Lip. 2013.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{ParallelProgramming}
 P.~Pacheco.
@@ -318,6 +321,7 @@ L.~Rinaldi, M.~Torquati, M.~Danelutto.
 M.~P. Rooney,  S.~J. Matthews.
 \newblock Evaluating {F}{F}{T} performance of the {C} and {R}ust {L}anguages on {R}aspberry {P}i platforms.
 \newblock {\em 2023 57th Annual Conference on Information Sciences and Systems (CISS)}, strony 1--6, 2023.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{Saligrama2019RustConcurrency}
 A.~Saligrama, A.~Shen, J.~Gjengset.
@@ -347,6 +351,7 @@ J.~Sible,  D.~Svoboda.
 T.~Silva, J.~Bispo, T.~Carvalho.
 \newblock Foundations for a {R}ust-{L}ike {B}orrow {C}hecker for {C}.
 \newblock strony 155 -- 165, 2024.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{ZastosowanieWspolbieznosci}
 H.~Team.
@@ -376,6 +381,7 @@ A.~Tuby,  A.~Morrison.
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
 \newblock Overview of {E}mbedded {R}ust {O}perating {S}ystems and {F}rameworks.
 \newblock {\em Sensors}, 24(17), 2024.
+\newblock [Dostęp: 23-12-2024].
 
 \bibitem{RustPerformance1}
 R.~Viitanen.
@@ -398,10 +404,12 @@ A.~Williams.
 X.~Yin, Z.~Huang, S.~Kan, G.~Shen.
 \newblock Safe{M}{D}: {O}wnership-{B}ased {S}afe {M}emory {D}eallocation for {C} {P}rograms.
 \newblock {\em Electronics}, 13(21), 2024.
+\newblock [Dostęp 16-03-2025].
 
 \bibitem{RustFC}
 Z.~Yu, L.~Song, Y.~Zhang.
 \newblock Fearless {C}oncurrency? {U}nderstanding {C}oncurrent {P}rogramming {S}afety in {R}eal-{W}orld {R}ust {S}oftware.
 \newblock \url{https://arxiv.org/abs/1902.01906}, 2019.
+\newblock [Dostęp 28-01-2025].
 
 \end{thebibliography}
