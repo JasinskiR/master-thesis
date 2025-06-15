@@ -310,25 +310,21 @@ L.~Rinaldi, M.~Torquati, M.~Danelutto.
 M.~P. Rooney,  S.~J. Matthews.
 \newblock Evaluating {F}{F}{T} performance of the {C} and {R}ust {L}anguages on {R}aspberry {P}i platforms.
 \newblock {\em 2023 57th Annual Conference on Information Sciences and Systems (CISS)}, strony 1--6, 2023.
-\newblock [Dostęp 16-03-2025].
 
 \bibitem{Saligrama2019RustConcurrency}
 A.~Saligrama, A.~Shen, J.~Gjengset.
 \newblock A {P}ractical {A}nalysis of {R}ust's {C}oncurrency {S}tory.
 \newblock {\em arXiv preprint arXiv:1904.12210}, Kwi. 2019.
-\newblock [Dostęp: 12-06-2025].
 
 \bibitem{Sesay2024Parallelism}
 I.~M. Sesay.
 \newblock The {C}ritical {R}ole of {P}arallelism and {M}ulticore {P}rocessors in {A}dvancing {H}igh-{L}evel {P}rogramming {P}ractices.
 \newblock {\em Global Science Journal}, Wrze. 2024.
-\newblock [Dostęp: 2025-06-12].
 
 \bibitem{10876950}
 M.~Shehryar,  F.~H. Khan.
 \newblock State-of-the-{A}rt {M}ulti-{C}ore {A}rchitectures: {A}nalyzing {C}urrent {R}esearch, {I}dentifying {G}aps, and {E}xploring {F}uture {D}irections.
 \newblock {\em 2024 21st International Bhurban Conference on Applied Sciences and Technology (IBCAST)}, strony 163--168, 2024.
-\newblock [Dostęp 12-06-2025].
 
 \bibitem{SecurityInRust}
 J.~Sible,  D.~Svoboda.
@@ -339,8 +335,7 @@ J.~Sible,  D.~Svoboda.
 \bibitem{PPL1_2}
 T.~Silva, J.~Bispo, T.~Carvalho.
 \newblock Foundations for a {R}ust-{L}ike {B}orrow {C}hecker for {C}.
-\newblock strony 155 -- 165, 2024.
-\newblock [Dostęp 16-03-2025].
+\newblock {\em Proceedings of the ACM SIGPLAN Conference on Languages, Compilers, and Tools for Embedded Systems ({LCTES})}, strony 155--165, 2024.
 
 \bibitem{ZastosowanieWspolbieznosci}
 H.~Team.
