@@ -105,10 +105,10 @@ Wybrane benchmarki NAS (CG, EP, IS) reprezentują głównie problemy o regularne
 
 Priorytetem dla przyszłych badań powinno być przeprowadzenie eksperymentów na maszynach Apple wyposażonych zarówno w procesory Intel, jak i Apple Silicon, co pozwoliłoby na:
 \begin{itemize}
-    \item Eliminację zmienności wynikającej z różnic systemowych między macOS a Linux
-    \item Użycie identycznego kompilatora (Clang) i bibliotek systemowych
-    \item Precyzyjną izolację wpływu architektury procesora od wpływu środowiska systemowego
-    \item Kontrolę nad identycznością mechanizmów szeregowania zadań
+    \item Eliminację zmienności wynikającej z różnic systemowych między macOS a Linux,
+    \item Użycie identycznego kompilatora (Clang) i bibliotek systemowych,
+    \item Precyzyjną izolację wpływu architektury procesora od wpływu środowiska systemowego,
+    \item Kontrolę nad identycznością mechanizmów szeregowania zadań.
 \end{itemize}
 
 \subsection{Rozszerzenie zakresu architektur i platform}
@@ -117,20 +117,20 @@ Priorytetem dla przyszłych badań powinno być przeprowadzenie eksperymentów n
 
 Dalsze badania powinny uwzględnić systemy hybrydowe wykorzystujące:
 \begin{itemize}
-    \item GPU poprzez CUDA (C++) i rust-gpu/wgpu (Rust)
-    \item Systemy SoC z dedykowanymi akceleratorami (NPU, DSP)
-    \item Platformy FPGA w kontekście programowania wysokiej wydajności
-    \item Procesory RISC-V jako alternatywę dla ARM i x86
+    \item GPU poprzez CUDA (C++) i rust-gpu/wgpu (Rust),
+    \item Systemy SoC z dedykowanymi akceleratorami (NPU, DSP),
+    \item Platformy FPGA w kontekście programowania wysokiej wydajności,
+    \item Procesory RISC-V jako alternatywę dla ARM i x86.
 \end{itemize}
 
 \subsubsection{Nowe paradygmaty programowania}
 
 Eksploracja powinna obejmować:
 \begin{itemize}
-    \item Model aktorowy (Actix dla Rust a CAF dla C++)
-    \item Programowanie przepływu danych oraz reaktywne strumienie danych
-    \item Mechanizmy C++20 \texttt{coroutines} a Rust \texttt{async/await}
-    \item Hybrydowe modele łączące synchroniczne i asynchroniczne wzorce
+    \item Model aktorowy (Actix dla Rust a CAF dla C++),
+    \item Programowanie przepływu danych oraz reaktywne strumienie danych,
+    \item Mechanizmy C++20 \texttt{coroutines} a Rust \texttt{async/await},
+    \item Hybrydowe modele łączące synchroniczne i asynchroniczne wzorce.
 \end{itemize}
 
 

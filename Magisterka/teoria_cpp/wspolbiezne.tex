@@ -80,7 +80,7 @@ W tym przykładzie - listing \ref{scoped_lock_example} dwa wątki próbują jedn
 Mechanizmy \texttt{std::latch} oraz \texttt{std::barrier} wprowadzone w standardzie C++20 służą do synchronizacji wielu wątków w określonym punkcie programu:
 \begin{itemize}
     \item \texttt{std::latch} - jednorazowy licznik synchronizacyjny, który pozwala wątkom oczekującym na rozpoczęcie działania, aż inne wątki zakończą przygotowanie.
-    \item \texttt{std::barrier} - wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu „cyklu bariery”.
+    \item \texttt{std::barrier} - wielokrotnego użytku, synchronizuje grupę wątków po osiągnięciu "cyklu bariery".
 \end{itemize}
 \begin{lstlisting}[language=C++, style=VS2017,  caption={Przykład użycia std::latch oraz std::barrier}, label={latch_barrier_example}]
 #include <iostream>

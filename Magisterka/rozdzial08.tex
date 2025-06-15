@@ -446,20 +446,20 @@ W C++ bezpieczeństwo współbieżności opiera się na odpowiedzialności progr
 Analiza rzeczywistych implementacji ujawnia konkretne kompromisy między językami w kontekście programowania współbieżnego.
 Rust z Tokio charakteryzuje się:
 \begin{itemize}
-    \item Bezpieczeństwem w czasie kompilacji przez system własności i cechy \texttt{Send/Sync}
-    \item Architekturą sterowaną zdarzeniami z efektywnym wykorzystaniem zasobów
-    \item Wymuszonym obsługą błędów eliminującym ciche awarie \eng{silent failures}
-    \item Ograniczonymi możliwościami introspekcji środowiska wykonawczego
-    \item Zależnością od zewnętrznych pakietów \eng{external crates} dla podstawowej funkcjonalności
+    \item Bezpieczeństwem w czasie kompilacji przez system własności i cechy \texttt{Send/Sync},
+    \item Architekturą sterowaną zdarzeniami z efektywnym wykorzystaniem zasobów,
+    \item Wymuszonym obsługą błędów eliminującym ciche awarie \eng{silent failures},
+    \item Ograniczonymi możliwościami introspekcji środowiska wykonawczego,
+    \item Zależnością od zewnętrznych pakietów \eng{external crates} dla podstawowej funkcjonalności.
 \end{itemize}
 
 C++ ze standardową biblioteką oferuje:
 \begin{itemize}
-    \item Bezpośrednią kontrolę nad zasobami systemowymi i układem pamięci
-    \item Kompleksowe monitorowanie i profilowanie w czasie wykonania  
-    \item Kompatybilność międzyplatformową z ręcznymi abstrakcjami platformowymi
-    \item Model wątek na połączenie z przewidywalnym użyciem zasobów
-    \item Ryzyko błędów w czasie wykonania wymagające ostrożnej synchronizacji
+    \item Bezpośrednią kontrolę nad zasobami systemowymi i układem pamięci,
+    \item Kompleksowe monitorowanie i profilowanie w czasie wykonania,
+    \item Kompatybilność międzyplatformową z ręcznymi abstrakcjami platformowymi,
+    \item Model wątek na połączenie z przewidywalnym użyciem zasobów,
+    \item Ryzyko błędów w czasie wykonania wymagające ostrożnej synchronizacji.
 \end{itemize}
 
 W praktyce wybór między językami zależy od priorytetów projektu: bezpieczeństwo a~kontrola, produktywność a elastyczność, nowoczesność a kompatybilność. Należy również uwzględnić kompetencje zespołu oraz wymagania środowiska docelowego.

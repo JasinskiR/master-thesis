@@ -103,11 +103,11 @@ Jednym z kluczowych wyróżników języka Rust jest rygorystyczny system bezpiec
 
 Deklaracja \texttt{unsafe} nie oznacza, że kod z założenia jest błędny lub niewłaściwy. Oznacza jedynie, że kompilator przestaje gwarantować bezpieczeństwo pamięciowe i odpowiedzialność za poprawność działania spoczywa w pełni na programiście. Z poziomu \texttt{unsafe} można wykonać następujące operacje \cite{UnsafeRust,TheRustProgrammingLanguage} :
 \begin{itemize}
-\item dereferencję wskaźników surowych \eng{raw pointers},
-\item wywołanie funkcji lub interfejsów oznaczonych jako \texttt{unsafe} (np. z FFI - \eng{Foreign Function Interface}, czyli interfejs do wywoływania funkcji z innych języków, np. C),
-\item dostęp do zmiennych statycznych o niesynchronizowanym dostępie,
-\item implementację niektórych cech \eng{traits} systemowych w sposób potencjalnie niebezpieczny,
-\item bezpośrednią manipulację pamięcią (alokacja, kopiowanie, itd.).
+\item Dereferencję wskaźników surowych \eng{raw pointers},
+\item Wywołanie funkcji lub interfejsów oznaczonych jako \texttt{unsafe} (np. z FFI - \eng{Foreign Function Interface}, czyli interfejs do wywoływania funkcji z innych języków, np. C),
+\item Dostęp do zmiennych statycznych o niesynchronizowanym dostępie,
+\item Implementację niektórych cech \eng{traits} systemowych w sposób potencjalnie niebezpieczny,
+\item Bezpośrednią manipulację pamięcią (alokacja, kopiowanie, itd.).
 \end{itemize} 
 Poniższy przykład demonstruje dereferencję wskaźnika surowego (\texttt{*const T, *mut T}), która wymaga bloku \texttt{unsafe}:
 \begin{lstlisting}[language=Rust, caption=Przykład użycia unsafe Rust, label=unsafe_rust_example]

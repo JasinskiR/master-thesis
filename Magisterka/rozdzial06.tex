@@ -165,58 +165,58 @@ implementacje = [("rust", "async"), ("cpp", "threaded"), ("cpp", "async")]
 
 \subsubsection{Metryki czasowe}
 \begin{itemize}
-    \item Czas wykonania - całkowity czas trwania eksperymentu wyrażony w sekundach
-    \item Przepustowość - liczba operacji lub komunikatów przetworzonych na sekundę
-    \item Opóźnienia synchronizacji muteksów - średni czas blokowania wyrażony w mikrosekundach
-    \item Czas tworzenia zadań asynchronicznych (Rust) - czas inicjalizacji zadania asynchronicznego
-    \item Narzut przełączania kontekstu (C++) - koszt czasowy przełączania między wątkami
+    \item Czas wykonania - całkowity czas trwania eksperymentu wyrażony w sekundach.
+    \item Przepustowość - liczba operacji lub komunikatów przetworzonych na sekundę.
+    \item Opóźnienia synchronizacji muteksów - średni czas blokowania wyrażony w mikrosekundach.
+    \item Czas tworzenia zadań asynchronicznych (Rust) - czas inicjalizacji zadania asynchronicznego.
+    \item Narzut przełączania kontekstu (C++) - koszt czasowy przełączania między wątkami.
 \end{itemize}
 
 \subsubsection{Metryki wykorzystania zasobów systemowych}
 \begin{itemize}
-    \item Pamięć RSS \eng{Resident Set Size} - rzeczywiste zużycie pamięci fizycznej wyrażone w~kilobajtach
+    \item Pamięć RSS \eng{Resident Set Size} - rzeczywiste zużycie pamięci fizycznej wyrażone w~kilobajtach.
     \item Estymacja pamięci sterty - szacowana pamięć sterty na strukturę danych:
     \begin{itemize}
-        \item Bufory \texttt{mpsc::channel}
-        \item Pojemność a rozmiar \texttt{std::vector}
-        \item Wewnętrzne przechowywanie \texttt{VecDeque}
-        \item Narzut stosu wątków (2048KB + metadane na wątek)
+        \item Bufory \texttt{mpsc::channel},
+        \item Pojemność a rozmiar \texttt{std::vector},
+        \item Wewnętrzne przechowywanie \texttt{VecDeque},
+        \item Narzut stosu wątków (2048KB + metadane na wątek).
     \end{itemize}
     \item Szczytowe zużycie pamięci - maksymalne zużycie podczas eksperymentu:
     \begin{itemize}
-        \item Serwer echa: ciągły monitoring co 500ms
-        \item Producent-konsument: migawka przed i po eksperymencie
-        \item Pomiar wieloplatformowy (Linux: /proc, macOS: ps)
+        \item Serwer echa: ciągły monitoring co 500ms,
+        \item Producent-konsument: migawka przed i po eksperymencie,
+        \item Pomiar wieloplatformowy (Linux: /proc, macOS: ps).
     \end{itemize}
-    \item Narzut środowiska wykonawczego - pamięć wykorzystywana przez środowisko uruchomieniowe języka
+    \item Narzut środowiska wykonawczego - pamięć wykorzystywana przez środowisko uruchomieniowe języka.
 \end{itemize}
 
 \subsection{Środowisko eksperymentalne}
 
 \subsubsection{Konfiguracja procesu kompilacji}
 \begin{itemize}
-    \item Rust: \texttt{cargo build --release} z pełnymi optymalizacjami kompilatora
-    \item C++: \texttt{g++ -O3 -DNDEBUG -std=c++20 -pthread}
-    \item Alokator pamięci: jemalloc dla języka Rust, systemowy alokator dla języka C++
-    \item Architektura docelowa: natywna architektura procesora (\texttt{-march=native})
+    \item Rust: \texttt{cargo build --release} z pełnymi optymalizacjami kompilatora,
+    \item C++: \texttt{g++ -O3 -DNDEBUG -std=c++20 -pthread},
+    \item Alokator pamięci: jemalloc dla języka Rust, systemowy alokator dla języka C++,
+    \item Architektura docelowa: natywna architektura procesora (\texttt{-march=native}).
 \end{itemize}
 
 \subsubsection{Konfiguracja środowiska uruchomieniowego}
 \begin{itemize}
-    \item Wątki Tokio: ręcznie ustawiane
-    \item Wątki C++: \texttt{std::thread::hardware\_concurrency()}
-    \item Rozmiar stosu: domyślne ustawienia systemowe (8MB Linux, 2MB macOS)
-    \item Limity połączeń: ograniczenia na poziomie systemu operacyjnego \texttt{ulimit -n}
+    \item Wątki Tokio: ręcznie ustawiane,
+    \item Wątki C++: \texttt{std::thread::hardware\_concurrency()},
+    \item Rozmiar stosu: domyślne ustawienia systemowe (8MB Linux, 2MB macOS),
+    \item Limity połączeń: ograniczenia na poziomie systemu operacyjnego \texttt{ulimit -n}.
 \end{itemize}
 
 \subsection{Procedura pomiarowa}
 
 \subsubsection{Protokół eksperymentalny}
 \begin{itemize}
-    \item Serie pomiarowe: 10 powtórzenia z pełnym pomiarem
-    \item Okres stabilizacji: 200ms (producent-konsument) lub 1000ms (serwer echa) między eksperymentami
-    \item Limit czasu wykonania: 300s dla eksperymentów serwera echa, 30s na połączenie dla implementacji Rust
-    \item Brak fazy rozgrzewki \eng{warmup runs} - pomiary od pierwszego uruchomienia
+    \item Serie pomiarowe: 10 powtórzenia z pełnym pomiarem,
+    \item Okres stabilizacji: 200ms (producent-konsument) lub 1000ms (serwer echa) między eksperymentami,
+    \item Limit czasu wykonania: 300s dla eksperymentów serwera echa, 30s na połączenie dla implementacji Rust,
+    \item Brak fazy rozgrzewki \eng{warmup runs} - pomiary od pierwszego uruchomienia.
 \end{itemize}
 
 \subsection{Narzędzia badawcze i automatyzacja}
@@ -224,16 +224,16 @@ implementacje = [("rust", "async"), ("cpp", "threaded"), ("cpp", "async")]
 \subsubsection{Aplikacja uruchamiająca eksperymenty}
 Skrypt Python z automatycznym:
 \begin{itemize}
-    \item Parsowaniem argumentów linii poleceń
-    \item Kontrolą limitów czasu
-    \item Generowaniem plików CSV z wynikami
-    \item Zbieraniem informacji o systemie (OS, architektura, procesor, pamięć)
+    \item Parsowaniem argumentów linii poleceń,
+    \item Kontrolą limitów czasu,
+    \item Generowaniem plików CSV z wynikami,
+    \item Zbieraniem informacji o systemie (OS, architektura, procesor, pamięć).
 \end{itemize}
 
 \subsubsection{Wsparcie wieloplatformowe}
 \begin{itemize}
-    \item \textbf{Linux}: \texttt{/proc/self/status} dla pomiaru pamięci RSS
-    \item \textbf{macOS}: \texttt{mach\_task\_basic\_info} i polecenie \texttt{ps}
+    \item \textbf{Linux}: \texttt{/proc/self/status} dla pomiaru pamięci RSS,
+    \item \textbf{macOS}: \texttt{mach\_task\_basic\_info} i polecenie \texttt{ps}.
 \end{itemize}
 
 \section{Programowanie równoległe}
@@ -241,35 +241,35 @@ W przypadku programowania równoległego, zdecydowano się na wykorzystanie uzna
 \subsection{Wydajność obliczeniowa}
 Główne metryki oceny wydajności algorytmów równoległych to:
 \begin{itemize}
-\item czas wykonania algorytmów równoległych (w milisekundach),
-\item współczynnik przyspieszenia (T1/Tn) dla różnych liczby wątków,
-\item efektywność (przyspieszenie/liczba procesorów).
+\item Czas wykonania algorytmów równoległych (w milisekundach),
+\item Współczynnik przyspieszenia (T1/Tn) dla różnych liczby wątków,
+\item Efektywność (przyspieszenie/liczba procesorów).
 \end{itemize}
 
 \subsection{Wydajność sprzętowa (MFLOP/s)}
 Wydajność obliczeniowa mierzona w jednostkach MFLOP/s (megaflops per second) pozwala na ocenę efektywności wykorzystania sprzętu:
 \begin{itemize}
-\item wydajność w pojedynczym wątku,
-\item wydajność wielowątkowa,
-\item efektywność skalowania (MFLOP/s na rdzeń).
+\item Wydajność w pojedynczym wątku,
+\item Wydajność wielowątkowa,
+\item Efektywność skalowania (MFLOP/s na rdzeń).
 \end{itemize}
 Dodatkowo przeprowadzona zostanie analiza zgodnie z prawem Amdahla w celu określenia teoretycznych ograniczeń przyspieszenia obliczeń.
 
 \subsection{Zasoby systemowe}
 Analiza zużycia zasobów przez algorytmy równoległe obejmuje:
 \begin{itemize}
-\item procentowe wykorzystanie CPU,
-\item zużycie pamięci w warunkach obciążenia,
-\item współczynnik nietrafień w cache,
-\item liczbę operacji wejścia-wyjścia na sekundę.
+\item Procentowe wykorzystanie CPU,
+\item Zużycie pamięci w warunkach obciążenia,
+\item Współczynnik nietrafień w cache,
+\item Liczbę operacji wejścia-wyjścia na sekundę.
 \end{itemize}
 
 \subsection{Wybrane algorytmy do analizy}
 Dla porównania mechanizmów równoległości wybrano następujące algorytmy z zestawu testowego NPB:
 \begin{itemize}
-    \item CG - \eng{conjugate gradient} - gradient sprzężony
-    \item EP - \eng{embarrassingly parallel} - problem trywialnie równoległy
-    \item IS - \eng{integer sorting} - sortowanie liczb całkowitych
+    \item CG - \eng{conjugate gradient} - gradient sprzężony,
+    \item EP - \eng{embarrassingly parallel} - problem trywialnie równoległy,
+    \item IS - \eng{integer sorting} - sortowanie liczb całkowitych.
 \end{itemize}
 
 Wybór powyższych benchmarków pozwoli na szczegółową analizę wydajności oraz stabilności obu języków w kontekście programowania współbieżnego i równoległego, umożliwiając sformułowanie rekomendacji dotyczących wyboru narzędzi w zależności od specyfiki projektu.
@@ -322,10 +322,10 @@ Nazwa hosta & \texttt{mbp-m1} \\
 
 Procesor Apple M1 charakteryzuje się architekturą heterogeniczną \eng{big.LITTLE} z rdzeniami o różnej wydajności:
 \begin{itemize}
-    \item \textbf{Performance cores (P-cores)}: 4 rdzenie wysokowydajne o częstotliwości do 3.2 GHz
-    \item \textbf{Efficiency cores (E-cores)}: 4 rdzenie energooszczędne o częstotliwości do 2.0 GHz
-    \item \textbf{Unified Memory Architecture}: Wspólna pamięć dla CPU i GPU eliminująca kopiowanie danych
-    \item \textbf{Pamięć podręczna}: Hierarchiczna struktura z dedykowanymi poziomami L1/L2 per rdzeń
+    \item \textbf{Performance cores (P-cores)}: 4 rdzenie wysokowydajne o częstotliwości do 3.2 GHz,
+    \item \textbf{Efficiency cores (E-cores)}: 4 rdzenie energooszczędne o częstotliwości do 2.0 GHz,
+    \item \textbf{Unified Memory Architecture}: Wspólna pamięć dla CPU i GPU eliminująca kopiowanie danych,
+    \item \textbf{Pamięć podręczna}: Hierarchiczna struktura z dedykowanymi poziomami L1/L2 per rdzeń.
 \end{itemize}
 
 \subsubsection{Platforma x86\_64 - Intel}
@@ -362,11 +362,11 @@ Nazwa hosta & \texttt{hp-intel} \\
 
 Procesor Intel Core Ultra 7 165H (Meteor Lake) również wykorzystuje architekturę heterogeniczną:
 \begin{itemize}
-    \item \textbf{P-cores}: 6 rdzeni wysokowydajnych z obsługą Hyper-Threading (12 wątków logicznych)
-    \item \textbf{E-cores}: 8 rdzeni energooszczędnych (8 wątków logicznych)
-    \item \textbf{LP E-cores}: 2 rdzenie niskoenergiczne (2 wątki logiczne)
-    \item \textbf{NUMA}: Non-Uniform Memory Access z Package L\#0
-    \item \textbf{Technologie}: Intel Turbo Boost, Intel Speed Shift, Advanced Vector Extensions (AVX2)
+    \item \textbf{P-cores}: 6 rdzeni wysokowydajnych z obsługą Hyper-Threading (12 wątków logicznych),
+    \item \textbf{E-cores}: 8 rdzeni energooszczędnych (8 wątków logicznych),
+    \item \textbf{LP E-cores}: 2 rdzenie niskoenergiczne (2 wątki logiczne),
+    \item \textbf{NUMA}: Non-Uniform Memory Access z Package L\#0,
+    \item \textbf{Technologie}: Intel Turbo Boost, Intel Speed Shift, Advanced Vector Extensions (AVX2).
 \end{itemize}
 
 \subsection{Środowiska programistyczne}
@@ -390,9 +390,9 @@ x86\_64 (Linux) & rustc 1.75.0 & g++ 11.4.0 \\
 
 \subsubsection{Flagi kompilacji}
 \begin{itemize}
-    \item \textbf{Rust}: \texttt{cargo build --release} z optymalizacjami \texttt{opt-level = 3}
-    \item \textbf{C++ (Linux)}: \texttt{g++ -O3 -DNDEBUG -std=c++20 -pthread -march=native}
-    \item \textbf{C++ (macOS)}: \texttt{clang++ -O3 -DNDEBUG -std=c++20 -pthread}
+    \item \textbf{Rust}: \texttt{cargo build --release} z optymalizacjami \texttt{opt-level = 3},
+    \item \textbf{C++ (Linux)}: \texttt{g++ -O3 -DNDEBUG -std=c++20 -pthread -march=native},
+    \item \textbf{C++ (macOS)}: \texttt{clang++ -O3 -DNDEBUG -std=c++20 -pthread}.
 \end{itemize}
 \subsection{Narzędzia pomiarowe i diagnostyczne}
 
@@ -401,18 +401,18 @@ x86\_64 (Linux) & rustc 1.75.0 & g++ 11.4.0 \\
 \subsubsection{Linux x86\_64 - perf}
 Monitorowane metryki:
 \begin{itemize}
-    \item \textbf{Cykle procesora}: Całkowita liczba cykli zegara
-    \item \textbf{Instrukcje}: Liczba wykonanych instrukcji
-    \item \textbf{Cache performance}: Trafienia i chybienia pamięci podręcznej
-    \item \textbf{Predykcja rozgałęzień}: Skuteczność branch prediction
-    \item \textbf{Przełączenia kontekstu}: Częstotliwość context switching
+    \item \textbf{Cykle procesora}: Całkowita liczba cykli zegara,
+    \item \textbf{Instrukcje}: Liczba wykonanych instrukcji,
+    \item \textbf{Cache performance}: Trafienia i chybienia pamięci podręcznej,
+    \item \textbf{Predykcja rozgałęzień}: Dokładność mechanizmów przewidywania rozgałęzień warunkowych,
+    \item \textbf{Przełączenia kontekstu}: Liczba operacji zmiany kontekstu wykonywania.
 \end{itemize}
 
 \subsubsection{macOS ARM64 - Instruments}
 Wykorzystanie pakietu Xcode Instruments:
 \begin{itemize}
-    \item \textbf{System Trace}: Analiza planowania wątków i synchronizacji
-    \item \textbf{Allocations}: Monitorowanie alokacji i dealokacji pamięci
-    \item \textbf{Time Profiler}: Profilowanie czasowe z dokładnością do funkcji
-    \item \textbf{System Usage}: Wykorzystanie zasobów systemowych
+    \item \textbf{System Trace}: Analiza planowania wątków i synchronizacji,
+    \item \textbf{Allocations}: Monitorowanie alokacji i dealokacji pamięci,
+    \item \textbf{Time Profiler}: Profilowanie czasowe z dokładnością do funkcji,
+    \item \textbf{System Usage}: Wykorzystanie zasobów systemowych.
 \end{itemize}
