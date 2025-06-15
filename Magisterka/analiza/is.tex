@@ -53,7 +53,7 @@ W wyraźnym kontraście pozostaje implementacja w języku Rust, która wykazuje 
 
 Porównując osiągi różnych implementacji, zauważa się wyraźną dominację \texttt{tbb} i \texttt{old\_omp} w klasach A i B. Obie te implementacje osiągają szczytowe wartości na poziomie około \mbox{1200 MFLOPS} przy użyciu 3-4 wątków, natomiast \texttt{new\_omp} nieznacznie ustępuje im, osiągając maksymalnie około 1100 MFLOPS. Różnice te są niewielkie, ale powtarzalne i mogą wskazywać na subtelne różnice w sposobie zarządzania wątkami lub rozdzielania zadań.
 
-W mniejszych klasach problemowych różnice pomiędzy implementacjami są wyraźniejsze, a~uzyskane rezultaty mniej przewidywalne. Po raz kolejny wyróżnia się tutaj implementacja \texttt{tbb}, która w klasie W bije rekord wydajności, osiągając wspomniane 1840 MFLOPS. Skalowanie w tych klasach jest nierówne i często nieliniowe, co świadczy o dużej wrażliwości na liczbę wątków oraz właściwości algorytmu w kontekście niewielkich zbiorów danych.
+W mniejszych klasach problemowych różnice pomiędzy implementacjami są wyraźniejsze, a~uzyskane rezultaty mniej przewidywalne. Po raz kolejny wyróżnia się tutaj implementacja \texttt{tbb}, która w klasie W bije rekord wydajności, osiągając wspomniane 1840 MFLOPS. Skalowanie w~tych klasach jest nierówne i często nieliniowe, co świadczy o dużej wrażliwości na liczbę wątków oraz właściwości algorytmu w kontekście niewielkich zbiorów danych.
 
 Implementacja \texttt{rust} utrzymuje konsekwentnie niższy poziom wydajności we wszystkich klasach i konfiguracjach. Jest to zaskakujące, biorąc pod uwagę jej bardzo dobre wyniki w innych benchmarkach, takich jak EP.
 \begin{figure}[H]
