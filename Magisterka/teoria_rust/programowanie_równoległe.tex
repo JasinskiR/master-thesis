@@ -20,7 +20,7 @@ fn main() {
 \end{lstlisting}
 Kod przedstawiony w listingu \ref{pariter_example} realizuje prostą operację podwajania wartości elementów wektora oraz ich sumowania, jednak kluczową cechą jest to, że wszystkie operacje wykonywane są równolegle. Funkcja \texttt{par\_iter()} zamienia standardowy iterator sekwencyjny na jego równoległy odpowiednik, co oznacza, że kolejne elementy będą przetwarzane na wielu rdzeniach procesora w sposób automatyczny i zoptymalizowany przez bibliotekę.
 
-Następnie funkcja \texttt{map} pozwala na równoległe zastosowanie tej samej operacji - w tym przypadku mnożenia przez 2 - do każdego elementu kolekcji. Nie wymaga to żadnej ręcznej synchronizacji ani zarządzania współbieżnością — biblioteka zajmuje się podziałem pracy i wykonaniem w sposób optymalny względem dostępnych zasobów sprzętowych.
+Następnie funkcja \texttt{map} pozwala na równoległe zastosowanie tej samej operacji - w tym przypadku mnożenia przez 2 - do każdego elementu kolekcji. Nie wymaga to żadnej ręcznej synchronizacji ani zarządzania współbieżnością - biblioteka zajmuje się podziałem pracy i~wykonaniem w sposób optymalny względem dostępnych zasobów sprzętowych.
 
 Ostatni etap przetwarzania to \texttt{reduce}, który agreguje wyniki cząstkowe w jeden wynik końcowy. Funkcja ta działa również równolegle: najpierw sumowane są wartości lokalnie (w ramach każdego wątku roboczego), a dopiero potem następuje łączenie tych częściowych sum w jedną finalną wartość. Neutralny element funkcji redukującej to 0, co jest standardowym przypadkiem przy sumowaniu liczb całkowitych.
 
