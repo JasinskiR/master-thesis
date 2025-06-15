@@ -135,7 +135,7 @@ M.~Bos.
 ByteByteGo.
 \newblock {E}{P}108: {H}ow do we design a secure system? --- blog.bytebytego.com.
 \newblock \url{https://blog.bytebytego.com/p/ep108-how-do-we-design-a-secure-system?utm_campaign=post&utm_medium=web}.
-\newblock [Dostęp 09-03-2025].
+\newblock [Dostęp: 09-03-2025].
 
 \bibitem{ProgramminInOpenMp}
 R.~Chandra.
@@ -180,6 +180,7 @@ Z.~Fehervari.
 M.~J. Flynn.
 \newblock Some {C}omputer {O}rganizations and {T}heir {E}ffectiveness.
 \newblock {\em IEEE Transactions on Computers}, C-21(9):948--960, 1972.
+\newblock [Dostęp 11-06-2025].
 
 \bibitem{RustSafety1}
 K.~R. Fulton, A.~Chan, D.~Votipka, M.~Hicks, M.~L. Mazurek.
@@ -201,22 +202,24 @@ Y.~Gusakov.
 P.~Hazarika,  R.~Budania.
 \newblock Rust vs {C}++: {P}erformance, {S}afety, and {U}se {C}ases {C}ompared.
 \newblock \url{https://www.codeporting.com/blog/rust_vs_cpp_performance_safety_and_use_cases_compared}, 2025.
-\newblock Accessed: 2025-06-12.
+\newblock Dostęp: 2025-06-12.
 
 \bibitem{heyman2020comparison}
 H.~Heyman,  L.~Brandefelt.
-\newblock A {C}omparison of {P}erformance \& {I}mplementation {C}omplexity of {M}ultithreaded {A}pplications in {R}ust, {J}ava and {C}++, 2020.
+\newblock {\em A {C}omparison of {P}erformance \& {I}mplementation {C}omplexity of {M}ultithreaded {A}pplications in {R}ust, {J}ava and {C}++}.
+\newblock Praca doktorska, 2020.
 
 \bibitem{RapidInnovationMasteringRust}
 R.~Innovation.
 \newblock {M}astering {R}ust {C}oncurrency \& {P}arallelism: {U}ltimate {G}uide 2024 --- rapidinnovation.io.
 \newblock \url{https://www.rapidinnovation.io/post/concurrent-and-parallel-programming-with-rust#2-basics-of-rust-for-concurrent-programming}.
-\newblock [Dostęp 23-12-2024].
+\newblock [Dostęp: 23-12-2024].
 
 \bibitem{arml2c}
 M.~Jalili,  M.~Erez.
 \newblock Harvesting {L}2 {C}aches in {S}erver {P}rocessors.
 \newblock \url{https://arxiv.org/abs/2301.04228}, 2023.
+\newblock [Dostęp: 2025-06-11].
 
 \bibitem{RustSafety3}
 R.~Jung, J.-H. Jourdan, R.~Krebbers, D.~Dreyer.
@@ -266,11 +269,13 @@ M.~Lindgren.
 J.~Löff, D.~Griebler, G.~Mencagli, G.~Araujo, M.~Torquati, M.~Danelutto, L.~G. Fernandes.
 \newblock The {N}{A}{S} {P}arallel {B}enchmarks for evaluating {C}++ parallel programming frameworks on shared-memory architectures.
 \newblock {\em Future Generation Computer Systems}, 125:743--757, 2021.
+\newblock [Dostęp 17-04-2025].
 
 \bibitem{martins2025npbrustnasparallelbenchmarks}
 E.~M. Martins, L.~G. Faé, R.~B. Hoffmann, L.~S. Bianchessi, D.~Griebler.
 \newblock {N}{P}{B}-{R}ust: {N}{A}{S} {P}arallel {B}enchmarks in {R}ust.
 \newblock \url{https://arxiv.org/abs/2502.15536}, 2025.
+\newblock [Dostęp: 2025-05-18].
 
 \bibitem{mitzenmacher2017probability}
 M.~Mitzenmacher,  E.~Upfal.
@@ -297,7 +302,7 @@ P.~Pacheco.
 W.~Paluszynski.
 \newblock {S}ystemy {C}zasu {R}zeczywistego i {S}ieci {K}omputerowe - {W}itold {P}aluszynski --- kcir.pwr.edu.pl.
 \newblock \url{https://kcir.pwr.edu.pl/~witold/scrsk/#literatura}.
-\newblock [Dostęp 10-03-2025].
+\newblock [Dostęp: 10-03-2025].
 
 \bibitem{RustSafety2}
 A.~Pinho, L.~Couto, J.~Oliveira.
@@ -318,23 +323,25 @@ M.~P. Rooney,  S.~J. Matthews.
 A.~Saligrama, A.~Shen, J.~Gjengset.
 \newblock A {P}ractical {A}nalysis of {R}ust's {C}oncurrency {S}tory.
 \newblock {\em arXiv preprint arXiv:1904.12210}, Kwi. 2019.
-\newblock [Dostęp: 2025-06-12].
+\newblock [Dostęp: 12-06-2025].
 
 \bibitem{Sesay2024Parallelism}
 I.~M. Sesay.
 \newblock The {C}ritical {R}ole of {P}arallelism and {M}ulticore {P}rocessors in {A}dvancing {H}igh-{L}evel {P}rogramming {P}ractices.
 \newblock {\em Global Science Journal}, Wrze. 2024.
+\newblock [Dostęp: 2025-06-12].
 
 \bibitem{10876950}
 M.~Shehryar,  F.~H. Khan.
 \newblock State-of-the-{A}rt {M}ulti-{C}ore {A}rchitectures: {A}nalyzing {C}urrent {R}esearch, {I}dentifying {G}aps, and {E}xploring {F}uture {D}irections.
 \newblock {\em 2024 21st International Bhurban Conference on Applied Sciences and Technology (IBCAST)}, strony 163--168, 2024.
+\newblock [Dostęp 12-06-2025].
 
 \bibitem{SecurityInRust}
 J.~Sible,  D.~Svoboda.
 \newblock Rust {S}oftware {S}ecurity: {A} {C}urrent {S}tate {A}ssessment.
 \newblock \url{https://doi.org/10.58012/0px4-9n81}, Dec 2022.
-\newblock [Dostęp: 2025-03-12].
+\newblock [Dostęp: 12-03-2025].
 
 \bibitem{PPL1_2}
 T.~Silva, J.~Bispo, T.~Carvalho.
@@ -357,12 +364,13 @@ B.~Troutwine.
 A.~Tuby,  A.~Morrison.
 \newblock Reverse {E}ngineering the {A}pple {M}1 {C}onditional {B}ranch {P}redictor for {O}ut-of-{P}lace {S}pectre {M}istraining.
 \newblock \url{https://arxiv.org/abs/2502.10719}, 2025.
+\newblock [Dostęp: 2025-05-18].
 
 \bibitem{DoD2023MemorySafe}
 {U.S. {D}epartment of {D}efense {C}hief {I}nformation {O}fficer}.
 \newblock The {C}ase for {M}emory-{S}afe {R}oadmaps.
 \newblock \url{https://media.defense.gov/2023/Dec/06/2003352724/-1/-1/0/THE-CASE-FOR-MEMORY-SAFE-ROADMAPS-TLP-CLEAR.PDF}, December 2023.
-\newblock Dostęp: 2025-06-12.
+\newblock [Dostęp: 12-06-2025].
 
 \bibitem{ZamiennikWEmbedded}
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
@@ -378,7 +386,7 @@ R.~Viitanen.
 V.~Q.~T. (vuquangtrong@gmail.com).
 \newblock {I}ntroduction to {P}arallel {P}rogramming in {C}++ with {O}pen{M}{P} - {S}tephan {O}\&apos;{B}rien --- physics.mcgill.ca.
 \newblock \url{https://www.physics.mcgill.ca/~obriens/Tutorials/parallel-cpp/}.
-\newblock [Dostęp 23-12-2024].
+\newblock [Dostęp: 23-12-2024].
 
 \bibitem{ConcurrencyInAction}
 A.~Williams.
