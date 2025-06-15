@@ -143,6 +143,7 @@ ByteByteGo.
 R.~Chandra.
 \newblock {\em Parallel {P}rogramming in {O}pen{M}{P}}.
 \newblock High performance computing. Elsevier Science, 2001.
+\newblock ISBN: 9781558606715, LCCN: 00043828.
 
 \bibitem{10.1145/3678232.3678258}
 T.-C. Chen, M.~Dezani-Ciancaglini, N.~Yoshida.
@@ -170,7 +171,7 @@ R.~DeWolf.
 \bibitem{TBBARMCONCLUSIONS}
 J.~Duke.
 \newblock Memory {F}orensics {C}omparison of {A}pple {M}1 and {I}ntel {A}rchitecture {U}sing {V}olatility {F}ramework.
-\newblock Master's thesis, Louisiana State University, 2021.
+\newblock Praca magisterska, Louisiana State University, 2021.
 
 \bibitem{RustDifferences1}
 Z.~Fehervari.
@@ -193,6 +194,7 @@ K.~R. Fulton, A.~Chan, D.~Votipka, M.~Hicks, M.~L. Mazurek.
 M.~Galvin.
 \newblock {\em Mastering {C}oncurrency {A}nd {P}arallel {P}rogramming: {A}tain {A}dvanced {T}echniques and {B}est {P}ractices for {C}rafting {R}obust, {M}aintainable, and {H}igh-{P}erformance {C}oncurrent {C}ode in {C}++}.
 \newblock 2024.
+\newblock ISBN: 9798326727572.
 
 \bibitem{RustDifferences}
 Y.~Gusakov.
@@ -271,7 +273,6 @@ M.~Lindgren.
 J.~Löff, D.~Griebler, G.~Mencagli, G.~Araujo, M.~Torquati, M.~Danelutto, L.~G. Fernandes.
 \newblock The {N}{A}{S} {P}arallel {B}enchmarks for evaluating {C}++ parallel programming frameworks on shared-memory architectures.
 \newblock {\em Future Generation Computer Systems}, 125:743--757, 2021.
-\newblock [Dostęp 17-04-2025].
 
 \bibitem{martins2025npbrustnasparallelbenchmarks}
 E.~M. Martins, L.~G. Faé, R.~B. Hoffmann, L.~S. Bianchessi, D.~Griebler.
@@ -279,22 +280,10 @@ E.~M. Martins, L.~G. Faé, R.~B. Hoffmann, L.~S. Bianchessi, D.~Griebler.
 \newblock \url{https://arxiv.org/abs/2502.15536}, 2025.
 \newblock [Dostęp: 2025-05-18].
 
-\bibitem{mitzenmacher2017probability}
-M.~Mitzenmacher,  E.~Upfal.
-\newblock {\em Probability and {C}omputing: {R}andomization and {P}robabilistic {T}echniques in {A}lgorithms and {D}ata {A}nalysis}.
-\newblock Cambridge University Press, 2017.
-\newblock ISBN: 9781108107990.
-
 \bibitem{ConcurrentSemanticComparison_1}
 S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
 \newblock Design of an {E}mpirical {S}tudy for {C}omparing the {U}sability of {C}oncurrent {P}rogramming {L}anguages.
 \newblock {\em Information and Software Technology}, 55(7):1304--1315, 2013.
-
-\bibitem{ConcurrentSemanticComparison_2}
-S.~Nanz, F.~Torshizi, M.~Pedroni, B.~Meyer.
-\newblock Design of an empirical study for comparing the usability of concurrent programming languages.
-\newblock {\em Information and Software Technology}, 55(7):1304--1315, Lip. 2013.
-\newblock [Dostęp 16-03-2025].
 
 \bibitem{ParallelProgramming}
 P.~Pacheco.
@@ -381,7 +370,6 @@ A.~Tuby,  A.~Morrison.
 T.~Vandervelden, R.~De~Smet, D.~Deac, K.~Steenhaut, A.~Braeken.
 \newblock Overview of {E}mbedded {R}ust {O}perating {S}ystems and {F}rameworks.
 \newblock {\em Sensors}, 24(17), 2024.
-\newblock [Dostęp: 23-12-2024].
 
 \bibitem{RustPerformance1}
 R.~Viitanen.
@@ -404,7 +392,6 @@ A.~Williams.
 X.~Yin, Z.~Huang, S.~Kan, G.~Shen.
 \newblock Safe{M}{D}: {O}wnership-{B}ased {S}afe {M}emory {D}eallocation for {C} {P}rograms.
 \newblock {\em Electronics}, 13(21), 2024.
-\newblock [Dostęp 16-03-2025].
 
 \bibitem{RustFC}
 Z.~Yu, L.~Song, Y.~Zhang.
